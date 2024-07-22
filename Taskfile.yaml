@@ -1,0 +1,54 @@
+version: "3"
+
+output: prefixed
+interval: 0s
+dotenv: [".env"]
+
+vars:
+  MAIN: cmd/main.go
+  BIN: tmp/bookmymovie.exe
+
+tasks:
+  build-go:
+    cmds:
+      - go build -o {{.BIN}} {{.MAIN}}
+  build:
+    cmds:
+      - task: build-go
+  generate-db:
+    cmds:
+      - sqlc generate
+    sources:
+      - sqlc.yaml
+      - database/sql/**/*.sql
+    generates:
+      - database/*.go
+  generate-templ:
+    cmds:
+      - templ generate
+    sources:
+      - mailer/templates/*.templ
+    generates:
+      - mailer/templates/*_templ.go
+  generate:
+    cmds:
+      - task: generate-db
+      - task: generate-templ
+
+  run-go:
+    cmds:
+      - task: build-go
+      - cmd: "{{.BIN}}"
+  run:
+    deps:
+      - run-go
+  migrate:
+    env:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: "{{.DATABASE_URI}}"
+      GOOSE_MIGRATION_DIR: database/sql/schema
+    cmds:
+      - goose {{.CLI_ARGS}}
+    requires:
+      vars:
+        - DATABASE_URI

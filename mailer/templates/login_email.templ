@@ -1,0 +1,17 @@
+package templates
+
+type LoginEmailParams struct {
+	IsNew bool
+	OTP   string
+	Link  string
+}
+
+templ LoginEmail(params *LoginEmailParams) {
+	<h2>Your OTP is { params.OTP }</h2>
+	if params.IsNew {
+		<h3>New</h3>
+	}
+	<a href={ templ.SafeURL(params.Link) }>
+		{ params.Link }
+	</a>
+}

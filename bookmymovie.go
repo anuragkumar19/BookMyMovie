@@ -1,0 +1,41 @@
+package bookmymovie
+
+import (
+	"os"
+
+	"bookmymovie.app/bookmymovie/database"
+	"bookmymovie.app/bookmymovie/mailer"
+	"bookmymovie.app/bookmymovie/services/auth"
+	"github.com/rs/zerolog"
+)
+
+type Application struct {
+	db     *database.Database
+	mailer *mailer.Mailer
+
+	authService *auth.Auth
+}
+
+func New() Application {
+	logger := zerolog.New(os.Stdout).With().Timestamp().Logger()
+
+	conf := newConfig()
+	if err := conf.parse(); err != nil {
+		logger.Err(err).Msg("failed to parse config")
+	}
+	if err := conf.validate(); err != nil {
+		logger.Err(err).Msg("failed to validate config")
+	}
+
+	logger = logger.Level(conf.logLevel)
+
+	db := database.NewDatabase(conf.database, &logger)
+	m := mailer.New(conf.mailer, &logger)
+	authService := auth.New(&logger, &db, &m)
+
+	return Application{
+		db:          &db,
+		mailer:      &m,
+		authService: &authService,
+	}
+}
