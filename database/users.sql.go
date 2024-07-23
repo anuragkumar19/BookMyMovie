@@ -31,6 +31,7 @@ const findUserByEmail = `-- name: FindUserByEmail :one
 SELECT
     "id",
     "email",
+    "role",
     "version",
     "last_login_token_sent_at",
     "total_login_tokens_sent"
@@ -43,6 +44,7 @@ WHERE
 type FindUserByEmailRow struct {
 	ID                   int64              `json:"id"`
 	Email                string             `json:"email"`
+	Role                 Roles              `json:"role"`
 	Version              int32              `json:"version"`
 	LastLoginTokenSentAt pgtype.Timestamptz `json:"last_login_token_sent_at"`
 	TotalLoginTokensSent int32              `json:"total_login_tokens_sent"`
@@ -54,6 +56,7 @@ func (q *Queries) FindUserByEmail(ctx context.Context, email string) (FindUserBy
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
+		&i.Role,
 		&i.Version,
 		&i.LastLoginTokenSentAt,
 		&i.TotalLoginTokensSent,

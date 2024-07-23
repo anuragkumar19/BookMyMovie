@@ -1,11 +1,13 @@
 -- +goose Up
 CREATE TABLE
     "refresh_tokens" (
-        "token" BIGSERIAL PRIMARY KEY NOT NULL,
+        "id" BIGSERIAL PRIMARY KEY NOT NULL,
         "created_at" TIMESTAMP WITH TIME ZONE NOT NULL,
         "user_id" BIGINT NOT NULL,
+        "user_role" roles NOT NULL,
         "expire_at" TIMESTAMP WITH TIME ZONE NOT NULL,
-        CONSTRAINT fk_user_id FOREIGN KEY ("user_id") REFERENCES users ("id")
+        "user_agent" TEXT NOT NULL,
+        CONSTRAINT fk_refresh_tokens_user_id FOREIGN KEY ("user_id") REFERENCES users ("id")
     );
 
 -- +goose Down

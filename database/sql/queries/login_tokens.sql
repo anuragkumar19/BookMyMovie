@@ -6,15 +6,18 @@ VALUES
 
 -- name: FindLoginToken :one
 SELECT
-    token,
-    otp,
-    "version",
-    created_at,
-    expire_at,
-    last_attempt_at,
-    total_attempts
+    login_tokens.token,
+    login_tokens.otp,
+    login_tokens."version",
+    login_tokens.user_id,
+    login_tokens.created_at,
+    login_tokens.expire_at,
+    login_tokens.last_attempt_at,
+    login_tokens.total_attempts,
+    users.role AS user_role
 FROM
     "login_tokens"
+    INNER JOIN users ON login_tokens.user_id = users.id
 WHERE
     token = $1;
 

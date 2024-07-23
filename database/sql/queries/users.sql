@@ -2,6 +2,7 @@
 SELECT
     "id",
     "email",
+    "role",
     "version",
     "last_login_token_sent_at",
     "total_login_tokens_sent"

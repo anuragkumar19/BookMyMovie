@@ -14,8 +14,9 @@ import (
 )
 
 type LoginParams struct {
-	Token string `json:"token"`
-	OTP   string `json:"otp"`
+	Token     string `json:"token"`
+	OTP       string `json:"otp"`
+	UserAgent string
 }
 
 func (data *LoginParams) Transform() *LoginParams {
@@ -29,6 +30,7 @@ func (data *LoginParams) Validate() error {
 		data,
 		validation.Field(&data.Token, validation.Required),
 		validation.Field(&data.OTP, validation.Required),
+		validation.Field(&data.UserAgent, validation.Required),
 	)
 }
 
@@ -88,8 +90,30 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 		return AuthTokens{}, err
 	}
 
-	// TODO: generate PASETO tokens
-	return AuthTokens{}, nil
+	refreshToken, err := s.db.CreateRefreshToken(ctx, &database.CreateRefreshTokenParams{
+		CreatedAt: pgtype.Timestamptz{Time: now, Valid: true},
+		UserID:    token.UserID,
+		UserRole:  token.UserRole,
+		ExpireAt:  pgtype.Timestamptz{Time: now.Add(s.config.RefreshTokenLifetime), Valid: true},
+		UserAgent: params.UserAgent,
+	})
+	if err != nil {
+		return AuthTokens{}, err
+	}
+
+	refreshTokenStr, err := s.generateRefreshToken(&refreshToken)
+	if err != nil {
+		return AuthTokens{}, err
+	}
+	accessToken, accessTokenExp, err := s.generateAccessToken(&refreshToken)
+	if err != nil {
+		return AuthTokens{}, err
+	}
+	return AuthTokens{
+		RefreshToken:      refreshTokenStr,
+		AccessToken:       accessToken,
+		AccessTokenExpiry: accessTokenExp,
+	}, nil
 }
 
 func (s *Auth) generateLoginLink(token string, otp string) string {

@@ -10,9 +10,10 @@ import (
 type AuthConfig struct {
 	Host string
 
-	AccessTokenSecret   string
-	RefreshTokenSecret  string
-	AccessTokenLifetime time.Duration
+	AccessTokenSecret    string
+	RefreshTokenSecret   string
+	AccessTokenLifetime  time.Duration
+	RefreshTokenLifetime time.Duration
 
 	LoginOTPSendingRate           int
 	LoginOTPSendingRateTimeWindow time.Duration
@@ -27,6 +28,7 @@ func (config *AuthConfig) Validate() error {
 		validation.Field(&config.AccessTokenSecret, validation.Required),
 		validation.Field(&config.RefreshTokenSecret, validation.Required),
 		validation.Field(&config.AccessTokenLifetime, validation.Required),
+		validation.Field(&config.RefreshTokenLifetime, validation.Required),
 		validation.Field(&config.LoginOTPSendingRate, validation.Required, validation.Min(1)),
 		validation.Field(&config.LoginOTPSendingRateTimeWindow, validation.Required, validation.Min(time.Millisecond)),
 		validation.Field(&config.LoginOTPLifetime, validation.Required, validation.Min(time.Millisecond)),
@@ -42,6 +44,7 @@ func DefaultConfig() AuthConfig {
 		AccessTokenLifetime:           time.Minute,
 		LoginOTPSendingRate:           10,
 		LoginOTPSendingRateTimeWindow: time.Hour,
+		RefreshTokenLifetime:          30 * 24 * time.Hour,
 		LoginOTPLifetime:              10 * time.Minute,
 		MaxOTPIncorrectAttempts:       10,
 	}

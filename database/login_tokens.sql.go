@@ -88,15 +88,18 @@ func (q *Queries) DeleteLoginToken(ctx context.Context, token string) error {
 
 const findLoginToken = `-- name: FindLoginToken :one
 SELECT
-    token,
-    otp,
-    "version",
-    created_at,
-    expire_at,
-    last_attempt_at,
-    total_attempts
+    login_tokens.token,
+    login_tokens.otp,
+    login_tokens."version",
+    login_tokens.user_id,
+    login_tokens.created_at,
+    login_tokens.expire_at,
+    login_tokens.last_attempt_at,
+    login_tokens.total_attempts,
+    users.role AS user_role
 FROM
     "login_tokens"
+    INNER JOIN users ON login_tokens.user_id = users.id
 WHERE
     token = $1
 `
@@ -105,10 +108,12 @@ type FindLoginTokenRow struct {
 	Token         string             `json:"token"`
 	Otp           string             `json:"otp"`
 	Version       int32              `json:"version"`
+	UserID        int64              `json:"user_id"`
 	CreatedAt     pgtype.Timestamptz `json:"created_at"`
 	ExpireAt      pgtype.Timestamptz `json:"expire_at"`
 	LastAttemptAt pgtype.Timestamptz `json:"last_attempt_at"`
 	TotalAttempts int32              `json:"total_attempts"`
+	UserRole      Roles              `json:"user_role"`
 }
 
 func (q *Queries) FindLoginToken(ctx context.Context, token string) (FindLoginTokenRow, error) {
@@ -118,10 +123,12 @@ func (q *Queries) FindLoginToken(ctx context.Context, token string) (FindLoginTo
 		&i.Token,
 		&i.Otp,
 		&i.Version,
+		&i.UserID,
 		&i.CreatedAt,
 		&i.ExpireAt,
 		&i.LastAttemptAt,
 		&i.TotalAttempts,
+		&i.UserRole,
 	)
 	return i, err
 }

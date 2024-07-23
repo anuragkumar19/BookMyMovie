@@ -11,10 +11,13 @@ import (
 type Querier interface {
 	AttemptLoginToken(ctx context.Context, arg *AttemptLoginTokenParams) error
 	CreateLoginToken(ctx context.Context, arg *CreateLoginTokenParams) error
+	CreateRefreshToken(ctx context.Context, arg *CreateRefreshTokenParams) (RefreshToken, error)
 	CreateRegularUser(ctx context.Context, email string) (int64, error)
 	DeleteExpiredTokens(ctx context.Context) error
 	DeleteLoginToken(ctx context.Context, token string) error
+	DeleteRefreshToken(ctx context.Context, id int64) error
 	FindLoginToken(ctx context.Context, token string) (FindLoginTokenRow, error)
+	FindRefreshToken(ctx context.Context, id int64) (RefreshToken, error)
 	FindUserByEmail(ctx context.Context, email string) (FindUserByEmailRow, error)
 	UpdateUserLoginFields(ctx context.Context, arg *UpdateUserLoginFieldsParams) error
 }
