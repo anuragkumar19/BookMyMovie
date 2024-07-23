@@ -4,7 +4,7 @@ CREATE TABLE
         "token" TEXT PRIMARY KEY NOT NULL,
         "version" INTEGER DEFAULT 1 NOT NULL,
         "created_at" TIMESTAMP WITH TIME ZONE NOT NULL,
-        "user_id" bytea NOT NULL,
+        "user_id" BIGINT NOT NULL,
         "otp" TEXT NOT NULL,
         "expire_at" TIMESTAMP WITH TIME ZONE NOT NULL,
         "last_attempt_at" TIMESTAMP WITH TIME ZONE,

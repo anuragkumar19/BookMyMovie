@@ -11,21 +11,20 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const createRegularUser = `-- name: CreateRegularUser :exec
+const createRegularUser = `-- name: CreateRegularUser :one
 INSERT INTO
-    "users" ("id", "email", "role")
+    "users" ("email", "role")
 VALUES
-    ($1, $2, 'regular_user')
+    ($1, 'regular_user')
+RETURNING
+    id
 `
 
-type CreateRegularUserParams struct {
-	ID    []byte `json:"id"`
-	Email string `json:"email"`
-}
-
-func (q *Queries) CreateRegularUser(ctx context.Context, arg *CreateRegularUserParams) error {
-	_, err := q.db.Exec(ctx, createRegularUser, arg.ID, arg.Email)
-	return err
+func (q *Queries) CreateRegularUser(ctx context.Context, email string) (int64, error) {
+	row := q.db.QueryRow(ctx, createRegularUser, email)
+	var id int64
+	err := row.Scan(&id)
+	return id, err
 }
 
 const findUserByEmail = `-- name: FindUserByEmail :one
@@ -42,7 +41,7 @@ WHERE
 `
 
 type FindUserByEmailRow struct {
-	ID                   []byte             `json:"id"`
+	ID                   int64              `json:"id"`
 	Email                string             `json:"email"`
 	Version              int32              `json:"version"`
 	LastLoginTokenSentAt pgtype.Timestamptz `json:"last_login_token_sent_at"`
@@ -75,7 +74,7 @@ WHERE
 type UpdateUserLoginFieldsParams struct {
 	LastLoginTokenSentAt pgtype.Timestamptz `json:"last_login_token_sent_at"`
 	TotalLoginTokensSent int32              `json:"total_login_tokens_sent"`
-	ID                   []byte             `json:"id"`
+	ID                   int64              `json:"id"`
 	Version              int32              `json:"version"`
 }
 

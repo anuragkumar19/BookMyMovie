@@ -10,11 +10,13 @@ FROM
 WHERE
     "email" = $1;
 
--- name: CreateRegularUser :exec
+-- name: CreateRegularUser :one
 INSERT INTO
-    "users" ("id", "email", "role")
+    "users" ("email", "role")
 VALUES
-    ($1, $2, 'regular_user');
+    ($1, 'regular_user')
+RETURNING
+    id;
 
 -- name: UpdateUserLoginFields :exec
 UPDATE "users"

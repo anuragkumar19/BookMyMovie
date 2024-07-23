@@ -70,7 +70,7 @@ type LoginToken struct {
 	Token         string             `json:"token"`
 	Version       int32              `json:"version"`
 	CreatedAt     pgtype.Timestamptz `json:"created_at"`
-	UserID        []byte             `json:"user_id"`
+	UserID        int64              `json:"user_id"`
 	Otp           string             `json:"otp"`
 	ExpireAt      pgtype.Timestamptz `json:"expire_at"`
 	LastAttemptAt pgtype.Timestamptz `json:"last_attempt_at"`
@@ -78,14 +78,14 @@ type LoginToken struct {
 }
 
 type RefreshToken struct {
-	Token     string             `json:"token"`
+	Token     int64              `json:"token"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UserID    []byte             `json:"user_id"`
+	UserID    int64              `json:"user_id"`
 	ExpireAt  pgtype.Timestamptz `json:"expire_at"`
 }
 
 type User struct {
-	ID                   []byte             `json:"id"`
+	ID                   int64              `json:"id"`
 	CreatedAt            pgtype.Timestamptz `json:"created_at"`
 	Version              int32              `json:"version"`
 	Name                 string             `json:"name"`

@@ -50,7 +50,7 @@ type CreateLoginTokenParams struct {
 	Otp       string             `json:"otp"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 	ExpireAt  pgtype.Timestamptz `json:"expire_at"`
-	UserID    []byte             `json:"user_id"`
+	UserID    int64              `json:"user_id"`
 }
 
 func (q *Queries) CreateLoginToken(ctx context.Context, arg *CreateLoginTokenParams) error {

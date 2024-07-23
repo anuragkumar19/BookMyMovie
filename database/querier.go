@@ -11,7 +11,7 @@ import (
 type Querier interface {
 	AttemptLoginToken(ctx context.Context, arg *AttemptLoginTokenParams) error
 	CreateLoginToken(ctx context.Context, arg *CreateLoginTokenParams) error
-	CreateRegularUser(ctx context.Context, arg *CreateRegularUserParams) error
+	CreateRegularUser(ctx context.Context, email string) (int64, error)
 	DeleteExpiredTokens(ctx context.Context) error
 	DeleteLoginToken(ctx context.Context, token string) error
 	FindLoginToken(ctx context.Context, token string) (FindLoginTokenRow, error)

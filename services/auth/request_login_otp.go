@@ -11,7 +11,6 @@ import (
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/oklog/ulid/v2"
 )
 
 type RequestLoginOTPParams struct {
@@ -40,15 +39,11 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			userId := ulid.Make().Bytes()
-			err := s.db.CreateRegularUser(ctx, &database.CreateRegularUserParams{
-				Email: loginToken,
-				ID:    userId,
-			})
+			id, err := s.db.CreateRegularUser(ctx, params.Email)
 			if err != nil {
 				return "", err
 			}
-			user.ID = userId
+			user.ID = id
 			user.Email = params.Email
 			user.Version = 1
 			isNew = true
