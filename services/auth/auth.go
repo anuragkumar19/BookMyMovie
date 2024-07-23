@@ -7,15 +7,17 @@ import (
 )
 
 type Auth struct {
+	config *AuthConfig
 	logger *zerolog.Logger
 	db     *database.Database
 	mailer *mailer.Mailer
 }
 
-func New(logger *zerolog.Logger, db *database.Database, mailer *mailer.Mailer) Auth {
+func New(config *AuthConfig, logger *zerolog.Logger, db *database.Database, mailer *mailer.Mailer) Auth {
 	return Auth{
 		logger: logger,
 		db:     db,
 		mailer: mailer,
+		config: config,
 	}
 }

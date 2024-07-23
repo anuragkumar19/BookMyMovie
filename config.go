@@ -8,19 +8,24 @@ import (
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/mailer"
+	"bookmymovie.app/bookmymovie/services/auth"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/rs/zerolog"
 )
 
 type config struct {
+	appHost  string
 	logLevel zerolog.Level
 	mailer   *mailer.MailerConfig
 	database *database.DatabaseConfig
+	auth     *auth.AuthConfig
 }
 
 func (config *config) validate() error {
 	return validation.ValidateStruct(
 		config,
+		validation.Field(&config.appHost, validation.Required, is.URL),
 		validation.Field(&config.logLevel),
 		validation.Field(&config.mailer),
 		validation.Field(&config.database),
@@ -32,6 +37,13 @@ func (config *config) parseFromEnvVars() error {
 	levelStr := os.Getenv("LOG_LEVEL")
 	if levelStr == "" {
 		levelStr = zerolog.InfoLevel.String()
+	}
+
+	// host
+	host := os.Getenv("APP_HOST")
+	if host != "" {
+		config.appHost = host
+		config.auth.Host = host
 	}
 
 	logLevel, err := zerolog.ParseLevel(levelStr)
@@ -127,6 +139,22 @@ func (config *config) parseFromEnvVars() error {
 		}
 		config.database.MinConns = int32(c)
 	}
+
+	// auth
+	accessTokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
+	if accessTokenSecret != "" {
+		config.auth.AccessTokenSecret = accessTokenSecret
+	}
+	refreshTokenSecret := os.Getenv("REFRESH_TOKEN_SECRET")
+	if refreshTokenSecret != "" {
+		config.auth.RefreshTokenSecret = refreshTokenSecret
+	}
+	//TODO: rest
+	// accessTokenLifetimeStr := os.Getenv("ACCESS_TOKEN_LIFETIME")
+	// if accessTokenLifetime != "" {
+	// 	config.auth.AccessTokenLifetime = accessTokenLifetime
+	// }
+
 	return nil
 }
 
@@ -143,9 +171,12 @@ func (config *config) parse() error {
 
 func newConfig() config {
 	dbConf := database.DefaultConfig()
+	authConf := auth.DefaultConfig()
 	return config{
 		logLevel: zerolog.InfoLevel,
 		mailer:   &mailer.MailerConfig{},
 		database: &dbConf,
+		appHost:  "",
+		auth:     &authConf,
 	}
 }

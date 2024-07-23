@@ -31,7 +31,7 @@ func New() Application {
 
 	db := database.NewDatabase(conf.database, &logger)
 	m := mailer.New(conf.mailer, &logger)
-	authService := auth.New(&logger, &db, &m)
+	authService := auth.New(conf.auth, &logger, &db, &m)
 
 	return Application{
 		db:          &db,

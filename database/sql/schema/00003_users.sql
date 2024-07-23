@@ -9,7 +9,7 @@ CREATE TABLE
         "role" roles NOT NULL,
         "dob" DATE,
         "last_login_token_sent_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
-        "total_login_tokens_sent" INTEGER DEFAULT 1 NOT NULL
+        "total_login_tokens_sent" INTEGER DEFAULT 0 NOT NULL
     );
 
 -- +goose Down
