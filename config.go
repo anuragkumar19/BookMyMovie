@@ -145,10 +145,6 @@ func (config *config) parseFromEnvVars() error {
 	if accessTokenSecret != "" {
 		config.auth.AccessTokenSecret = accessTokenSecret
 	}
-	refreshTokenSecret := os.Getenv("REFRESH_TOKEN_SECRET")
-	if refreshTokenSecret != "" {
-		config.auth.RefreshTokenSecret = refreshTokenSecret
-	}
 	//TODO: rest
 	// accessTokenLifetimeStr := os.Getenv("ACCESS_TOKEN_LIFETIME")
 	// if accessTokenLifetime != "" {

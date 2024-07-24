@@ -79,6 +79,7 @@ type LoginToken struct {
 
 type RefreshToken struct {
 	ID        int64              `json:"id"`
+	Token     string             `json:"token"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 	UserID    int64              `json:"user_id"`
 	UserRole  Roles              `json:"user_role"`

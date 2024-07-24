@@ -13,11 +13,12 @@ import (
 
 const createRefreshToken = `-- name: CreateRefreshToken :one
 INSERT INTO
-    "refresh_tokens" ("created_at", "user_id", "user_role", "expire_at", "user_agent")
+    "refresh_tokens" ("token", "created_at", "user_id", "user_role", "expire_at", "user_agent")
 VALUES
-    ($1, $2, $3, $4, $5)
+    ($1, $2, $3, $4, $5, $6)
 RETURNING
     "id",
+    "token",
     "created_at",
     "user_id",
     "user_role",
@@ -26,6 +27,7 @@ RETURNING
 `
 
 type CreateRefreshTokenParams struct {
+	Token     string             `json:"token"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 	UserID    int64              `json:"user_id"`
 	UserRole  Roles              `json:"user_role"`
@@ -35,6 +37,7 @@ type CreateRefreshTokenParams struct {
 
 func (q *Queries) CreateRefreshToken(ctx context.Context, arg *CreateRefreshTokenParams) (RefreshToken, error) {
 	row := q.db.QueryRow(ctx, createRefreshToken,
+		arg.Token,
 		arg.CreatedAt,
 		arg.UserID,
 		arg.UserRole,
@@ -44,6 +47,7 @@ func (q *Queries) CreateRefreshToken(ctx context.Context, arg *CreateRefreshToke
 	var i RefreshToken
 	err := row.Scan(
 		&i.ID,
+		&i.Token,
 		&i.CreatedAt,
 		&i.UserID,
 		&i.UserRole,
@@ -56,17 +60,18 @@ func (q *Queries) CreateRefreshToken(ctx context.Context, arg *CreateRefreshToke
 const deleteRefreshToken = `-- name: DeleteRefreshToken :exec
 DELETE FROM "refresh_tokens"
 WHERE
-    id = $1
+    "token" = $1
 `
 
-func (q *Queries) DeleteRefreshToken(ctx context.Context, id int64) error {
-	_, err := q.db.Exec(ctx, deleteRefreshToken, id)
+func (q *Queries) DeleteRefreshToken(ctx context.Context, token string) error {
+	_, err := q.db.Exec(ctx, deleteRefreshToken, token)
 	return err
 }
 
 const findRefreshToken = `-- name: FindRefreshToken :one
 SELECT
     "id",
+    "token",
     "created_at",
     "user_id",
     "user_role",
@@ -75,14 +80,15 @@ SELECT
 FROM
     "refresh_tokens"
 WHERE
-    id = $1
+    "token" = $1
 `
 
-func (q *Queries) FindRefreshToken(ctx context.Context, id int64) (RefreshToken, error) {
-	row := q.db.QueryRow(ctx, findRefreshToken, id)
+func (q *Queries) FindRefreshToken(ctx context.Context, token string) (RefreshToken, error) {
+	row := q.db.QueryRow(ctx, findRefreshToken, token)
 	var i RefreshToken
 	err := row.Scan(
 		&i.ID,
+		&i.Token,
 		&i.CreatedAt,
 		&i.UserID,
 		&i.UserRole,

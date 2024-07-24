@@ -11,7 +11,6 @@ type AuthConfig struct {
 	Host string
 
 	AccessTokenSecret    string
-	RefreshTokenSecret   string
 	AccessTokenLifetime  time.Duration
 	RefreshTokenLifetime time.Duration
 
@@ -26,7 +25,6 @@ func (config *AuthConfig) Validate() error {
 		config,
 		validation.Field(&config.Host, validation.Required, is.URL),
 		validation.Field(&config.AccessTokenSecret, validation.Required),
-		validation.Field(&config.RefreshTokenSecret, validation.Required),
 		validation.Field(&config.AccessTokenLifetime, validation.Required),
 		validation.Field(&config.RefreshTokenLifetime, validation.Required),
 		validation.Field(&config.LoginOTPSendingRate, validation.Required, validation.Min(1)),
@@ -40,7 +38,6 @@ func DefaultConfig() AuthConfig {
 	return AuthConfig{
 		Host:                          "",
 		AccessTokenSecret:             "",
-		RefreshTokenSecret:            "",
 		AccessTokenLifetime:           time.Minute,
 		LoginOTPSendingRate:           10,
 		LoginOTPSendingRateTimeWindow: time.Hour,

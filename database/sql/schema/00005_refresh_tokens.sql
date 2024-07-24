@@ -1,7 +1,8 @@
 -- +goose Up
 CREATE TABLE
     "refresh_tokens" (
-        "id" BIGSERIAL PRIMARY KEY NOT NULL,
+        "id" BIGSERIAL UNIQUE NOT NULL,
+        "token" TEXT PRIMARY KEY NOT NULL,
         "created_at" TIMESTAMP WITH TIME ZONE NOT NULL,
         "user_id" BIGINT NOT NULL,
         "user_role" roles NOT NULL,

@@ -90,7 +90,12 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 		return AuthTokens{}, err
 	}
 
+	refreshTokenStr, err := s.generateRandomToken()
+	if err != nil {
+		return AuthTokens{}, err
+	}
 	refreshToken, err := s.db.CreateRefreshToken(ctx, &database.CreateRefreshTokenParams{
+		Token:     refreshTokenStr,
 		CreatedAt: pgtype.Timestamptz{Time: now, Valid: true},
 		UserID:    token.UserID,
 		UserRole:  token.UserRole,
@@ -101,10 +106,6 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 		return AuthTokens{}, err
 	}
 
-	refreshTokenStr, err := s.generateRefreshToken(&refreshToken)
-	if err != nil {
-		return AuthTokens{}, err
-	}
 	accessToken, accessTokenExp, err := s.generateAccessToken(&refreshToken)
 	if err != nil {
 		return AuthTokens{}, err

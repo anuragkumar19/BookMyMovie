@@ -15,9 +15,9 @@ type Querier interface {
 	CreateRegularUser(ctx context.Context, email string) (int64, error)
 	DeleteExpiredTokens(ctx context.Context) error
 	DeleteLoginToken(ctx context.Context, token string) error
-	DeleteRefreshToken(ctx context.Context, id int64) error
+	DeleteRefreshToken(ctx context.Context, token string) error
 	FindLoginToken(ctx context.Context, token string) (FindLoginTokenRow, error)
-	FindRefreshToken(ctx context.Context, id int64) (RefreshToken, error)
+	FindRefreshToken(ctx context.Context, token string) (RefreshToken, error)
 	FindUserByEmail(ctx context.Context, email string) (FindUserByEmailRow, error)
 	UpdateUserLoginFields(ctx context.Context, arg *UpdateUserLoginFieldsParams) error
 }
