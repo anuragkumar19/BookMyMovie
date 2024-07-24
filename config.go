@@ -29,6 +29,7 @@ func (config *config) validate() error {
 		validation.Field(&config.logLevel),
 		validation.Field(&config.mailer),
 		validation.Field(&config.database),
+		validation.Field(&config.auth),
 	)
 }
 

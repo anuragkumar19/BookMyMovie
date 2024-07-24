@@ -21,10 +21,10 @@ func New() Application {
 
 	conf := newConfig()
 	if err := conf.parse(); err != nil {
-		logger.Err(err).Msg("failed to parse config")
+		logger.Fatal().Err(err).Msg("failed to parse config")
 	}
 	if err := conf.validate(); err != nil {
-		logger.Err(err).Msg("failed to validate config")
+		logger.Fatal().Err(err).Msg("failed to validate config")
 	}
 
 	logger = logger.Level(conf.logLevel)

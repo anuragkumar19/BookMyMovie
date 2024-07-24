@@ -18,6 +18,9 @@ type Auth struct {
 }
 
 func New(config *AuthConfig, logger *zerolog.Logger, db *database.Database, mailer *mailer.Mailer) Auth {
+	if err := config.Validate(); err != nil {
+		logger.Fatal().Err(err).Msg("auth config validation failed")
+	}
 	a := Auth{
 		logger:        logger,
 		db:            db,
