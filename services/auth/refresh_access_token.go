@@ -24,7 +24,6 @@ func (s *Auth) RefreshAccessToken(ctx context.Context, token string) (AccessToke
 			return AccessToken{}, services_errors.UnauthorizedError(ErrTokenInvalid)
 		}
 	}
-
 	if time.Now().After(rt.ExpireAt.Time) {
 		return AccessToken{}, services_errors.UnauthorizedError(ErrTokenInvalid)
 	}

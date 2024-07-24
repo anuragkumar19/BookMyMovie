@@ -35,7 +35,7 @@ DELETE FROM "login_tokens"
 WHERE
     token = $1;
 
--- name: DeleteExpiredTokens :exec
+-- name: DeleteExpiredLoginTokens :exec
 DELETE FROM "login_tokens"
 WHERE
     expire_at < NOW();

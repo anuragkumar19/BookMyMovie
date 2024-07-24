@@ -57,14 +57,25 @@ func (q *Queries) CreateRefreshToken(ctx context.Context, arg *CreateRefreshToke
 	return i, err
 }
 
+const deleteExpiredRefreshTokens = `-- name: DeleteExpiredRefreshTokens :exec
+DELETE FROM "refresh_tokens"
+WHERE
+    "expire_at" < NOW()
+`
+
+func (q *Queries) DeleteExpiredRefreshTokens(ctx context.Context) error {
+	_, err := q.db.Exec(ctx, deleteExpiredRefreshTokens)
+	return err
+}
+
 const deleteRefreshToken = `-- name: DeleteRefreshToken :exec
 DELETE FROM "refresh_tokens"
 WHERE
-    "token" = $1
+    "id" = $1
 `
 
-func (q *Queries) DeleteRefreshToken(ctx context.Context, token string) error {
-	_, err := q.db.Exec(ctx, deleteRefreshToken, token)
+func (q *Queries) DeleteRefreshToken(ctx context.Context, id int64) error {
+	_, err := q.db.Exec(ctx, deleteRefreshToken, id)
 	return err
 }
 

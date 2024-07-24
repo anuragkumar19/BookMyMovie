@@ -29,4 +29,9 @@ WHERE
 -- name: DeleteRefreshToken :exec
 DELETE FROM "refresh_tokens"
 WHERE
-    "token" = $1;
+    "id" = $1;
+
+-- name: DeleteExpiredRefreshTokens :exec
+DELETE FROM "refresh_tokens"
+WHERE
+    "expire_at" < NOW();

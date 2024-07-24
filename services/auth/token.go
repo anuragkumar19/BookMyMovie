@@ -3,36 +3,62 @@ package auth
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"errors"
 	"fmt"
-	"math"
-	"math/big"
 	"strconv"
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
+	services_errors "bookmymovie.app/bookmymovie/services/errors"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var (
-	ErrTokenInvalid = errors.New("invalid token")
-)
+type AuthMetadata struct {
+	UserID         int64
+	UserRole       database.Roles
+	RefreshTokenID int64
+}
 
-// type tokenData struct {
-// 	iss      string
-// 	id       int64
-// 	userId   int64
-// 	userRole database.Roles
-// }
-
-// TODO: hash otp
-func (s *Auth) generateOTP() (rawOTP string, hash string, err error) {
-	bigI, err := rand.Int(rand.Reader, big.NewInt(int64(math.Pow10(6)-1)))
+func (s *Auth) GetAuthMetadata(accessToken string) (AuthMetadata, error) {
+	token, err := jwt.Parse(accessToken, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
+		}
+		return []byte(s.config.AccessTokenSecret), nil
+	})
 	if err != nil {
-		return "", "", err
+		return AuthMetadata{}, services_errors.UnauthorizedError(err)
 	}
-	otp := fmt.Sprintf("%06d", bigI.Int64())
-	return otp, otp, nil
+	if !token.Valid {
+		return AuthMetadata{}, services_errors.UnauthorizedError(ErrTokenInvalid)
+	}
+	claims := token.Claims.(jwt.MapClaims)
+
+	id := claims["id"].(int64)
+	userId := claims["user_id"].(int64)
+	userRole := claims["user_role"].(database.Roles)
+
+	if _, ok := s.revokedTokens[id]; ok {
+		return AuthMetadata{}, services_errors.UnauthorizedError(ErrTokenInvalid)
+	}
+
+	return AuthMetadata{
+		RefreshTokenID: id,
+		UserID:         userId,
+		UserRole:       userRole,
+	}, nil
+}
+
+func (s *Auth) startBackgroundRevokedTokenCleanup() {
+	go func() {
+		for {
+			for k, v := range s.revokedTokens {
+				if v.Before(time.Now()) {
+					delete(s.revokedTokens, k)
+				}
+			}
+			time.Sleep(s.config.AccessTokenLifetime)
+		}
+	}()
 }
 
 func (*Auth) generateRandomToken() (string, error) {
@@ -42,10 +68,6 @@ func (*Auth) generateRandomToken() (string, error) {
 		return "", err
 	}
 	return base64.RawURLEncoding.EncodeToString(b) + strconv.Itoa(int(time.Now().UnixNano())), nil
-}
-
-func (s *Auth) matchOTP(rawOTP string, hash string) bool {
-	return rawOTP == hash
 }
 
 func (s *Auth) generateAccessToken(rt *database.RefreshToken) (token string, expiry time.Time, err error) {
@@ -66,27 +88,3 @@ func (s *Auth) generateAccessToken(rt *database.RefreshToken) (token string, exp
 	st, err := t.SignedString([]byte(s.config.AccessTokenSecret))
 	return st, expiry, err
 }
-
-// func parseAndVerifyToken(tokenStr string, secret string) (tokenData, error) {
-// 	token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (interface{}, error) {
-// 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-// 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
-// 		}
-// 		return []byte(secret), nil
-// 	})
-// 	if err != nil {
-// 		return tokenData{}, err
-// 	}
-// 	if !token.Valid {
-// 		return tokenData{}, ErrTokenInvalid
-// 	}
-// 	claims := token.Claims.(jwt.MapClaims)
-// 	iss, err := claims.GetIssuer()
-// 	if err != nil {
-// 		return tokenData{}, err
-// 	}
-// 	id := claims["id"].(int64)
-// 	userId := claims["user_id"].(int64)
-// 	userRole := claims["user_role"].(database.Roles)
-// 	return tokenData{iss: iss, id: id, userId: userId, userRole: userRole}, nil
-// }

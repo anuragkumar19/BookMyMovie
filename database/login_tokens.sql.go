@@ -64,14 +64,14 @@ func (q *Queries) CreateLoginToken(ctx context.Context, arg *CreateLoginTokenPar
 	return err
 }
 
-const deleteExpiredTokens = `-- name: DeleteExpiredTokens :exec
+const deleteExpiredLoginTokens = `-- name: DeleteExpiredLoginTokens :exec
 DELETE FROM "login_tokens"
 WHERE
     expire_at < NOW()
 `
 
-func (q *Queries) DeleteExpiredTokens(ctx context.Context) error {
-	_, err := q.db.Exec(ctx, deleteExpiredTokens)
+func (q *Queries) DeleteExpiredLoginTokens(ctx context.Context) error {
+	_, err := q.db.Exec(ctx, deleteExpiredLoginTokens)
 	return err
 }
 
