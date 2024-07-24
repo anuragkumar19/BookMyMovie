@@ -22,16 +22,16 @@ func (data *RequestLoginOTPParams) Transform() *RequestLoginOTPParams {
 	return data
 }
 
-func (data *RequestLoginOTPParams) Validate() error {
+func (data *RequestLoginOTPParams) Validate() validation.Errors {
 	return validation.ValidateStruct(
 		data,
 		validation.Field(&data.Email, validation.Required, is.Email),
-	)
+	).(validation.Errors)
 }
 
 func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParams) (loginToken string, err error) {
 	if err := params.Transform().Validate(); err != nil {
-		return "", err
+		return "", errors.ValidationError(err)
 	}
 
 	var isNew bool

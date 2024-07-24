@@ -25,13 +25,13 @@ func (data *LoginParams) Transform() *LoginParams {
 	return data
 }
 
-func (data *LoginParams) Validate() error {
+func (data *LoginParams) Validate() validation.Errors {
 	return validation.ValidateStruct(
 		data,
 		validation.Field(&data.Token, validation.Required),
 		validation.Field(&data.OTP, validation.Required),
 		validation.Field(&data.UserAgent, validation.Required),
-	)
+	).(validation.Errors)
 }
 
 type AuthTokens struct {
@@ -42,7 +42,7 @@ type AuthTokens struct {
 
 func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, error) {
 	if err := params.Transform().Validate(); err != nil {
-		return AuthTokens{}, err
+		return AuthTokens{}, errors.ValidationError(err)
 	}
 
 	token, err := s.db.FindLoginToken(ctx, params.Token)
