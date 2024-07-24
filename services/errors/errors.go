@@ -1,4 +1,4 @@
-package errors
+package services_errors
 
 import (
 	"errors"
@@ -11,8 +11,13 @@ var (
 	ErrUpdateConflict   = errors.New("update conflict - version mismatch")
 	ErrOTPExpired       = errors.New("otp expired")
 	ErrOTPMismatch      = errors.New("otp mismatch")
+	ErrUnauthorized     = errors.New("unauthorized")
 )
 
 func ValidationError(err validation.Errors) error {
 	return errors.Join(ErrValidationFailed, err)
+}
+
+func UnauthorizedError(err error) error {
+	return errors.Join(ErrUnauthorized, err)
 }

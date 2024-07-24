@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
-	"bookmymovie.app/bookmymovie/services/errors"
+	services_errors "bookmymovie.app/bookmymovie/services/errors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/jackc/pgx/v5"
@@ -31,7 +31,7 @@ func (data *RequestLoginOTPParams) Validate() validation.Errors {
 
 func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParams) (loginToken string, err error) {
 	if err := params.Transform().Validate(); err != nil {
-		return "", errors.ValidationError(err)
+		return "", services_errors.ValidationError(err)
 	}
 
 	var isNew bool
@@ -58,7 +58,7 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 		user.TotalLoginTokensSent = 0
 	}
 	if user.TotalLoginTokensSent >= int32(s.config.LoginOTPSendingRate) {
-		return "", errors.NewRateLimitError(user.LastLoginTokenSentAt.Time.Add(s.config.LoginOTPSendingRateTimeWindow).Sub(now), int(user.TotalLoginTokensSent), user.LastLoginTokenSentAt.Time)
+		return "", services_errors.NewRateLimitError(user.LastLoginTokenSentAt.Time.Add(s.config.LoginOTPSendingRateTimeWindow).Sub(now), int(user.TotalLoginTokensSent), user.LastLoginTokenSentAt.Time)
 	}
 
 	token, err := s.generateRandomToken()
@@ -88,7 +88,7 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 		Version:              user.Version,
 	}); err != nil {
 		if err == pgx.ErrNoRows {
-			return "", errors.ErrUpdateConflict
+			return "", services_errors.ErrUpdateConflict
 		} else {
 			return "", err
 		}

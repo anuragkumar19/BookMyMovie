@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
-	"bookmymovie.app/bookmymovie/services/errors"
+	services_errors "bookmymovie.app/bookmymovie/services/errors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -42,13 +42,13 @@ type AuthTokens struct {
 
 func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, error) {
 	if err := params.Transform().Validate(); err != nil {
-		return AuthTokens{}, errors.ValidationError(err)
+		return AuthTokens{}, services_errors.ValidationError(err)
 	}
 
 	token, err := s.db.FindLoginToken(ctx, params.Token)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return AuthTokens{}, errors.ErrOTPExpired
+			return AuthTokens{}, services_errors.ErrOTPExpired
 		}
 		return AuthTokens{}, err
 	}
@@ -56,16 +56,16 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 	now := time.Now()
 
 	if token.ExpireAt.Time.Before(now) {
-		return AuthTokens{}, errors.ErrOTPExpired
+		return AuthTokens{}, services_errors.ErrOTPExpired
 	}
 	if token.TotalAttempts >= int32(s.config.MaxOTPIncorrectAttempts) {
 		if err := s.db.DeleteLoginToken(ctx, token.Token); err != nil {
 			if err == pgx.ErrNoRows {
-				return AuthTokens{}, errors.ErrOTPExpired
+				return AuthTokens{}, services_errors.ErrOTPExpired
 			}
 			return AuthTokens{}, err
 		}
-		return AuthTokens{}, errors.ErrOTPExpired
+		return AuthTokens{}, services_errors.ErrOTPExpired
 	}
 
 	if !s.matchOTP(params.OTP, token.Otp) {
@@ -76,16 +76,16 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 			Version:       token.Version,
 		}); err != nil {
 			if err == pgx.ErrNoRows {
-				return AuthTokens{}, errors.ErrUpdateConflict
+				return AuthTokens{}, services_errors.ErrUpdateConflict
 			}
 			return AuthTokens{}, err
 		}
-		return AuthTokens{}, errors.ErrOTPMismatch
+		return AuthTokens{}, services_errors.ErrOTPMismatch
 	}
 
 	if err := s.db.DeleteLoginToken(ctx, token.Token); err != nil {
 		if err == pgx.ErrNoRows {
-			return AuthTokens{}, errors.ErrOTPExpired
+			return AuthTokens{}, services_errors.ErrOTPExpired
 		}
 		return AuthTokens{}, err
 	}
