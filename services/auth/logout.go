@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"net/http"
 	"time"
 
 	services_errors "bookmymovie.app/bookmymovie/services/errors"
@@ -22,4 +23,15 @@ func (s *Auth) Logout(ctx context.Context, accessToken string) error {
 	}
 	s.revokedTokens[auth.RefreshTokenID] = time.Now().Add(s.config.AccessTokenLifetime)
 	return nil
+}
+
+func (s *Auth) logoutHandler(w http.ResponseWriter, r *http.Request) {
+
+	err := s.Logout(r.Context(), r.Header.Get("Authorization"))
+	if err != nil {
+		services_errors.HTTPErrorHandler(err, w, r)
+		return
+	}
+
+	w.WriteHeader(200)
 }

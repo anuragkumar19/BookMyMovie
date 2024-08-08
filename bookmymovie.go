@@ -39,3 +39,7 @@ func New() Application {
 		authService: &authService,
 	}
 }
+
+func (app *Application) AuthService() *auth.Auth {
+	return app.authService
+}

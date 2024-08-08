@@ -2,6 +2,8 @@ package auth
 
 import (
 	"context"
+	"fmt"
+	"net/http"
 	"time"
 
 	services_errors "bookmymovie.app/bookmymovie/services/errors"
@@ -36,4 +38,15 @@ func (s *Auth) RefreshAccessToken(ctx context.Context, token string) (AccessToke
 		AccessToken:       accessToken,
 		AccessTokenExpiry: accessTokenExp,
 	}, nil
+}
+
+func (s *Auth) refreshAccessTokenHandler(w http.ResponseWriter, r *http.Request) {
+
+	token, err := s.RefreshAccessToken(r.Context(), r.Header.Get("Authorization"))
+	if err != nil {
+		services_errors.HTTPErrorHandler(err, w, r)
+		return
+	}
+
+	w.Write([]byte(fmt.Sprintf("%#v", token)))
 }

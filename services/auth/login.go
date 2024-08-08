@@ -2,13 +2,15 @@ package auth
 
 import (
 	"context"
+	"fmt"
+	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
 	services_errors "bookmymovie.app/bookmymovie/services/errors"
-	_ "github.com/anuragkumar19/binding"
+	"github.com/anuragkumar19/binding"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -26,13 +28,13 @@ func (data *LoginParams) Transform() *LoginParams {
 	return data
 }
 
-func (data *LoginParams) Validate() validation.Errors {
+func (data *LoginParams) Validate() error {
 	return validation.ValidateStruct(
 		data,
 		validation.Field(&data.Token, validation.Required),
 		validation.Field(&data.OTP, validation.Required),
 		validation.Field(&data.UserAgent, validation.Required),
-	).(validation.Errors)
+	)
 }
 
 type AuthTokens struct {
@@ -43,7 +45,7 @@ type AuthTokens struct {
 
 func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, error) {
 	if err := params.Transform().Validate(); err != nil {
-		return AuthTokens{}, services_errors.ValidationError(err)
+		return AuthTokens{}, services_errors.ValidationError(err.(validation.Errors))
 	}
 
 	token, err := s.db.FindLoginToken(ctx, params.Token)
@@ -116,6 +118,22 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 		AccessToken:       accessToken,
 		AccessTokenExpiry: accessTokenExp,
 	}, nil
+}
+
+func (s *Auth) loginHandler(w http.ResponseWriter, r *http.Request) {
+	var params LoginParams
+	if err := binding.Bind(r, &params); err != nil {
+		services_errors.HTTPErrorHandler(err, w, r)
+		return
+	}
+	params.UserAgent = r.UserAgent()
+
+	tks, err := s.Login(r.Context(), &params)
+	if err != nil {
+		services_errors.HTTPErrorHandler(err, w, r)
+		return
+	}
+	w.Write([]byte(fmt.Sprintf("%#v", tks)))
 }
 
 // func (s *Auth) loginHandler(w http.ResponseWriter, r *http.Request) {

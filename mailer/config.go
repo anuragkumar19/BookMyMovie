@@ -20,7 +20,8 @@ func (config *MailerConfig) Validate() error {
 	return validation.ValidateStruct(
 		config,
 		validation.Field(&config.Host, validation.Required, is.Host),
-		validation.Field(&config.Port, validation.Required, is.Port),
+		validation.Field(&config.Port, validation.Required), // is.Port,
+
 		validation.Field(&config.Username, validation.Required),
 		validation.Field(&config.Password, validation.Required),
 		validation.Field(&config.FromAddress, validation.Required, is.Email),

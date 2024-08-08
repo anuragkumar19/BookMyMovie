@@ -33,9 +33,9 @@ func (s *Auth) GetAuthMetadata(accessToken string) (AuthMetadata, error) {
 	}
 	claims := token.Claims.(jwt.MapClaims)
 
-	id := claims["id"].(int64)
-	userId := claims["user_id"].(int64)
-	userRole := claims["user_role"].(database.Roles)
+	id := int64(claims["id"].(float64))
+	userId := int64(claims["user_id"].(float64))
+	userRole := database.Roles(claims["user_role"].(string))
 
 	if _, ok := s.revokedTokens[id]; ok {
 		return AuthMetadata{}, services_errors.UnauthorizedError(ErrTokenInvalid)

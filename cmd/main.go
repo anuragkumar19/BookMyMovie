@@ -1,12 +1,15 @@
 package main
 
 import (
-	"fmt"
-
 	"bookmymovie.app/bookmymovie"
+	"bookmymovie.app/bookmymovie/server"
 )
 
 func main() {
-	bookmymovie.New()
-	fmt.Println("Hello World!")
+	app := bookmymovie.New()
+
+	srv := server.New()
+
+	srv.RegisterService(app.AuthService())
+	srv.TempServe()
 }

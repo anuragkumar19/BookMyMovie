@@ -2,11 +2,13 @@ package auth
 
 import (
 	"context"
+	"net/http"
 	"strings"
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
 	services_errors "bookmymovie.app/bookmymovie/services/errors"
+	"github.com/anuragkumar19/binding"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/jackc/pgx/v5"
@@ -22,16 +24,16 @@ func (data *RequestLoginOTPParams) Transform() *RequestLoginOTPParams {
 	return data
 }
 
-func (data *RequestLoginOTPParams) Validate() validation.Errors {
+func (data *RequestLoginOTPParams) Validate() error {
 	return validation.ValidateStruct(
 		data,
 		validation.Field(&data.Email, validation.Required, is.Email),
-	).(validation.Errors)
+	)
 }
 
 func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParams) (loginToken string, err error) {
 	if err := params.Transform().Validate(); err != nil {
-		return "", services_errors.ValidationError(err)
+		return "", services_errors.ValidationError(err.(validation.Errors))
 	}
 
 	var isNew bool
@@ -98,4 +100,20 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 	s.logger.Info().Str("email", user.Email).Str("otp", otp).Str("link", s.generateLoginLink(token, otp)).Time("expire_at", expiry).Bool("is_new", isNew).Msg("mail sent")
 
 	return token, nil
+}
+
+func (s *Auth) requestLoginOTPHandler(w http.ResponseWriter, r *http.Request) {
+	var params RequestLoginOTPParams
+	if err := binding.Bind(r, &params); err != nil {
+		services_errors.HTTPErrorHandler(err, w, r)
+		return
+	}
+
+	token, err := s.RequestLoginOTP(r.Context(), &params)
+	if err != nil {
+		services_errors.HTTPErrorHandler(err, w, r)
+		return
+	}
+
+	w.Write([]byte(token))
 }
