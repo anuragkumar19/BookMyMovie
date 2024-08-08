@@ -4,6 +4,8 @@ go 1.22.2
 
 require (
 	github.com/a-h/templ v0.2.747
+	github.com/anuragkumar19/binding v0.1.2
+	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/jackc/pgx/v5 v5.6.0

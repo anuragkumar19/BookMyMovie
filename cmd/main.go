@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"bookmymovie.app/bookmymovie"
+)
 
 func main() {
+	bookmymovie.New()
 	fmt.Println("Hello World!")
 }
