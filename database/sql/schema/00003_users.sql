@@ -4,7 +4,7 @@ CREATE TABLE
         "id" BIGSERIAL PRIMARY KEY NOT NULL,
         "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
         "version" INTEGER DEFAULT 1 NOT NULL,
-        "name" TEXT NOT NULL DEFAULT 'Guest',
+        "name" TEXT NOT NULL DEFAULT 'User',
         "email" CITEXT NOT NULL UNIQUE,
         "role" roles NOT NULL,
         "dob" DATE,

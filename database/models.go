@@ -11,6 +11,137 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type IndiaCbfcRatings string
+
+const (
+	IndiaCbfcRatingsU  IndiaCbfcRatings = "U"
+	IndiaCbfcRatingsUA IndiaCbfcRatings = "U/A"
+	IndiaCbfcRatingsA  IndiaCbfcRatings = "A"
+	IndiaCbfcRatingsS  IndiaCbfcRatings = "S"
+)
+
+func (e *IndiaCbfcRatings) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = IndiaCbfcRatings(s)
+	case string:
+		*e = IndiaCbfcRatings(s)
+	default:
+		return fmt.Errorf("unsupported scan type for IndiaCbfcRatings: %T", src)
+	}
+	return nil
+}
+
+type NullIndiaCbfcRatings struct {
+	IndiaCbfcRatings IndiaCbfcRatings `json:"india_cbfc_ratings"`
+	Valid            bool             `json:"valid"` // Valid is true if IndiaCbfcRatings is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullIndiaCbfcRatings) Scan(value interface{}) error {
+	if value == nil {
+		ns.IndiaCbfcRatings, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.IndiaCbfcRatings.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullIndiaCbfcRatings) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.IndiaCbfcRatings), nil
+}
+
+func (e IndiaCbfcRatings) Valid() bool {
+	switch e {
+	case IndiaCbfcRatingsU,
+		IndiaCbfcRatingsUA,
+		IndiaCbfcRatingsA,
+		IndiaCbfcRatingsS:
+		return true
+	}
+	return false
+}
+
+func AllIndiaCbfcRatingsValues() []IndiaCbfcRatings {
+	return []IndiaCbfcRatings{
+		IndiaCbfcRatingsU,
+		IndiaCbfcRatingsUA,
+		IndiaCbfcRatingsA,
+		IndiaCbfcRatingsS,
+	}
+}
+
+type MpaRatings string
+
+const (
+	MpaRatingsG    MpaRatings = "G"
+	MpaRatingsPG   MpaRatings = "PG"
+	MpaRatingsPG13 MpaRatings = "PG-13"
+	MpaRatingsR    MpaRatings = "R"
+	MpaRatingsNC17 MpaRatings = "NC-17"
+)
+
+func (e *MpaRatings) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = MpaRatings(s)
+	case string:
+		*e = MpaRatings(s)
+	default:
+		return fmt.Errorf("unsupported scan type for MpaRatings: %T", src)
+	}
+	return nil
+}
+
+type NullMpaRatings struct {
+	MpaRatings MpaRatings `json:"mpa_ratings"`
+	Valid      bool       `json:"valid"` // Valid is true if MpaRatings is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullMpaRatings) Scan(value interface{}) error {
+	if value == nil {
+		ns.MpaRatings, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.MpaRatings.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullMpaRatings) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.MpaRatings), nil
+}
+
+func (e MpaRatings) Valid() bool {
+	switch e {
+	case MpaRatingsG,
+		MpaRatingsPG,
+		MpaRatingsPG13,
+		MpaRatingsR,
+		MpaRatingsNC17:
+		return true
+	}
+	return false
+}
+
+func AllMpaRatingsValues() []MpaRatings {
+	return []MpaRatings{
+		MpaRatingsG,
+		MpaRatingsPG,
+		MpaRatingsPG13,
+		MpaRatingsR,
+		MpaRatingsNC17,
+	}
+}
+
 type Roles string
 
 const (
@@ -77,6 +208,51 @@ type LoginToken struct {
 	TotalAttempts int32              `json:"total_attempts"`
 }
 
+type Movie struct {
+	ID                       int64              `json:"id"`
+	CreatedAt                pgtype.Timestamptz `json:"created_at"`
+	Version                  int32              `json:"version"`
+	Title                    string             `json:"title"`
+	Slug                     string             `json:"slug"`
+	Poster                   string             `json:"poster"`
+	RunningDurationInMinutes int32              `json:"running_duration_in_minutes"`
+	AvailableLanguages       []string           `json:"available_languages"`
+	AvailableFormats         []string           `json:"available_formats"`
+	Rating                   string             `json:"rating"`
+	TotalRatingCount         int32              `json:"total_rating_count"`
+	Genres                   []string           `json:"genres"`
+	ReleaseDate              pgtype.Date        `json:"release_date"`
+	IsInCinema               bool               `json:"is_in_cinema"`
+	IndiaCbfcRating          IndiaCbfcRatings   `json:"india_cbfc_rating"`
+	MpaRating                MpaRatings         `json:"mpa_rating"`
+	About                    string             `json:"about"`
+}
+
+type MoviesCast struct {
+	MovieID  int64 `json:"movie_id"`
+	PersonID int64 `json:"person_id"`
+	Index    int32 `json:"index"`
+}
+
+type MoviesCrew struct {
+	MovieID  int64 `json:"movie_id"`
+	PersonID int64 `json:"person_id"`
+	Index    int32 `json:"index"`
+}
+
+type Person struct {
+	ID             int64              `json:"id"`
+	CreatedAt      pgtype.Timestamptz `json:"created_at"`
+	Version        int32              `json:"version"`
+	Name           string             `json:"name"`
+	Slug           string             `json:"slug"`
+	Nicknames      []string           `json:"nicknames"`
+	ProfilePicture string             `json:"profile_picture"`
+	Occupations    []string           `json:"occupations"`
+	Dob            pgtype.Date        `json:"dob"`
+	About          string             `json:"about"`
+}
+
 type RefreshToken struct {
 	ID        int64              `json:"id"`
 	Token     string             `json:"token"`
@@ -85,6 +261,16 @@ type RefreshToken struct {
 	UserRole  Roles              `json:"user_role"`
 	ExpireAt  pgtype.Timestamptz `json:"expire_at"`
 	UserAgent string             `json:"user_agent"`
+}
+
+type Review struct {
+	ID        int64              `json:"id"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	Version   int32              `json:"version"`
+	MovieID   int64              `json:"movie_id"`
+	AuthorID  int64              `json:"author_id"`
+	Text      string             `json:"text"`
+	Rating    int32              `json:"rating"`
 }
 
 type User struct {
@@ -97,4 +283,14 @@ type User struct {
 	Dob                  pgtype.Date        `json:"dob"`
 	LastLoginTokenSentAt pgtype.Timestamptz `json:"last_login_token_sent_at"`
 	TotalLoginTokensSent int32              `json:"total_login_tokens_sent"`
+}
+
+type Video struct {
+	ID          int64              `json:"id"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	Version     int32              `json:"version"`
+	MovieID     int64              `json:"movie_id"`
+	Language    string             `json:"language"`
+	YoutubeLink string             `json:"youtube_link"`
+	Index       int32              `json:"index"`
 }
