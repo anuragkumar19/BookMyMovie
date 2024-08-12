@@ -11,7 +11,7 @@ CREATE TABLE
         "occupations" TEXT[] NOT NULL,
         "dob" DATE,
         "about" TEXT NOT NULL DEFAULT 'No Information available',
-        "imdb_id" TEXT NOT NULL,
+        "imdb_id" TEXT UNIQUE NOT NULL,
         "imdb_last_synced_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
     );
 

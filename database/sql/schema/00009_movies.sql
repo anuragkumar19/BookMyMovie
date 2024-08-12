@@ -8,7 +8,8 @@ CREATE TABLE
         "slug" TEXT NOT NULL,
         "poster" TEXT NOT NULL,
         "running_duration_in_minutes" INTEGER NOT NULL,
-        "available_languages" TEXT[] NOT NULL,
+        "available_audio_languages" TEXT[] NOT NULL,
+        "available_subtitle_languages" TEXT[] NOT NULL,
         "available_formats" TEXT[] NOT NULL,
         "rating" TEXT NOT NULL,
         "total_rating_count" INTEGER NOT NULL,
@@ -18,7 +19,7 @@ CREATE TABLE
         "india_cbfc_rating" india_cbfc_ratings NOT NULL,
         "mpa_rating" mpa_ratings NOT NULL,
         "about" TEXT NOT NULL DEFAULT 'No Information available',
-        "imdb_id" TEXT NOT NULL,
+        "imdb_id" TEXT UNIQUE NOT NULL,
         "imdb_rating" TEXT NOT NULL,
         "imdb_last_synced_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
     );
