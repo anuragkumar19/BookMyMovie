@@ -10,7 +10,9 @@ CREATE TABLE
         "profile_picture" TEXT NOT NULL,
         "occupations" TEXT[] NOT NULL,
         "dob" DATE,
-        "about" TEXT NOT NULL DEFAULT 'No Information available'
+        "about" TEXT NOT NULL DEFAULT 'No Information available',
+        "imdb_id" TEXT NOT NULL,
+        "imdb_last_synced_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
     );
 
 -- +goose Down

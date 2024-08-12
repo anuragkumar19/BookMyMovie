@@ -17,7 +17,10 @@ CREATE TABLE
         "is_in_cinema" BOOLEAN NOT NULL,
         "india_cbfc_rating" india_cbfc_ratings NOT NULL,
         "mpa_rating" mpa_ratings NOT NULL,
-        "about" TEXT NOT NULL DEFAULT 'No Information available'
+        "about" TEXT NOT NULL DEFAULT 'No Information available',
+        "imdb_id" TEXT NOT NULL,
+        "imdb_rating" TEXT NOT NULL,
+        "imdb_last_synced_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
     );
 
 -- +goose Down
