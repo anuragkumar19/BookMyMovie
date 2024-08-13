@@ -3,13 +3,13 @@ module bookmymovie.app/bookmymovie
 go 1.22.2
 
 require (
+	connectrpc.com/connect v1.16.2
 	github.com/a-h/templ v0.2.747
-	github.com/anuragkumar19/binding v0.1.2
-	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/jackc/pgx/v5 v5.6.0
 	github.com/rs/zerolog v1.33.0
+	google.golang.org/protobuf v1.34.2
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	jaytaylor.com/html2text v0.0.0-20230321000545-74c2419ad056
 )

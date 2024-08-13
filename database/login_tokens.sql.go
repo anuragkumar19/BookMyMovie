@@ -22,10 +22,10 @@ WHERE
 `
 
 type AttemptLoginTokenParams struct {
-	LastAttemptAt pgtype.Timestamptz `json:"last_attempt_at"`
-	TotalAttempts int32              `json:"total_attempts"`
-	Token         string             `json:"token"`
-	Version       int32              `json:"version"`
+	LastAttemptAt pgtype.Timestamptz
+	TotalAttempts int32
+	Token         string
+	Version       int32
 }
 
 func (q *Queries) AttemptLoginToken(ctx context.Context, arg *AttemptLoginTokenParams) error {
@@ -46,11 +46,11 @@ VALUES
 `
 
 type CreateLoginTokenParams struct {
-	Token     string             `json:"token"`
-	Otp       string             `json:"otp"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	ExpireAt  pgtype.Timestamptz `json:"expire_at"`
-	UserID    int64              `json:"user_id"`
+	Token     string
+	Otp       string
+	CreatedAt pgtype.Timestamptz
+	ExpireAt  pgtype.Timestamptz
+	UserID    int64
 }
 
 func (q *Queries) CreateLoginToken(ctx context.Context, arg *CreateLoginTokenParams) error {
@@ -105,15 +105,15 @@ WHERE
 `
 
 type FindLoginTokenRow struct {
-	Token         string             `json:"token"`
-	Otp           string             `json:"otp"`
-	Version       int32              `json:"version"`
-	UserID        int64              `json:"user_id"`
-	CreatedAt     pgtype.Timestamptz `json:"created_at"`
-	ExpireAt      pgtype.Timestamptz `json:"expire_at"`
-	LastAttemptAt pgtype.Timestamptz `json:"last_attempt_at"`
-	TotalAttempts int32              `json:"total_attempts"`
-	UserRole      Roles              `json:"user_role"`
+	Token         string
+	Otp           string
+	Version       int32
+	UserID        int64
+	CreatedAt     pgtype.Timestamptz
+	ExpireAt      pgtype.Timestamptz
+	LastAttemptAt pgtype.Timestamptz
+	TotalAttempts int32
+	UserRole      Roles
 }
 
 func (q *Queries) FindLoginToken(ctx context.Context, token string) (FindLoginTokenRow, error) {

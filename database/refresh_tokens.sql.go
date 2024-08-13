@@ -27,12 +27,12 @@ RETURNING
 `
 
 type CreateRefreshTokenParams struct {
-	Token     string             `json:"token"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UserID    int64              `json:"user_id"`
-	UserRole  Roles              `json:"user_role"`
-	ExpireAt  pgtype.Timestamptz `json:"expire_at"`
-	UserAgent string             `json:"user_agent"`
+	Token     string
+	CreatedAt pgtype.Timestamptz
+	UserID    int64
+	UserRole  Roles
+	ExpireAt  pgtype.Timestamptz
+	UserAgent string
 }
 
 func (q *Queries) CreateRefreshToken(ctx context.Context, arg *CreateRefreshTokenParams) (RefreshToken, error) {

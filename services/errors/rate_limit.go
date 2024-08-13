@@ -6,9 +6,9 @@ import (
 )
 
 type RateLimitError struct {
-	TryAfter                time.Duration `json:"try_after"`
-	TotalRequests           int           `json:"total_requests"`
-	LastSuccessfulRequestAt time.Time     `json:"last_successful_request_at"`
+	TryAfter                time.Duration
+	TotalRequests           int
+	LastSuccessfulRequestAt time.Time
 }
 
 func (e RateLimitError) Error() string {

@@ -23,6 +23,15 @@ tasks:
       - database/sql/**/*.sql
     generates:
       - database/*.go
+  generate-protobuf:
+    cmds:
+      - buf lint && buf generate
+    sources:
+      - buf.yaml
+      - buf.gen.yaml
+      - proto/**/*
+    generates:
+      - gen/**/*.go
   generate-templ:
     cmds:
       - templ generate
@@ -34,6 +43,7 @@ tasks:
     cmds:
       - task: generate-db
       - task: generate-templ
+      - task: generate-protobuf
 
   run-go:
     cmds:

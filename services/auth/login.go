@@ -2,23 +2,20 @@ package auth
 
 import (
 	"context"
-	"fmt"
-	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
 	services_errors "bookmymovie.app/bookmymovie/services/errors"
-	"github.com/anuragkumar19/binding"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type LoginParams struct {
-	Token     string `json:"token"`
-	OTP       string `json:"otp"`
+	Token     string
+	OTP       string
 	UserAgent string
 }
 
@@ -118,22 +115,6 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 		AccessToken:       accessToken,
 		AccessTokenExpiry: accessTokenExp,
 	}, nil
-}
-
-func (s *Auth) loginHandler(w http.ResponseWriter, r *http.Request) {
-	var params LoginParams
-	if err := binding.Bind(r, &params); err != nil {
-		services_errors.HTTPErrorHandler(err, w, r)
-		return
-	}
-	params.UserAgent = r.UserAgent()
-
-	tks, err := s.Login(r.Context(), &params)
-	if err != nil {
-		services_errors.HTTPErrorHandler(err, w, r)
-		return
-	}
-	w.Write([]byte(fmt.Sprintf("%#v", tks)))
 }
 
 func (s *Auth) generateLoginLink(token string, otp string) string {

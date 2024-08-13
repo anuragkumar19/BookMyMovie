@@ -2,14 +2,14 @@ package main
 
 import (
 	"bookmymovie.app/bookmymovie"
-	"bookmymovie.app/bookmymovie/server"
+	"bookmymovie.app/bookmymovie/api"
 )
 
 func main() {
 	app := bookmymovie.New()
 
-	srv := server.New()
+	api := api.New(&app)
 
-	srv.RegisterService(app.AuthService())
-	srv.TempServe()
+	api.Run()
+
 }

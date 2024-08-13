@@ -33,8 +33,8 @@ func (e *IndiaCbfcRatings) Scan(src interface{}) error {
 }
 
 type NullIndiaCbfcRatings struct {
-	IndiaCbfcRatings IndiaCbfcRatings `json:"india_cbfc_ratings"`
-	Valid            bool             `json:"valid"` // Valid is true if IndiaCbfcRatings is not NULL
+	IndiaCbfcRatings IndiaCbfcRatings
+	Valid            bool // Valid is true if IndiaCbfcRatings is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -98,8 +98,8 @@ func (e *MpaRatings) Scan(src interface{}) error {
 }
 
 type NullMpaRatings struct {
-	MpaRatings MpaRatings `json:"mpa_ratings"`
-	Valid      bool       `json:"valid"` // Valid is true if MpaRatings is not NULL
+	MpaRatings MpaRatings
+	Valid      bool // Valid is true if MpaRatings is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -162,8 +162,8 @@ func (e *Roles) Scan(src interface{}) error {
 }
 
 type NullRoles struct {
-	Roles Roles `json:"roles"`
-	Valid bool  `json:"valid"` // Valid is true if Roles is not NULL
+	Roles Roles
+	Valid bool // Valid is true if Roles is not NULL
 }
 
 // Scan implements the Scanner interface.
@@ -201,133 +201,133 @@ func AllRolesValues() []Roles {
 }
 
 type City struct {
-	ID          string             `json:"id"`
-	CreatedAt   pgtype.Timestamptz `json:"created_at"`
-	DisplayName string             `json:"display_name"`
-	State       string             `json:"state"`
-	Coordinates string             `json:"coordinates"`
+	ID          string
+	CreatedAt   pgtype.Timestamptz
+	DisplayName string
+	State       string
+	Coordinates string
 }
 
 type LoginToken struct {
-	Token         string             `json:"token"`
-	Version       int32              `json:"version"`
-	CreatedAt     pgtype.Timestamptz `json:"created_at"`
-	UserID        int64              `json:"user_id"`
-	Otp           string             `json:"otp"`
-	ExpireAt      pgtype.Timestamptz `json:"expire_at"`
-	LastAttemptAt pgtype.Timestamptz `json:"last_attempt_at"`
-	TotalAttempts int32              `json:"total_attempts"`
+	Token         string
+	Version       int32
+	CreatedAt     pgtype.Timestamptz
+	UserID        int64
+	Otp           string
+	ExpireAt      pgtype.Timestamptz
+	LastAttemptAt pgtype.Timestamptz
+	TotalAttempts int32
 }
 
 type Movie struct {
-	ID                         int64              `json:"id"`
-	CreatedAt                  pgtype.Timestamptz `json:"created_at"`
-	Version                    int32              `json:"version"`
-	Title                      string             `json:"title"`
-	Slug                       string             `json:"slug"`
-	Poster                     string             `json:"poster"`
-	RunningDurationInMinutes   int32              `json:"running_duration_in_minutes"`
-	AvailableAudioLanguages    []string           `json:"available_audio_languages"`
-	AvailableSubtitleLanguages []string           `json:"available_subtitle_languages"`
-	AvailableFormats           []string           `json:"available_formats"`
-	Rating                     string             `json:"rating"`
-	TotalRatingCount           int32              `json:"total_rating_count"`
-	Genres                     []string           `json:"genres"`
-	ReleaseDate                pgtype.Date        `json:"release_date"`
-	IsInCinema                 bool               `json:"is_in_cinema"`
-	IndiaCbfcRating            IndiaCbfcRatings   `json:"india_cbfc_rating"`
-	MpaRating                  MpaRatings         `json:"mpa_rating"`
-	About                      string             `json:"about"`
-	ImdbID                     string             `json:"imdb_id"`
-	ImdbRating                 string             `json:"imdb_rating"`
-	ImdbLastSyncedAt           pgtype.Timestamptz `json:"imdb_last_synced_at"`
+	ID                         int64
+	CreatedAt                  pgtype.Timestamptz
+	Version                    int32
+	Title                      string
+	Slug                       string
+	Poster                     string
+	RunningDurationInMinutes   int32
+	AvailableAudioLanguages    []string
+	AvailableSubtitleLanguages []string
+	AvailableFormats           []string
+	Rating                     string
+	TotalRatingCount           int32
+	Genres                     []string
+	ReleaseDate                pgtype.Date
+	IsInCinema                 bool
+	IndiaCbfcRating            IndiaCbfcRatings
+	MpaRating                  MpaRatings
+	About                      string
+	ImdbID                     string
+	ImdbRating                 string
+	ImdbLastSyncedAt           pgtype.Timestamptz
 }
 
 type MovieFormat struct {
-	ID        string             `json:"id"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	About     string             `json:"about"`
+	ID        string
+	CreatedAt pgtype.Timestamptz
+	About     string
 }
 
 type MovieGenre struct {
-	ID          string             `json:"id"`
-	CreatedAt   pgtype.Timestamptz `json:"created_at"`
-	DisplayName string             `json:"display_name"`
-	About       string             `json:"about"`
+	ID          string
+	CreatedAt   pgtype.Timestamptz
+	DisplayName string
+	About       string
 }
 
 type MovieLanguage struct {
-	ID          string             `json:"id"`
-	CreatedAt   pgtype.Timestamptz `json:"created_at"`
-	DisplayName string             `json:"display_name"`
-	EnglishName string             `json:"english_name"`
+	ID          string
+	CreatedAt   pgtype.Timestamptz
+	DisplayName string
+	EnglishName string
 }
 
 type MoviesCast struct {
-	MovieID  int64 `json:"movie_id"`
-	PersonID int64 `json:"person_id"`
-	Index    int32 `json:"index"`
+	MovieID  int64
+	PersonID int64
+	Index    int32
 }
 
 type MoviesCrew struct {
-	MovieID  int64 `json:"movie_id"`
-	PersonID int64 `json:"person_id"`
-	Index    int32 `json:"index"`
+	MovieID  int64
+	PersonID int64
+	Index    int32
 }
 
 type Person struct {
-	ID               int64              `json:"id"`
-	CreatedAt        pgtype.Timestamptz `json:"created_at"`
-	Version          int32              `json:"version"`
-	Name             string             `json:"name"`
-	Slug             string             `json:"slug"`
-	Nicknames        []string           `json:"nicknames"`
-	ProfilePicture   string             `json:"profile_picture"`
-	Occupations      []string           `json:"occupations"`
-	Dob              pgtype.Date        `json:"dob"`
-	About            string             `json:"about"`
-	ImdbID           string             `json:"imdb_id"`
-	ImdbLastSyncedAt pgtype.Timestamptz `json:"imdb_last_synced_at"`
+	ID               int64
+	CreatedAt        pgtype.Timestamptz
+	Version          int32
+	Name             string
+	Slug             string
+	Nicknames        []string
+	ProfilePicture   string
+	Occupations      []string
+	Dob              pgtype.Date
+	About            string
+	ImdbID           string
+	ImdbLastSyncedAt pgtype.Timestamptz
 }
 
 type RefreshToken struct {
-	ID        int64              `json:"id"`
-	Token     string             `json:"token"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UserID    int64              `json:"user_id"`
-	UserRole  Roles              `json:"user_role"`
-	ExpireAt  pgtype.Timestamptz `json:"expire_at"`
-	UserAgent string             `json:"user_agent"`
+	ID        int64
+	Token     string
+	CreatedAt pgtype.Timestamptz
+	UserID    int64
+	UserRole  Roles
+	ExpireAt  pgtype.Timestamptz
+	UserAgent string
 }
 
 type Review struct {
-	ID        int64              `json:"id"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	Version   int32              `json:"version"`
-	MovieID   int64              `json:"movie_id"`
-	AuthorID  int64              `json:"author_id"`
-	Text      string             `json:"text"`
-	Rating    int32              `json:"rating"`
+	ID        int64
+	CreatedAt pgtype.Timestamptz
+	Version   int32
+	MovieID   int64
+	AuthorID  int64
+	Text      string
+	Rating    int32
 }
 
 type User struct {
-	ID                   int64              `json:"id"`
-	CreatedAt            pgtype.Timestamptz `json:"created_at"`
-	Version              int32              `json:"version"`
-	Name                 string             `json:"name"`
-	Email                string             `json:"email"`
-	Role                 Roles              `json:"role"`
-	Dob                  pgtype.Date        `json:"dob"`
-	LastLoginTokenSentAt pgtype.Timestamptz `json:"last_login_token_sent_at"`
-	TotalLoginTokensSent int32              `json:"total_login_tokens_sent"`
+	ID                   int64
+	CreatedAt            pgtype.Timestamptz
+	Version              int32
+	Name                 string
+	Email                string
+	Role                 Roles
+	Dob                  pgtype.Date
+	LastLoginTokenSentAt pgtype.Timestamptz
+	TotalLoginTokensSent int32
 }
 
 type Video struct {
-	ID          int64              `json:"id"`
-	CreatedAt   pgtype.Timestamptz `json:"created_at"`
-	Version     int32              `json:"version"`
-	MovieID     int64              `json:"movie_id"`
-	Language    string             `json:"language"`
-	YoutubeLink string             `json:"youtube_link"`
-	Index       int32              `json:"index"`
+	ID          int64
+	CreatedAt   pgtype.Timestamptz
+	Version     int32
+	MovieID     int64
+	Language    string
+	YoutubeLink string
+	Index       int32
 }

@@ -1,6 +1,7 @@
 package bookmymovie
 
 import (
+	"context"
 	"os"
 
 	"bookmymovie.app/bookmymovie/database"
@@ -42,4 +43,9 @@ func New() Application {
 
 func (app *Application) AuthService() *auth.Auth {
 	return app.authService
+}
+
+func (app *Application) Shutdown(_ context.Context) error {
+	app.mailer.Wait()
+	return nil
 }

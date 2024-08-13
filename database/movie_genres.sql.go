@@ -19,9 +19,9 @@ RETURNING
 `
 
 type CreateGenreParams struct {
-	ID          string `json:"id"`
-	DisplayName string `json:"display_name"`
-	About       string `json:"about"`
+	ID          string
+	DisplayName string
+	About       string
 }
 
 func (q *Queries) CreateGenre(ctx context.Context, arg *CreateGenreParams) (MovieGenre, error) {
@@ -110,9 +110,9 @@ WHERE
 `
 
 type UpdateGenreParams struct {
-	DisplayName string `json:"display_name"`
-	About       string `json:"about"`
-	ID          string `json:"id"`
+	DisplayName string
+	About       string
+	ID          string
 }
 
 func (q *Queries) UpdateGenre(ctx context.Context, arg *UpdateGenreParams) error {

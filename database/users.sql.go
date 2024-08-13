@@ -42,12 +42,12 @@ WHERE
 `
 
 type FindUserByEmailRow struct {
-	ID                   int64              `json:"id"`
-	Email                string             `json:"email"`
-	Role                 Roles              `json:"role"`
-	Version              int32              `json:"version"`
-	LastLoginTokenSentAt pgtype.Timestamptz `json:"last_login_token_sent_at"`
-	TotalLoginTokensSent int32              `json:"total_login_tokens_sent"`
+	ID                   int64
+	Email                string
+	Role                 Roles
+	Version              int32
+	LastLoginTokenSentAt pgtype.Timestamptz
+	TotalLoginTokensSent int32
 }
 
 func (q *Queries) FindUserByEmail(ctx context.Context, email string) (FindUserByEmailRow, error) {
@@ -75,10 +75,10 @@ WHERE
 `
 
 type UpdateUserLoginFieldsParams struct {
-	LastLoginTokenSentAt pgtype.Timestamptz `json:"last_login_token_sent_at"`
-	TotalLoginTokensSent int32              `json:"total_login_tokens_sent"`
-	ID                   int64              `json:"id"`
-	Version              int32              `json:"version"`
+	LastLoginTokenSentAt pgtype.Timestamptz
+	TotalLoginTokensSent int32
+	ID                   int64
+	Version              int32
 }
 
 func (q *Queries) UpdateUserLoginFields(ctx context.Context, arg *UpdateUserLoginFieldsParams) error {
