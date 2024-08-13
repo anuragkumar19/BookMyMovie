@@ -10,16 +10,21 @@ import (
 
 type Querier interface {
 	AttemptLoginToken(ctx context.Context, arg *AttemptLoginTokenParams) error
+	CreateGenre(ctx context.Context, arg *CreateGenreParams) (MovieGenre, error)
 	CreateLoginToken(ctx context.Context, arg *CreateLoginTokenParams) error
 	CreateRefreshToken(ctx context.Context, arg *CreateRefreshTokenParams) (RefreshToken, error)
 	CreateRegularUser(ctx context.Context, email string) (int64, error)
 	DeleteExpiredLoginTokens(ctx context.Context) error
 	DeleteExpiredRefreshTokens(ctx context.Context) error
+	DeleteGenre(ctx context.Context, id string) error
 	DeleteLoginToken(ctx context.Context, token string) error
 	DeleteRefreshToken(ctx context.Context, id int64) error
 	FindLoginToken(ctx context.Context, token string) (FindLoginTokenRow, error)
 	FindRefreshToken(ctx context.Context, token string) (RefreshToken, error)
 	FindUserByEmail(ctx context.Context, email string) (FindUserByEmailRow, error)
+	GetAllGenres(ctx context.Context) ([]MovieGenre, error)
+	GetGenreByID(ctx context.Context, id string) (MovieGenre, error)
+	UpdateGenre(ctx context.Context, arg *UpdateGenreParams) error
 	UpdateUserLoginFields(ctx context.Context, arg *UpdateUserLoginFieldsParams) error
 }
 

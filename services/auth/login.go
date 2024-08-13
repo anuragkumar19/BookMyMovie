@@ -136,31 +136,6 @@ func (s *Auth) loginHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("%#v", tks)))
 }
 
-// func (s *Auth) loginHandler(w http.ResponseWriter, r *http.Request) {
-// 	var params LoginParams
-// 	if err := binding.Bind(r, &params); err != nil {
-// 		//TODO: error handler
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		return
-// 	}
-// 	params.UserAgent = r.UserAgent()
-// 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-// 	defer cancel()
-// 	result, err := s.Login(ctx, &params)
-// 	if err != nil {
-// 		//TODO: error handler
-// 		w.Write([]byte(err.Error()))
-// 	}
-// 	http.SetCookie(w, &http.Cookie{
-// 		Name:     "refresh_token",
-// 		Value:    result.RefreshToken,
-// 		Secure:   true,
-// 		HttpOnly: true,
-// 		SameSite: http.SameSiteLaxMode,
-// 	})
-// 	b, err := json.Marshal()
-// }
-
 func (s *Auth) generateLoginLink(token string, otp string) string {
 	return s.config.Host + "/auth/login?token=" + url.QueryEscape(token) + "&otp=" + url.QueryEscape(otp)
 }
