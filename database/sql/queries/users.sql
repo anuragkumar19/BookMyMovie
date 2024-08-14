@@ -27,3 +27,17 @@ SET
 WHERE
     "id" = $3
     AND "version" = $4;
+
+-- name: FindUserById :one
+SELECT
+    "id",
+    "name",
+    "email",
+    "role",
+    "dob",
+    "version",
+    "created_at"
+FROM
+    "users"
+WHERE
+    "id" = $1;

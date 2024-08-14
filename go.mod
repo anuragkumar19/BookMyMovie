@@ -9,7 +9,8 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/jackc/pgx/v5 v5.6.0
 	github.com/rs/zerolog v1.33.0
-	golang.org/x/net v0.24.0
+	golang.org/x/net v0.27.0
+	google.golang.org/genproto v0.0.0-20240812133136-8ffd90a71988
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	jaytaylor.com/html2text v0.0.0-20230321000545-74c2419ad056
@@ -25,9 +26,9 @@ require (
 	github.com/mattn/go-runewidth v0.0.9 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
-	golang.org/x/crypto v0.22.0 // indirect
-	golang.org/x/sync v0.3.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/crypto v0.25.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
+	golang.org/x/sys v0.22.0 // indirect
+	golang.org/x/text v0.16.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 )

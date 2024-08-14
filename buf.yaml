@@ -6,7 +6,8 @@ lint:
   use:
     - DEFAULT
   ignore:
-    - api/proto/google/type/timestamp.proto
+    - api/proto/google/type/timestamp/timestamp.proto
+    - api/proto/google/type/date/date.proto
 breaking:
   use:
     - FILE

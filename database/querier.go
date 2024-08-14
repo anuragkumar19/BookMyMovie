@@ -22,6 +22,7 @@ type Querier interface {
 	FindLoginToken(ctx context.Context, token string) (FindLoginTokenRow, error)
 	FindRefreshToken(ctx context.Context, token string) (RefreshToken, error)
 	FindUserByEmail(ctx context.Context, email string) (FindUserByEmailRow, error)
+	FindUserById(ctx context.Context, id int64) (FindUserByIdRow, error)
 	GetAllGenres(ctx context.Context) ([]MovieGenre, error)
 	GetGenreByID(ctx context.Context, id string) (MovieGenre, error)
 	UpdateGenre(ctx context.Context, arg *UpdateGenreParams) error

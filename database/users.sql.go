@@ -64,6 +64,46 @@ func (q *Queries) FindUserByEmail(ctx context.Context, email string) (FindUserBy
 	return i, err
 }
 
+const findUserById = `-- name: FindUserById :one
+SELECT
+    "id",
+    "name",
+    "email",
+    "role",
+    "dob",
+    "version",
+    "created_at"
+FROM
+    "users"
+WHERE
+    "id" = $1
+`
+
+type FindUserByIdRow struct {
+	ID        int64
+	Name      string
+	Email     string
+	Role      Roles
+	Dob       pgtype.Date
+	Version   int32
+	CreatedAt pgtype.Timestamptz
+}
+
+func (q *Queries) FindUserById(ctx context.Context, id int64) (FindUserByIdRow, error) {
+	row := q.db.QueryRow(ctx, findUserById, id)
+	var i FindUserByIdRow
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.Role,
+		&i.Dob,
+		&i.Version,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const updateUserLoginFields = `-- name: UpdateUserLoginFields :exec
 UPDATE "users"
 SET
