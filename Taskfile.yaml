@@ -29,9 +29,9 @@ tasks:
     sources:
       - buf.yaml
       - buf.gen.yaml
-      - proto/**/*
+      - api/proto/**/*
     generates:
-      - gen/**/*.go
+      - api/gen/**/*.go
   generate-templ:
     cmds:
       - templ generate

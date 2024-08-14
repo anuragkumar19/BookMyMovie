@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"bookmymovie.app/bookmymovie"
-	"bookmymovie.app/bookmymovie/gen/auth/v1/authv1connect"
+	"bookmymovie.app/bookmymovie/api/gen/auth/v1/authv1connect"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )

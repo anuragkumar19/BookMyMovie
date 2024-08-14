@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 
-	authv1 "bookmymovie.app/bookmymovie/gen/auth/v1"
+	authv1 "bookmymovie.app/bookmymovie/api/gen/auth/v1"
 	"bookmymovie.app/bookmymovie/services/auth"
 	"connectrpc.com/connect"
 	"google.golang.org/protobuf/types/known/timestamppb"

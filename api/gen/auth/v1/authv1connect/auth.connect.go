@@ -5,7 +5,7 @@
 package authv1connect
 
 import (
-	v1 "bookmymovie.app/bookmymovie/gen/auth/v1"
+	v1 "bookmymovie.app/bookmymovie/api/gen/auth/v1"
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
