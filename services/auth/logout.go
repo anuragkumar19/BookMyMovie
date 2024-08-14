@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	services_errors "bookmymovie.app/bookmymovie/services/errors"
@@ -15,7 +16,7 @@ func (s *Auth) Logout(ctx context.Context, accessToken string) error {
 	}
 
 	if err := s.db.DeleteRefreshToken(ctx, auth.RefreshTokenID); err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return services_errors.ErrUpdateConflict
 		}
 		return err

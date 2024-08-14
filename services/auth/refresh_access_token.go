@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	services_errors "bookmymovie.app/bookmymovie/services/errors"
@@ -20,7 +21,7 @@ func (s *Auth) RefreshAccessToken(ctx context.Context, token string) (AccessToke
 
 	rt, err := s.db.FindRefreshToken(ctx, token)
 	if err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return AccessToken{}, services_errors.UnauthorizedError(ErrTokenInvalid)
 		}
 	}

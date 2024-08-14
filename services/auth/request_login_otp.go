@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"time"
 
@@ -38,7 +39,7 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 	user, err := s.db.FindUserByEmail(ctx, params.Email)
 
 	if err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			id, err := s.db.CreateRegularUser(ctx, params.Email)
 			if err != nil {
 				return "", err
@@ -87,7 +88,7 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 		ID:                   user.ID,
 		Version:              user.Version,
 	}); err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return "", services_errors.ErrUpdateConflict
 		} else {
 			return "", err

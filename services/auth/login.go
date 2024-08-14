@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"net/url"
 	"strings"
 	"time"
@@ -47,7 +48,7 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 
 	token, err := s.db.FindLoginToken(ctx, params.Token)
 	if err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return AuthTokens{}, services_errors.ErrOTPExpired
 		}
 		return AuthTokens{}, err
@@ -60,7 +61,7 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 	}
 	if token.TotalAttempts >= int32(s.config.MaxOTPIncorrectAttempts) {
 		if err := s.db.DeleteLoginToken(ctx, token.Token); err != nil {
-			if err == pgx.ErrNoRows {
+			if errors.Is(err, pgx.ErrNoRows) {
 				return AuthTokens{}, services_errors.ErrOTPExpired
 			}
 			return AuthTokens{}, err
@@ -75,7 +76,7 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 			Token:         token.Token,
 			Version:       token.Version,
 		}); err != nil {
-			if err == pgx.ErrNoRows {
+			if errors.Is(err, pgx.ErrNoRows) {
 				return AuthTokens{}, services_errors.ErrUpdateConflict
 			}
 			return AuthTokens{}, err
@@ -84,7 +85,7 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 	}
 
 	if err := s.db.DeleteLoginToken(ctx, token.Token); err != nil {
-		if err == pgx.ErrNoRows {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return AuthTokens{}, services_errors.ErrOTPExpired
 		}
 		return AuthTokens{}, err
