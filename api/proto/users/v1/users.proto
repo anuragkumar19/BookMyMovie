@@ -13,9 +13,9 @@ enum Role {
   ROLE_ADMIN = 2;
 }
 
-message GetUserInfoRequest {}
+message GetLoggedInUserRequest {}
 
-message GetUserInfoResponse {
+message GetLoggedInUserResponse {
   int64 id = 1;
   string name = 2;
   string email = 3;
@@ -26,5 +26,6 @@ message GetUserInfoResponse {
 }
 
 service UsersService {
-  rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse);
+  rpc GetLoggedInUser(GetLoggedInUserRequest) returns (GetLoggedInUserResponse);
+  // rpc UpdateUserInfo(GetLoggedInUserRequest) returns (GetLoggedInUserResponse);
 }

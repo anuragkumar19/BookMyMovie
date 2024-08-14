@@ -6,7 +6,7 @@ import (
 	"bookmymovie.app/bookmymovie/database"
 )
 
-func (s *Users) GetUserInfo(ctx context.Context, accessToken string) (database.FindUserByIdRow, error) {
+func (s *Users) GetLoggedInUser(ctx context.Context, accessToken string) (database.FindUserByIdRow, error) {
 	authMeta, err := s.auth.GetAuthMetadata(accessToken)
 	if err != nil {
 		return database.FindUserByIdRow{}, err

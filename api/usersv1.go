@@ -16,27 +16,27 @@ type usersV1Service struct {
 	users *users.Users
 }
 
-func (s *usersV1Service) GetUserInfo(ctx context.Context, r *connect.Request[usersv1.GetUserInfoRequest]) (*connect.Response[usersv1.GetUserInfoResponse], error) {
-	info, err := s.users.GetUserInfo(ctx, r.Header().Get("Authorization"))
+func (s *usersV1Service) GetLoggedInUser(ctx context.Context, r *connect.Request[usersv1.GetLoggedInUserRequest]) (*connect.Response[usersv1.GetLoggedInUserResponse], error) {
+	user, err := s.users.GetLoggedInUser(ctx, r.Header().Get("Authorization"))
 	if err != nil {
 		return nil, err //TODO:
 	}
 	var dob *date.Date
-	if info.Dob.Valid {
+	if user.Dob.Valid {
 		dob = &date.Date{
-			Year:  int32(info.Dob.Time.Year()),
-			Month: int32(info.Dob.Time.Month()),
-			Day:   int32(info.Dob.Time.Day()),
+			Year:  int32(user.Dob.Time.Year()),
+			Month: int32(user.Dob.Time.Month()),
+			Day:   int32(user.Dob.Time.Day()),
 		}
 	}
-	res := connect.NewResponse(&usersv1.GetUserInfoResponse{
-		Id:        info.ID,
-		Name:      info.Name,
-		Email:     info.Email,
-		Version:   info.Version,
-		Role:      mapRole(info.Role),
+	res := connect.NewResponse(&usersv1.GetLoggedInUserResponse{
+		Id:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		Version:   user.Version,
+		Role:      mapRole(user.Role),
 		Dob:       dob,
-		CreatedAt: timestamppb.New(info.CreatedAt.Time),
+		CreatedAt: timestamppb.New(user.CreatedAt.Time),
 	})
 	return res, nil
 }

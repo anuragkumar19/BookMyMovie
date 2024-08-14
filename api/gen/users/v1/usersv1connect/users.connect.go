@@ -33,20 +33,20 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// UsersServiceGetUserInfoProcedure is the fully-qualified name of the UsersService's GetUserInfo
-	// RPC.
-	UsersServiceGetUserInfoProcedure = "/users.v1.UsersService/GetUserInfo"
+	// UsersServiceGetLoggedInUserProcedure is the fully-qualified name of the UsersService's
+	// GetLoggedInUser RPC.
+	UsersServiceGetLoggedInUserProcedure = "/users.v1.UsersService/GetLoggedInUser"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
-	usersServiceServiceDescriptor           = v1.File_users_v1_users_proto.Services().ByName("UsersService")
-	usersServiceGetUserInfoMethodDescriptor = usersServiceServiceDescriptor.Methods().ByName("GetUserInfo")
+	usersServiceServiceDescriptor               = v1.File_users_v1_users_proto.Services().ByName("UsersService")
+	usersServiceGetLoggedInUserMethodDescriptor = usersServiceServiceDescriptor.Methods().ByName("GetLoggedInUser")
 )
 
 // UsersServiceClient is a client for the users.v1.UsersService service.
 type UsersServiceClient interface {
-	GetUserInfo(context.Context, *connect.Request[v1.GetUserInfoRequest]) (*connect.Response[v1.GetUserInfoResponse], error)
+	GetLoggedInUser(context.Context, *connect.Request[v1.GetLoggedInUserRequest]) (*connect.Response[v1.GetLoggedInUserResponse], error)
 }
 
 // NewUsersServiceClient constructs a client for the users.v1.UsersService service. By default, it
@@ -59,10 +59,10 @@ type UsersServiceClient interface {
 func NewUsersServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) UsersServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &usersServiceClient{
-		getUserInfo: connect.NewClient[v1.GetUserInfoRequest, v1.GetUserInfoResponse](
+		getLoggedInUser: connect.NewClient[v1.GetLoggedInUserRequest, v1.GetLoggedInUserResponse](
 			httpClient,
-			baseURL+UsersServiceGetUserInfoProcedure,
-			connect.WithSchema(usersServiceGetUserInfoMethodDescriptor),
+			baseURL+UsersServiceGetLoggedInUserProcedure,
+			connect.WithSchema(usersServiceGetLoggedInUserMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 	}
@@ -70,17 +70,17 @@ func NewUsersServiceClient(httpClient connect.HTTPClient, baseURL string, opts .
 
 // usersServiceClient implements UsersServiceClient.
 type usersServiceClient struct {
-	getUserInfo *connect.Client[v1.GetUserInfoRequest, v1.GetUserInfoResponse]
+	getLoggedInUser *connect.Client[v1.GetLoggedInUserRequest, v1.GetLoggedInUserResponse]
 }
 
-// GetUserInfo calls users.v1.UsersService.GetUserInfo.
-func (c *usersServiceClient) GetUserInfo(ctx context.Context, req *connect.Request[v1.GetUserInfoRequest]) (*connect.Response[v1.GetUserInfoResponse], error) {
-	return c.getUserInfo.CallUnary(ctx, req)
+// GetLoggedInUser calls users.v1.UsersService.GetLoggedInUser.
+func (c *usersServiceClient) GetLoggedInUser(ctx context.Context, req *connect.Request[v1.GetLoggedInUserRequest]) (*connect.Response[v1.GetLoggedInUserResponse], error) {
+	return c.getLoggedInUser.CallUnary(ctx, req)
 }
 
 // UsersServiceHandler is an implementation of the users.v1.UsersService service.
 type UsersServiceHandler interface {
-	GetUserInfo(context.Context, *connect.Request[v1.GetUserInfoRequest]) (*connect.Response[v1.GetUserInfoResponse], error)
+	GetLoggedInUser(context.Context, *connect.Request[v1.GetLoggedInUserRequest]) (*connect.Response[v1.GetLoggedInUserResponse], error)
 }
 
 // NewUsersServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -89,16 +89,16 @@ type UsersServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewUsersServiceHandler(svc UsersServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	usersServiceGetUserInfoHandler := connect.NewUnaryHandler(
-		UsersServiceGetUserInfoProcedure,
-		svc.GetUserInfo,
-		connect.WithSchema(usersServiceGetUserInfoMethodDescriptor),
+	usersServiceGetLoggedInUserHandler := connect.NewUnaryHandler(
+		UsersServiceGetLoggedInUserProcedure,
+		svc.GetLoggedInUser,
+		connect.WithSchema(usersServiceGetLoggedInUserMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	return "/users.v1.UsersService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case UsersServiceGetUserInfoProcedure:
-			usersServiceGetUserInfoHandler.ServeHTTP(w, r)
+		case UsersServiceGetLoggedInUserProcedure:
+			usersServiceGetLoggedInUserHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -108,6 +108,6 @@ func NewUsersServiceHandler(svc UsersServiceHandler, opts ...connect.HandlerOpti
 // UnimplementedUsersServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedUsersServiceHandler struct{}
 
-func (UnimplementedUsersServiceHandler) GetUserInfo(context.Context, *connect.Request[v1.GetUserInfoRequest]) (*connect.Response[v1.GetUserInfoResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("users.v1.UsersService.GetUserInfo is not implemented"))
+func (UnimplementedUsersServiceHandler) GetLoggedInUser(context.Context, *connect.Request[v1.GetLoggedInUserRequest]) (*connect.Response[v1.GetLoggedInUserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("users.v1.UsersService.GetLoggedInUser is not implemented"))
 }
