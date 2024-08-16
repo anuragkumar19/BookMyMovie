@@ -1,6 +1,6 @@
 -- +goose Up
 CREATE TABLE
-    "videos" (
+    "movies_videos" (
         "id" BIGSERIAL PRIMARY KEY NOT NULL,
         "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
         "version" INTEGER DEFAULT 1 NOT NULL,
@@ -8,8 +8,8 @@ CREATE TABLE
         "language" TEXT NOT NULL,
         "youtube_link" TEXT NOT NULL,
         "index" INTEGER NOT NULL,
-        CONSTRAINT fk_videos_movies_movie_id FOREIGN KEY ("movie_id") REFERENCES movies ("id")
+        CONSTRAINT fk_movies_videos_movies_movie_id FOREIGN KEY ("movie_id") REFERENCES movies ("id")
     );
 
 -- +goose Down
-DROP TABLE "videos";
+DROP TABLE "movies_videos";

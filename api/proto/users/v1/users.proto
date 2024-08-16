@@ -25,7 +25,21 @@ message GetLoggedInUserResponse {
   google.protobuf.Timestamp created_at = 7;
 }
 
+message UpdateUserRequest {
+  optional string name = 1;
+  optional google.type.Date dob = 2;
+}
+
+message UpdateUserResponse {}
+
+message RequestRoleChangeRequest {
+  Role new_role = 1;
+}
+
+message RequestRoleChangeResponse {}
+
 service UsersService {
   rpc GetLoggedInUser(GetLoggedInUserRequest) returns (GetLoggedInUserResponse);
-  // rpc UpdateUserInfo(GetLoggedInUserRequest) returns (GetLoggedInUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  rpc RequestRoleChange(RequestRoleChangeRequest) returns (RequestRoleChangeResponse);
 }

@@ -243,12 +243,6 @@ type Movie struct {
 	ImdbLastSyncedAt           pgtype.Timestamptz
 }
 
-type MovieFormat struct {
-	ID        string
-	CreatedAt pgtype.Timestamptz
-	About     string
-}
-
 type MovieGenre struct {
 	ID          string
 	CreatedAt   pgtype.Timestamptz
@@ -256,26 +250,32 @@ type MovieGenre struct {
 	About       string
 }
 
-type MovieLanguage struct {
+type MoviesCast struct {
+	MovieID        int64
+	MoviesPersonID int64
+	Index          int32
+}
+
+type MoviesCrew struct {
+	MovieID        int64
+	MoviesPersonID int64
+	Index          int32
+}
+
+type MoviesFormat struct {
+	ID        string
+	CreatedAt pgtype.Timestamptz
+	About     string
+}
+
+type MoviesLanguage struct {
 	ID          string
 	CreatedAt   pgtype.Timestamptz
 	DisplayName string
 	EnglishName string
 }
 
-type MoviesCast struct {
-	MovieID  int64
-	PersonID int64
-	Index    int32
-}
-
-type MoviesCrew struct {
-	MovieID  int64
-	PersonID int64
-	Index    int32
-}
-
-type Person struct {
+type MoviesPerson struct {
 	ID               int64
 	CreatedAt        pgtype.Timestamptz
 	Version          int32
@@ -290,6 +290,26 @@ type Person struct {
 	ImdbLastSyncedAt pgtype.Timestamptz
 }
 
+type MoviesReview struct {
+	ID        int64
+	CreatedAt pgtype.Timestamptz
+	Version   int32
+	MovieID   int64
+	AuthorID  int64
+	Text      string
+	Rating    int32
+}
+
+type MoviesVideo struct {
+	ID          int64
+	CreatedAt   pgtype.Timestamptz
+	Version     int32
+	MovieID     int64
+	Language    string
+	YoutubeLink string
+	Index       int32
+}
+
 type RefreshToken struct {
 	ID        int64
 	Token     string
@@ -298,16 +318,6 @@ type RefreshToken struct {
 	UserRole  Roles
 	ExpireAt  pgtype.Timestamptz
 	UserAgent string
-}
-
-type Review struct {
-	ID        int64
-	CreatedAt pgtype.Timestamptz
-	Version   int32
-	MovieID   int64
-	AuthorID  int64
-	Text      string
-	Rating    int32
 }
 
 type User struct {
@@ -320,14 +330,4 @@ type User struct {
 	Dob                  pgtype.Date
 	LastLoginTokenSentAt pgtype.Timestamptz
 	TotalLoginTokensSent int32
-}
-
-type Video struct {
-	ID          int64
-	CreatedAt   pgtype.Timestamptz
-	Version     int32
-	MovieID     int64
-	Language    string
-	YoutubeLink string
-	Index       int32
 }

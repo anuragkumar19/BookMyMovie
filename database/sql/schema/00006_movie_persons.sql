@@ -1,6 +1,6 @@
 -- +goose Up
 CREATE TABLE
-    "persons" (
+    "movies_persons" (
         "id" BIGSERIAL PRIMARY KEY NOT NULL,
         "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
         "version" INTEGER DEFAULT 1 NOT NULL,
@@ -16,4 +16,4 @@ CREATE TABLE
     );
 
 -- +goose Down
-DROP TABLE "persons";
+DROP TABLE "movies_persons";

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package movies.v1;
+
+import "google/type/date/date.proto";
+import "google/type/timestamp/timestamp.proto";
+
+option go_package = "bookmymovie.app/bookmymovie/api/gen/movies/v1;moviesv1";
+
+service MoviesLanguagesService {}
+
+service MoviesGenresService {}
+
+service MoviesFormatsService {}
+
+service MoviesPersonsService {}
