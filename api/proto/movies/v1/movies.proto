@@ -14,3 +14,9 @@ service MoviesGenresService {}
 service MoviesFormatsService {}
 
 service MoviesPersonsService {}
+
+service MoviesVideosService {}
+
+service MoviesReviewsService {}
+
+service MoviesService {}

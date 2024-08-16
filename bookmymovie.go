@@ -8,12 +8,14 @@ import (
 	"bookmymovie.app/bookmymovie/mailer"
 	"bookmymovie.app/bookmymovie/services/auth"
 	"bookmymovie.app/bookmymovie/services/users"
+	"bookmymovie.app/bookmymovie/storage"
 	"github.com/rs/zerolog"
 )
 
 type Application struct {
-	db     *database.Database
-	mailer *mailer.Mailer
+	db      *database.Database
+	storage *storage.Storage
+	mailer  *mailer.Mailer
 
 	authService  *auth.Auth
 	usersService *users.Users
@@ -33,12 +35,14 @@ func New() Application {
 	logger = logger.Level(conf.logLevel)
 
 	db := database.NewDatabase(conf.database, &logger)
+	storage := storage.New(conf.storage, &logger)
 	m := mailer.New(conf.mailer, &logger)
 	authService := auth.New(conf.auth, &logger, &db, &m)
 	usersService := users.New(&logger, &db, &m, &authService)
 
 	return Application{
 		db:           &db,
+		storage:      &storage,
 		mailer:       &m,
 		authService:  &authService,
 		usersService: &usersService,

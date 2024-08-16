@@ -9,6 +9,7 @@ import (
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/mailer"
 	"bookmymovie.app/bookmymovie/services/auth"
+	"bookmymovie.app/bookmymovie/storage"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/rs/zerolog"
@@ -19,6 +20,7 @@ type config struct {
 	logLevel zerolog.Level
 	mailer   *mailer.MailerConfig
 	database *database.DatabaseConfig
+	storage  *storage.StorageConfig
 	auth     *auth.AuthConfig
 }
 
@@ -30,6 +32,7 @@ func (config *config) validate() error {
 		validation.Field(&config.mailer),
 		validation.Field(&config.database),
 		validation.Field(&config.auth),
+		validation.Field(&config.storage),
 	)
 }
 
@@ -141,6 +144,32 @@ func (config *config) parseFromEnvVars() error {
 		config.database.MinConns = int32(c)
 	}
 
+	// storage
+	storageEndpoint := os.Getenv("MINIO_STORAGE_ENDPOINT")
+	if storageEndpoint != "" {
+		config.storage.Endpoint = storageEndpoint
+	}
+	storageAccessKey := os.Getenv("MINIO_STORAGE_ACCESS_KEY")
+	if storageAccessKey != "" {
+		config.storage.AccessKey = storageAccessKey
+	}
+	storageSecret := os.Getenv("MINIO_STORAGE_SECRET")
+	if storageSecret != "" {
+		config.storage.Secret = storageSecret
+	}
+	storageBucket := os.Getenv("MINIO_STORAGE_BUCKET")
+	if storageBucket != "" {
+		config.storage.Bucket = storageBucket
+	}
+	storageUseSSL := os.Getenv("MINIO_STORAGE_USE_SSL")
+	if storageUseSSL == "true" {
+		config.storage.UseSSL = true
+	}
+	storageAutoCreateBucket := os.Getenv("MINIO_STORAGE_AUTO_CREATE_BUCKET")
+	if storageAutoCreateBucket == "true" {
+		config.storage.AutoCreateBucket = true
+	}
+
 	// auth
 	accessTokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
 	if accessTokenSecret != "" {
@@ -175,5 +204,6 @@ func newConfig() config {
 		database: &dbConf,
 		appHost:  "",
 		auth:     &authConf,
+		storage:  &storage.StorageConfig{},
 	}
 }
