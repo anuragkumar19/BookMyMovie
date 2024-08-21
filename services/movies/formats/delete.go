@@ -16,7 +16,7 @@ func (s *Formats) Delete(ctx context.Context, accessToken string, id string) err
 	if err != nil {
 		return err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.MovieFormatDelete); err != nil {
+	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesFormatsDelete); err != nil {
 		return err
 	}
 

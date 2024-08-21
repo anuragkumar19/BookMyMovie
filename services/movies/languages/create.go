@@ -36,7 +36,7 @@ func (s *Languages) Create(ctx context.Context, params *CreateParams) (id string
 	if err != nil {
 		return "", err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.LanguageCreate); err != nil {
+	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesLanguagesCreate); err != nil {
 		return "", err
 	}
 

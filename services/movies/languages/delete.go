@@ -16,7 +16,7 @@ func (s *Languages) Delete(ctx context.Context, accessToken string, id string) e
 	if err != nil {
 		return err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.LanguageDelete); err != nil {
+	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesLanguagesDelete); err != nil {
 		return err
 	}
 

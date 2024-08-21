@@ -36,7 +36,7 @@ func (s *Formats) Create(ctx context.Context, params *CreateParams) (id string, 
 	if err != nil {
 		return "", err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.MovieFormatCreate); err != nil {
+	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesFormatsCreate); err != nil {
 		return "", err
 	}
 

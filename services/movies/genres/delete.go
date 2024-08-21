@@ -16,7 +16,7 @@ func (s *Genres) Delete(ctx context.Context, accessToken string, id string) erro
 	if err != nil {
 		return err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.GenreDelete); err != nil {
+	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesGenresDelete); err != nil {
 		return err
 	}
 

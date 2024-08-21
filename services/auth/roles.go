@@ -16,39 +16,33 @@ const (
 	MovieUpdate Permission = "movie:update"
 	MovieDelete Permission = "movie:delete"
 
-	LanguageCreate Permission = "language:create"
-	LanguageUpdate Permission = "language:update"
-	LanguageDelete Permission = "language:delete"
+	MoviesLanguagesCreate Permission = "movies:languages:create"
+	MoviesLanguagesDelete Permission = "movies:languages:delete"
 
-	GenreCreate Permission = "genre:create"
-	GenreUpdate Permission = "genre:update"
-	GenreDelete Permission = "genre:delete"
+	MoviesGenresCreate Permission = "movies:genres:create"
+	MoviesGenresDelete Permission = "movies:genres:delete"
 
-	MovieFormatCreate Permission = "movie:format:create"
-	MovieFormatUpdate Permission = "movie:format:update"
-	MovieFormatDelete Permission = "movie:format:delete"
+	MoviesFormatsCreate Permission = "movies:formats:create"
+	MoviesFormatsDelete Permission = "movies:formats:delete"
 
-	PersonCreate Permission = "person:create"
-	PersonUpdate Permission = "person:update"
-	PersonDelete Permission = "person:delete"
+	MoviesPersonsCreate Permission = "movies:persons:create"
+	MoviesPersonsUpdate Permission = "movies:persons:update"
+	MoviesPersonsDelete Permission = "movies:persons:delete"
 )
 
 var adminPermission = rolePermissionMap{
-	MovieCreate:       true,
-	MovieUpdate:       true,
-	MovieDelete:       true,
-	LanguageCreate:    true,
-	LanguageUpdate:    true,
-	LanguageDelete:    true,
-	GenreCreate:       true,
-	GenreUpdate:       true,
-	GenreDelete:       true,
-	PersonCreate:      true,
-	PersonUpdate:      true,
-	PersonDelete:      true,
-	MovieFormatCreate: true,
-	MovieFormatUpdate: true,
-	MovieFormatDelete: true,
+	MovieCreate:           true,
+	MovieUpdate:           true,
+	MovieDelete:           true,
+	MoviesLanguagesCreate: true,
+	MoviesLanguagesDelete: true,
+	MoviesGenresCreate:    true,
+	MoviesGenresDelete:    true,
+	MoviesPersonsCreate:   true,
+	MoviesPersonsUpdate:   true,
+	MoviesPersonsDelete:   true,
+	MoviesFormatsCreate:   true,
+	MoviesFormatsDelete:   true,
 }
 
 var regularUserPermission = rolePermissionMap{}

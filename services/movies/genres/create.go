@@ -36,7 +36,7 @@ func (s *Genres) Create(ctx context.Context, params *CreateParams) (id string, e
 	if err != nil {
 		return "", err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.GenreCreate); err != nil {
+	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesGenresCreate); err != nil {
 		return "", err
 	}
 
