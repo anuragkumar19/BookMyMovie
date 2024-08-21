@@ -9,12 +9,12 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type authV1Service struct {
+type authService struct {
 	// authv1connect.UnimplementedAuthServiceHandler
 	auth *auth.Auth
 }
 
-func (s *authV1Service) RequestLoginOTP(ctx context.Context, r *connect.Request[authv1.RequestLoginOTPRequest]) (*connect.Response[authv1.RequestLoginOTPResponse], error) {
+func (s *authService) RequestLoginOTP(ctx context.Context, r *connect.Request[authv1.RequestLoginOTPRequest]) (*connect.Response[authv1.RequestLoginOTPResponse], error) {
 	token, err := s.auth.RequestLoginOTP(ctx, &auth.RequestLoginOTPParams{
 		Email: r.Msg.Email,
 	})
@@ -29,7 +29,7 @@ func (s *authV1Service) RequestLoginOTP(ctx context.Context, r *connect.Request[
 	return res, nil
 }
 
-func (s *authV1Service) Login(ctx context.Context, r *connect.Request[authv1.LoginRequest]) (*connect.Response[authv1.LoginResponse], error) {
+func (s *authService) Login(ctx context.Context, r *connect.Request[authv1.LoginRequest]) (*connect.Response[authv1.LoginResponse], error) {
 	tokens, err := s.auth.Login(ctx, &auth.LoginParams{
 		Token:     r.Msg.LoginToken,
 		OTP:       r.Msg.Otp,
@@ -48,7 +48,7 @@ func (s *authV1Service) Login(ctx context.Context, r *connect.Request[authv1.Log
 	return res, nil
 }
 
-func (s *authV1Service) RefreshAccessToken(ctx context.Context, r *connect.Request[authv1.RefreshAccessTokenRequest]) (*connect.Response[authv1.RefreshAccessTokenResponse], error) {
+func (s *authService) RefreshAccessToken(ctx context.Context, r *connect.Request[authv1.RefreshAccessTokenRequest]) (*connect.Response[authv1.RefreshAccessTokenResponse], error) {
 	tokens, err := s.auth.RefreshAccessToken(ctx, r.Header().Get("Authorization"))
 	if err != nil {
 		return nil, err //TODO:
@@ -62,7 +62,7 @@ func (s *authV1Service) RefreshAccessToken(ctx context.Context, r *connect.Reque
 	return res, nil
 }
 
-func (s *authV1Service) Logout(ctx context.Context, r *connect.Request[authv1.LogoutRequest]) (*connect.Response[authv1.LogoutResponse], error) {
+func (s *authService) Logout(ctx context.Context, r *connect.Request[authv1.LogoutRequest]) (*connect.Response[authv1.LogoutResponse], error) {
 	err := s.auth.Logout(ctx, r.Header().Get("Authorization"))
 	if err != nil {
 		return nil, err //TODO:

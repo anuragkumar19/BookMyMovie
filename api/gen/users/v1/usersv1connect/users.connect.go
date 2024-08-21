@@ -36,17 +36,26 @@ const (
 	// UsersServiceGetLoggedInUserProcedure is the fully-qualified name of the UsersService's
 	// GetLoggedInUser RPC.
 	UsersServiceGetLoggedInUserProcedure = "/users.v1.UsersService/GetLoggedInUser"
+	// UsersServiceUpdateUserProcedure is the fully-qualified name of the UsersService's UpdateUser RPC.
+	UsersServiceUpdateUserProcedure = "/users.v1.UsersService/UpdateUser"
+	// UsersServiceRequestRoleChangeProcedure is the fully-qualified name of the UsersService's
+	// RequestRoleChange RPC.
+	UsersServiceRequestRoleChangeProcedure = "/users.v1.UsersService/RequestRoleChange"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
-	usersServiceServiceDescriptor               = v1.File_users_v1_users_proto.Services().ByName("UsersService")
-	usersServiceGetLoggedInUserMethodDescriptor = usersServiceServiceDescriptor.Methods().ByName("GetLoggedInUser")
+	usersServiceServiceDescriptor                 = v1.File_users_v1_users_proto.Services().ByName("UsersService")
+	usersServiceGetLoggedInUserMethodDescriptor   = usersServiceServiceDescriptor.Methods().ByName("GetLoggedInUser")
+	usersServiceUpdateUserMethodDescriptor        = usersServiceServiceDescriptor.Methods().ByName("UpdateUser")
+	usersServiceRequestRoleChangeMethodDescriptor = usersServiceServiceDescriptor.Methods().ByName("RequestRoleChange")
 )
 
 // UsersServiceClient is a client for the users.v1.UsersService service.
 type UsersServiceClient interface {
 	GetLoggedInUser(context.Context, *connect.Request[v1.GetLoggedInUserRequest]) (*connect.Response[v1.GetLoggedInUserResponse], error)
+	UpdateUser(context.Context, *connect.Request[v1.UpdateUserRequest]) (*connect.Response[v1.UpdateUserResponse], error)
+	RequestRoleChange(context.Context, *connect.Request[v1.RequestRoleChangeRequest]) (*connect.Response[v1.RequestRoleChangeResponse], error)
 }
 
 // NewUsersServiceClient constructs a client for the users.v1.UsersService service. By default, it
@@ -65,12 +74,26 @@ func NewUsersServiceClient(httpClient connect.HTTPClient, baseURL string, opts .
 			connect.WithSchema(usersServiceGetLoggedInUserMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		updateUser: connect.NewClient[v1.UpdateUserRequest, v1.UpdateUserResponse](
+			httpClient,
+			baseURL+UsersServiceUpdateUserProcedure,
+			connect.WithSchema(usersServiceUpdateUserMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		requestRoleChange: connect.NewClient[v1.RequestRoleChangeRequest, v1.RequestRoleChangeResponse](
+			httpClient,
+			baseURL+UsersServiceRequestRoleChangeProcedure,
+			connect.WithSchema(usersServiceRequestRoleChangeMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // usersServiceClient implements UsersServiceClient.
 type usersServiceClient struct {
-	getLoggedInUser *connect.Client[v1.GetLoggedInUserRequest, v1.GetLoggedInUserResponse]
+	getLoggedInUser   *connect.Client[v1.GetLoggedInUserRequest, v1.GetLoggedInUserResponse]
+	updateUser        *connect.Client[v1.UpdateUserRequest, v1.UpdateUserResponse]
+	requestRoleChange *connect.Client[v1.RequestRoleChangeRequest, v1.RequestRoleChangeResponse]
 }
 
 // GetLoggedInUser calls users.v1.UsersService.GetLoggedInUser.
@@ -78,9 +101,21 @@ func (c *usersServiceClient) GetLoggedInUser(ctx context.Context, req *connect.R
 	return c.getLoggedInUser.CallUnary(ctx, req)
 }
 
+// UpdateUser calls users.v1.UsersService.UpdateUser.
+func (c *usersServiceClient) UpdateUser(ctx context.Context, req *connect.Request[v1.UpdateUserRequest]) (*connect.Response[v1.UpdateUserResponse], error) {
+	return c.updateUser.CallUnary(ctx, req)
+}
+
+// RequestRoleChange calls users.v1.UsersService.RequestRoleChange.
+func (c *usersServiceClient) RequestRoleChange(ctx context.Context, req *connect.Request[v1.RequestRoleChangeRequest]) (*connect.Response[v1.RequestRoleChangeResponse], error) {
+	return c.requestRoleChange.CallUnary(ctx, req)
+}
+
 // UsersServiceHandler is an implementation of the users.v1.UsersService service.
 type UsersServiceHandler interface {
 	GetLoggedInUser(context.Context, *connect.Request[v1.GetLoggedInUserRequest]) (*connect.Response[v1.GetLoggedInUserResponse], error)
+	UpdateUser(context.Context, *connect.Request[v1.UpdateUserRequest]) (*connect.Response[v1.UpdateUserResponse], error)
+	RequestRoleChange(context.Context, *connect.Request[v1.RequestRoleChangeRequest]) (*connect.Response[v1.RequestRoleChangeResponse], error)
 }
 
 // NewUsersServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -95,10 +130,26 @@ func NewUsersServiceHandler(svc UsersServiceHandler, opts ...connect.HandlerOpti
 		connect.WithSchema(usersServiceGetLoggedInUserMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	usersServiceUpdateUserHandler := connect.NewUnaryHandler(
+		UsersServiceUpdateUserProcedure,
+		svc.UpdateUser,
+		connect.WithSchema(usersServiceUpdateUserMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	usersServiceRequestRoleChangeHandler := connect.NewUnaryHandler(
+		UsersServiceRequestRoleChangeProcedure,
+		svc.RequestRoleChange,
+		connect.WithSchema(usersServiceRequestRoleChangeMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/users.v1.UsersService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case UsersServiceGetLoggedInUserProcedure:
 			usersServiceGetLoggedInUserHandler.ServeHTTP(w, r)
+		case UsersServiceUpdateUserProcedure:
+			usersServiceUpdateUserHandler.ServeHTTP(w, r)
+		case UsersServiceRequestRoleChangeProcedure:
+			usersServiceRequestRoleChangeHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -110,4 +161,12 @@ type UnimplementedUsersServiceHandler struct{}
 
 func (UnimplementedUsersServiceHandler) GetLoggedInUser(context.Context, *connect.Request[v1.GetLoggedInUserRequest]) (*connect.Response[v1.GetLoggedInUserResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("users.v1.UsersService.GetLoggedInUser is not implemented"))
+}
+
+func (UnimplementedUsersServiceHandler) UpdateUser(context.Context, *connect.Request[v1.UpdateUserRequest]) (*connect.Response[v1.UpdateUserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("users.v1.UsersService.UpdateUser is not implemented"))
+}
+
+func (UnimplementedUsersServiceHandler) RequestRoleChange(context.Context, *connect.Request[v1.RequestRoleChangeRequest]) (*connect.Response[v1.RequestRoleChangeResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("users.v1.UsersService.RequestRoleChange is not implemented"))
 }

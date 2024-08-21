@@ -2,21 +2,126 @@ syntax = "proto3";
 
 package movies.v1;
 
-import "google/type/date/date.proto";
-import "google/type/timestamp/timestamp.proto";
+// import "google/type/date/date.proto";
+// import "google/type/timestamp/timestamp.proto";
 
 option go_package = "bookmymovie.app/bookmymovie/api/gen/movies/v1;moviesv1";
 
-service MoviesLanguagesService {}
+message GetLanguageRequest {
+  string id = 1;
+}
 
-service MoviesGenresService {}
+message GetLanguageResponse {
+  string id = 1;
+  string display_name = 2;
+  string english_name = 3;
+}
 
-service MoviesFormatsService {}
+message GetLanguagesRequest {}
+
+message GetLanguagesResponse {
+  repeated GetLanguageResponse languages = 1;
+}
+
+message CreateLanguageRequest {
+  string display_name = 1;
+  string english_name = 2;
+}
+
+message CreateLanguageResponse {
+  string id = 1;
+}
+
+message DeleteLanguageRequest {
+  string id = 1;
+}
+
+message DeleteLanguageResponse {}
+
+service MoviesLanguagesService {
+  rpc GetLanguage(GetLanguageRequest) returns (GetLanguageResponse);
+  rpc GetLanguages(GetLanguagesRequest) returns (GetLanguagesResponse);
+  rpc CreateLanguage(CreateLanguageRequest) returns (CreateLanguageResponse);
+  rpc DeleteLanguage(DeleteLanguageRequest) returns (DeleteLanguageResponse);
+}
+
+message GetGenreRequest {
+  string id = 1;
+}
+
+message GetGenreResponse {
+  string id = 1;
+  string display_name = 2;
+  string about = 3;
+}
+
+message GetGenresRequest {}
+
+message GetGenresResponse {
+  repeated GetGenreResponse genres = 1;
+}
+
+message CreateGenreRequest {
+  string display_name = 1;
+  string about = 2;
+}
+
+message CreateGenreResponse {
+  string id = 1;
+}
+
+message DeleteGenreRequest {
+  string id = 1;
+}
+
+message DeleteGenreResponse {}
+
+service MoviesGenresService {
+  rpc GetGenre(GetGenreRequest) returns (GetGenreResponse);
+  rpc GetGenres(GetGenresRequest) returns (GetGenresResponse);
+  rpc CreateGenre(CreateGenreRequest) returns (CreateGenreResponse);
+  rpc DeleteGenre(DeleteGenreRequest) returns (DeleteGenreResponse);
+}
+
+message GetFormatRequest {
+  string id = 1;
+}
+
+message GetFormatResponse {
+  string id = 1;
+  string about = 2;
+}
+
+message GetFormatsRequest {}
+
+message GetFormatsResponse {
+  repeated GetFormatResponse formats = 1;
+}
+
+message CreateFormatRequest {
+  string id = 1;
+  string about = 2;
+}
+
+message CreateFormatResponse {}
+
+message DeleteFormatRequest {
+  string id = 1;
+}
+
+message DeleteFormatResponse {}
+
+service MoviesFormatsService {
+  rpc GetFormat(GetFormatRequest) returns (GetFormatResponse);
+  rpc GetFormats(GetFormatsRequest) returns (GetFormatsResponse);
+  rpc CreateFormat(CreateFormatRequest) returns (CreateFormatResponse);
+  rpc DeleteFormat(DeleteFormatRequest) returns (DeleteFormatResponse);
+}
 
 service MoviesPersonsService {}
+
+service MoviesService {}
 
 service MoviesVideosService {}
 
 service MoviesReviewsService {}
-
-service MoviesService {}

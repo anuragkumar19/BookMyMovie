@@ -4,19 +4,20 @@ import (
 	"context"
 
 	usersv1 "bookmymovie.app/bookmymovie/api/gen/users/v1"
+	"bookmymovie.app/bookmymovie/api/gen/users/v1/usersv1connect"
 	"bookmymovie.app/bookmymovie/services/users"
 	"connectrpc.com/connect"
 	"google.golang.org/genproto/googleapis/type/date"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type usersV1Service struct {
-	// usersv1connect.UnimplementedUsersServiceHandler
+type usersService struct {
+	usersv1connect.UnimplementedUsersServiceHandler
 
 	users *users.Users
 }
 
-func (s *usersV1Service) GetLoggedInUser(ctx context.Context, r *connect.Request[usersv1.GetLoggedInUserRequest]) (*connect.Response[usersv1.GetLoggedInUserResponse], error) {
+func (s *usersService) GetLoggedInUser(ctx context.Context, r *connect.Request[usersv1.GetLoggedInUserRequest]) (*connect.Response[usersv1.GetLoggedInUserResponse], error) {
 	user, err := s.users.GetLoggedInUser(ctx, r.Header().Get("Authorization"))
 	if err != nil {
 		return nil, err //TODO:
