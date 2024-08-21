@@ -7,6 +7,8 @@ import (
 )
 
 var (
+	ErrAlreadyExist     = errors.New("already exist")
+	ErrNotFound         = errors.New("not found")
 	ErrValidationFailed = errors.New("validation error")
 	ErrUpdateConflict   = errors.New("update conflict - version mismatch")
 	ErrOTPExpired       = errors.New("otp expired")

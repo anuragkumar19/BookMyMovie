@@ -243,13 +243,6 @@ type Movie struct {
 	ImdbLastSyncedAt           pgtype.Timestamptz
 }
 
-type MovieGenre struct {
-	ID          string
-	CreatedAt   pgtype.Timestamptz
-	DisplayName string
-	About       string
-}
-
 type MoviesCast struct {
 	MovieID        int64
 	MoviesPersonID int64
@@ -263,9 +256,17 @@ type MoviesCrew struct {
 }
 
 type MoviesFormat struct {
-	ID        string
-	CreatedAt pgtype.Timestamptz
-	About     string
+	ID          string
+	DisplayName string
+	CreatedAt   pgtype.Timestamptz
+	About       string
+}
+
+type MoviesGenre struct {
+	ID          string
+	CreatedAt   pgtype.Timestamptz
+	DisplayName string
+	About       string
 }
 
 type MoviesLanguage struct {

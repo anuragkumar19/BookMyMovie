@@ -10,22 +10,29 @@ import (
 
 type Querier interface {
 	AttemptLoginToken(ctx context.Context, arg *AttemptLoginTokenParams) error
-	CreateGenre(ctx context.Context, arg *CreateGenreParams) (MovieGenre, error)
 	CreateLoginToken(ctx context.Context, arg *CreateLoginTokenParams) error
+	CreateMoviesFormat(ctx context.Context, arg *CreateMoviesFormatParams) (MoviesFormat, error)
+	CreateMoviesGenre(ctx context.Context, arg *CreateMoviesGenreParams) (MoviesGenre, error)
+	CreateMoviesLanguage(ctx context.Context, arg *CreateMoviesLanguageParams) (MoviesLanguage, error)
 	CreateRefreshToken(ctx context.Context, arg *CreateRefreshTokenParams) (RefreshToken, error)
 	CreateRegularUser(ctx context.Context, email string) (int64, error)
 	DeleteExpiredLoginTokens(ctx context.Context) error
 	DeleteExpiredRefreshTokens(ctx context.Context) error
-	DeleteGenre(ctx context.Context, id string) error
 	DeleteLoginToken(ctx context.Context, token string) error
+	DeleteMoviesFormat(ctx context.Context, id string) error
+	DeleteMoviesGenre(ctx context.Context, id string) error
+	DeleteMoviesLanguage(ctx context.Context, id string) error
 	DeleteRefreshToken(ctx context.Context, id int64) error
 	FindLoginToken(ctx context.Context, token string) (FindLoginTokenRow, error)
 	FindRefreshToken(ctx context.Context, token string) (RefreshToken, error)
 	FindUserByEmail(ctx context.Context, email string) (FindUserByEmailRow, error)
 	FindUserById(ctx context.Context, id int64) (FindUserByIdRow, error)
-	GetAllGenres(ctx context.Context) ([]MovieGenre, error)
-	GetGenreByID(ctx context.Context, id string) (MovieGenre, error)
-	UpdateGenre(ctx context.Context, arg *UpdateGenreParams) error
+	GetAllMoviesFormats(ctx context.Context) ([]MoviesFormat, error)
+	GetAllMoviesGenres(ctx context.Context) ([]MoviesGenre, error)
+	GetAllMoviesLanguages(ctx context.Context) ([]MoviesLanguage, error)
+	GetMoviesFormatByID(ctx context.Context, id string) (MoviesFormat, error)
+	GetMoviesGenreByID(ctx context.Context, id string) (MoviesGenre, error)
+	GetMoviesLanguageByID(ctx context.Context, id string) (MoviesLanguage, error)
 	UpdateUserLoginFields(ctx context.Context, arg *UpdateUserLoginFieldsParams) error
 }
 
