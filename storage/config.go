@@ -5,22 +5,14 @@ import (
 )
 
 type StorageConfig struct {
-	Endpoint         string
-	AccessKey        string
-	Secret           string
-	UseSSL           bool
-	Bucket           string
-	AutoCreateBucket bool
+	FirebaseAdminConfigJSON []byte
+	Bucket                  string
 }
 
 func (config *StorageConfig) Validate() error {
 	return validation.ValidateStruct(
 		config,
-		validation.Field(&config.Endpoint, validation.Required),
-		validation.Field(&config.AccessKey, validation.Required),
-		validation.Field(&config.Secret, validation.Required),
-		validation.Field(&config.UseSSL),
+		validation.Field(&config.FirebaseAdminConfigJSON, validation.Required),
 		validation.Field(&config.Bucket, validation.Required),
-		validation.Field(&config.AutoCreateBucket),
 	)
 }

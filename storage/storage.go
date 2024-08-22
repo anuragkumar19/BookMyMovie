@@ -2,17 +2,18 @@ package storage
 
 import (
 	"context"
-	"time"
+	"os"
 
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/credentials"
+	"cloud.google.com/go/storage"
+	firebase "firebase.google.com/go/v4"
 	"github.com/rs/zerolog"
+	"google.golang.org/api/option"
 )
 
 type Storage struct {
 	logger *zerolog.Logger
 	config *StorageConfig
-	client *minio.Client
+	bucket *storage.BucketHandle
 }
 
 func New(config *StorageConfig, logger *zerolog.Logger) Storage {
@@ -20,35 +21,26 @@ func New(config *StorageConfig, logger *zerolog.Logger) Storage {
 		logger.Fatal().Err(err).Msg("storage config validation failed")
 	}
 
-	client, err := minio.New(config.Endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(config.AccessKey, config.Secret, ""),
-		Secure: config.UseSSL,
-	})
+	opt := option.WithCredentialsJSON([]byte(os.Getenv("FIREBASE_ADMIN_CONFIG")))
+	app, err := firebase.NewApp(context.Background(), &firebase.Config{
+		StorageBucket: os.Getenv("STORAGE_BUCKET"),
+	}, opt)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to create storage client")
+		logger.Fatal().Err(err).Msg("failed to create firebase app")
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-	defer cancel()
-
-	exist, err := client.BucketExists(ctx, config.Bucket)
+	s, err := app.Storage(context.Background())
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to check check bucket existence")
+		logger.Fatal().Err(err).Msg("failed to init firebase app storage")
 	}
-	if !exist {
-		if !config.AutoCreateBucket {
-			logger.Fatal().Err(err).Bool("auto_create_bucket", config.AutoCreateBucket).Str("bucket", config.Bucket).Msg("bucket with specified name doesn't exits")
-		}
-		logger.Info().Bool("auto_create_bucket", config.AutoCreateBucket).Str("bucket", config.Bucket).Msg("bucket doesn't exist creating bucket")
-		if err := client.MakeBucket(ctx, config.Bucket, minio.MakeBucketOptions{}); err != nil {
-			logger.Fatal().Err(err).Bool("auto_create_bucket", config.AutoCreateBucket).Str("bucket", config.Bucket).Msg("failed to create bucket")
-		}
-		logger.Info().Bool("auto_create_bucket", config.AutoCreateBucket).Str("bucket", config.Bucket).Msg("bucket created")
+	buckerHandle, err := s.DefaultBucket()
+	if err != nil {
+		logger.Fatal().Err(err).Msg("failed to init default bucked handle")
 	}
 
 	return Storage{
 		config: config,
 		logger: logger,
-		client: client,
+		bucket: buckerHandle,
 	}
 }
