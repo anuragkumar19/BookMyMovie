@@ -56,6 +56,13 @@ func (api *Api) Run() {
 	http.ListenAndServe(
 		"localhost:8080",
 		// Use h2c so we can serve HTTP/2 without TLS.
-		h2c.NewHandler(mux, &http2.Server{}),
+		h2c.NewHandler(maxByte(mux), &http2.Server{}),
 	)
+}
+
+func maxByte(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Body = http.MaxBytesReader(w, r.Body, 5_000_000)
+		h.ServeHTTP(w, r)
+	})
 }
