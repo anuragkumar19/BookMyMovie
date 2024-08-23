@@ -145,13 +145,29 @@ func (config *config) parseFromEnvVars() error {
 	}
 
 	// storage
-	firebaseAdminConfig := os.Getenv("FIREBASE_ADMIN_CONFIG")
-	if firebaseAdminConfig != "" {
-		config.storage.FirebaseAdminConfigJSON = []byte(firebaseAdminConfig)
+	storageEndpoint := os.Getenv("MINIO_STORAGE_ENDPOINT")
+	if storageEndpoint != "" {
+		config.storage.Endpoint = storageEndpoint
 	}
-	storageBucket := os.Getenv("STORAGE_BUCKET")
+	storageAccessKey := os.Getenv("MINIO_STORAGE_ACCESS_KEY")
+	if storageAccessKey != "" {
+		config.storage.AccessKey = storageAccessKey
+	}
+	storageSecret := os.Getenv("MINIO_STORAGE_SECRET")
+	if storageSecret != "" {
+		config.storage.Secret = storageSecret
+	}
+	storageBucket := os.Getenv("MINIO_STORAGE_BUCKET")
 	if storageBucket != "" {
 		config.storage.Bucket = storageBucket
+	}
+	storageUseSSL := os.Getenv("MINIO_STORAGE_USE_SSL")
+	if storageUseSSL == "true" {
+		config.storage.UseSSL = true
+	}
+	storageAutoCreateBucket := os.Getenv("MINIO_STORAGE_AUTO_CREATE_BUCKET")
+	if storageAutoCreateBucket == "true" {
+		config.storage.AutoCreateBucket = true
 	}
 
 	// auth
