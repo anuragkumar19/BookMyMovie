@@ -81,6 +81,9 @@ const (
 	// MoviesFormatsServiceDeleteFormatProcedure is the fully-qualified name of the
 	// MoviesFormatsService's DeleteFormat RPC.
 	MoviesFormatsServiceDeleteFormatProcedure = "/movies.v1.MoviesFormatsService/DeleteFormat"
+	// MoviesPersonsServiceCreatePersonProcedure is the fully-qualified name of the
+	// MoviesPersonsService's CreatePerson RPC.
+	MoviesPersonsServiceCreatePersonProcedure = "/movies.v1.MoviesPersonsService/CreatePerson"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
@@ -101,6 +104,7 @@ var (
 	moviesFormatsServiceCreateFormatMethodDescriptor     = moviesFormatsServiceServiceDescriptor.Methods().ByName("CreateFormat")
 	moviesFormatsServiceDeleteFormatMethodDescriptor     = moviesFormatsServiceServiceDescriptor.Methods().ByName("DeleteFormat")
 	moviesPersonsServiceServiceDescriptor                = v1.File_movies_v1_movies_proto.Services().ByName("MoviesPersonsService")
+	moviesPersonsServiceCreatePersonMethodDescriptor     = moviesPersonsServiceServiceDescriptor.Methods().ByName("CreatePerson")
 	moviesServiceServiceDescriptor                       = v1.File_movies_v1_movies_proto.Services().ByName("MoviesService")
 	moviesVideosServiceServiceDescriptor                 = v1.File_movies_v1_movies_proto.Services().ByName("MoviesVideosService")
 	moviesReviewsServiceServiceDescriptor                = v1.File_movies_v1_movies_proto.Services().ByName("MoviesReviewsService")
@@ -547,6 +551,7 @@ func (UnimplementedMoviesFormatsServiceHandler) DeleteFormat(context.Context, *c
 
 // MoviesPersonsServiceClient is a client for the movies.v1.MoviesPersonsService service.
 type MoviesPersonsServiceClient interface {
+	CreatePerson(context.Context, *connect.Request[v1.CreatePersonRequest]) (*connect.Response[v1.CreatePersonResponse], error)
 }
 
 // NewMoviesPersonsServiceClient constructs a client for the movies.v1.MoviesPersonsService service.
@@ -557,15 +562,30 @@ type MoviesPersonsServiceClient interface {
 // The URL supplied here should be the base URL for the Connect or gRPC server (for example,
 // http://api.acme.com or https://acme.com/grpc).
 func NewMoviesPersonsServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) MoviesPersonsServiceClient {
-	return &moviesPersonsServiceClient{}
+	baseURL = strings.TrimRight(baseURL, "/")
+	return &moviesPersonsServiceClient{
+		createPerson: connect.NewClient[v1.CreatePersonRequest, v1.CreatePersonResponse](
+			httpClient,
+			baseURL+MoviesPersonsServiceCreatePersonProcedure,
+			connect.WithSchema(moviesPersonsServiceCreatePersonMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+	}
 }
 
 // moviesPersonsServiceClient implements MoviesPersonsServiceClient.
 type moviesPersonsServiceClient struct {
+	createPerson *connect.Client[v1.CreatePersonRequest, v1.CreatePersonResponse]
+}
+
+// CreatePerson calls movies.v1.MoviesPersonsService.CreatePerson.
+func (c *moviesPersonsServiceClient) CreatePerson(ctx context.Context, req *connect.Request[v1.CreatePersonRequest]) (*connect.Response[v1.CreatePersonResponse], error) {
+	return c.createPerson.CallUnary(ctx, req)
 }
 
 // MoviesPersonsServiceHandler is an implementation of the movies.v1.MoviesPersonsService service.
 type MoviesPersonsServiceHandler interface {
+	CreatePerson(context.Context, *connect.Request[v1.CreatePersonRequest]) (*connect.Response[v1.CreatePersonResponse], error)
 }
 
 // NewMoviesPersonsServiceHandler builds an HTTP handler from the service implementation. It returns
@@ -574,8 +594,16 @@ type MoviesPersonsServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewMoviesPersonsServiceHandler(svc MoviesPersonsServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	moviesPersonsServiceCreatePersonHandler := connect.NewUnaryHandler(
+		MoviesPersonsServiceCreatePersonProcedure,
+		svc.CreatePerson,
+		connect.WithSchema(moviesPersonsServiceCreatePersonMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/movies.v1.MoviesPersonsService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
+		case MoviesPersonsServiceCreatePersonProcedure:
+			moviesPersonsServiceCreatePersonHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -584,6 +612,10 @@ func NewMoviesPersonsServiceHandler(svc MoviesPersonsServiceHandler, opts ...con
 
 // UnimplementedMoviesPersonsServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedMoviesPersonsServiceHandler struct{}
+
+func (UnimplementedMoviesPersonsServiceHandler) CreatePerson(context.Context, *connect.Request[v1.CreatePersonRequest]) (*connect.Response[v1.CreatePersonResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.CreatePerson is not implemented"))
+}
 
 // MoviesServiceClient is a client for the movies.v1.MoviesService service.
 type MoviesServiceClient interface {

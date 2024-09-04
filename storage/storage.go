@@ -12,7 +12,7 @@ import (
 type Storage struct {
 	logger *zerolog.Logger
 	config *StorageConfig
-	*minio.Client
+	client *minio.Client
 }
 
 func New(config *StorageConfig, logger *zerolog.Logger) Storage {
@@ -23,6 +23,7 @@ func New(config *StorageConfig, logger *zerolog.Logger) Storage {
 	client, err := minio.New(config.Endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(config.AccessKey, config.Secret, ""),
 		Secure: config.UseSSL,
+		Region: config.Region,
 	})
 	if err != nil {
 		logger.Fatal().Err(err).Msg("failed to create storage client")
@@ -49,6 +50,6 @@ func New(config *StorageConfig, logger *zerolog.Logger) Storage {
 	return Storage{
 		config: config,
 		logger: logger,
-		Client: client,
+		client: client,
 	}
 }

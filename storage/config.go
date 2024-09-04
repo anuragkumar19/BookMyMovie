@@ -11,6 +11,7 @@ type StorageConfig struct {
 	UseSSL           bool
 	Bucket           string
 	AutoCreateBucket bool
+	Region           string
 }
 
 func (config *StorageConfig) Validate() error {
@@ -21,6 +22,7 @@ func (config *StorageConfig) Validate() error {
 		validation.Field(&config.Secret, validation.Required),
 		validation.Field(&config.UseSSL),
 		validation.Field(&config.Bucket, validation.Required),
+		validation.Field(&config.Region),
 		validation.Field(&config.AutoCreateBucket),
 	)
 }

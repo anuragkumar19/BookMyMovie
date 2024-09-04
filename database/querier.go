@@ -14,6 +14,7 @@ type Querier interface {
 	CreateMoviesFormat(ctx context.Context, arg *CreateMoviesFormatParams) (MoviesFormat, error)
 	CreateMoviesGenre(ctx context.Context, arg *CreateMoviesGenreParams) (MoviesGenre, error)
 	CreateMoviesLanguage(ctx context.Context, arg *CreateMoviesLanguageParams) (MoviesLanguage, error)
+	CreateMoviesPerson(ctx context.Context, arg *CreateMoviesPersonParams) (int64, error)
 	CreateRefreshToken(ctx context.Context, arg *CreateRefreshTokenParams) (RefreshToken, error)
 	CreateRegularUser(ctx context.Context, email string) (int64, error)
 	DeleteExpiredLoginTokens(ctx context.Context) error

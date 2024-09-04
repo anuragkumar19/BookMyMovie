@@ -145,27 +145,31 @@ func (config *config) parseFromEnvVars() error {
 	}
 
 	// storage
-	storageEndpoint := os.Getenv("MINIO_STORAGE_ENDPOINT")
+	storageEndpoint := os.Getenv("S3_STORAGE_ENDPOINT")
 	if storageEndpoint != "" {
 		config.storage.Endpoint = storageEndpoint
 	}
-	storageAccessKey := os.Getenv("MINIO_STORAGE_ACCESS_KEY")
+	storageAccessKey := os.Getenv("S3_STORAGE_ACCESS_KEY")
 	if storageAccessKey != "" {
 		config.storage.AccessKey = storageAccessKey
 	}
-	storageSecret := os.Getenv("MINIO_STORAGE_SECRET")
+	storageSecret := os.Getenv("S3_STORAGE_SECRET")
 	if storageSecret != "" {
 		config.storage.Secret = storageSecret
 	}
-	storageBucket := os.Getenv("MINIO_STORAGE_BUCKET")
+	storageBucket := os.Getenv("S3_STORAGE_BUCKET")
 	if storageBucket != "" {
 		config.storage.Bucket = storageBucket
 	}
-	storageUseSSL := os.Getenv("MINIO_STORAGE_USE_SSL")
+	storageBucketRegion := os.Getenv("S3_STORAGE_BUCKET_REGION")
+	if storageBucketRegion != "" {
+		config.storage.Region = storageBucketRegion
+	}
+	storageUseSSL := os.Getenv("S3_STORAGE_USE_SSL")
 	if storageUseSSL == "true" {
 		config.storage.UseSSL = true
 	}
-	storageAutoCreateBucket := os.Getenv("MINIO_STORAGE_AUTO_CREATE_BUCKET")
+	storageAutoCreateBucket := os.Getenv("S3_STORAGE_AUTO_CREATE_BUCKET")
 	if storageAutoCreateBucket == "true" {
 		config.storage.AutoCreateBucket = true
 	}

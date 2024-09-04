@@ -8,6 +8,7 @@ lint:
   ignore:
     - api/proto/google/type/timestamp/timestamp.proto
     - api/proto/google/type/date/date.proto
+    - api/proto/shared/type/upload/upload.proto
 breaking:
   use:
     - FILE
