@@ -19,14 +19,14 @@ type Movies struct {
 	genres    *genres.Genres
 }
 
-func New(logger *zerolog.Logger, db *database.Database, auth *auth.Auth) Movies {
-	l := languages.New(logger, db, auth)
-	f := formats.New(logger, db, auth)
-	g := genres.New(logger, db, auth)
+func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Movies {
+	l := languages.New(logger, db, a)
+	f := formats.New(logger, db, a)
+	g := genres.New(logger, db, a)
 	return Movies{
 		logger:    logger,
 		db:        db,
-		auth:      auth,
+		auth:      a,
 		languages: &l,
 		formats:   &f,
 		genres:    &g,

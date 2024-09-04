@@ -5,7 +5,7 @@ import (
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
 
-type MailerConfig struct {
+type Config struct {
 	Host     string
 	Port     int
 	Username string
@@ -16,7 +16,7 @@ type MailerConfig struct {
 	ReplyTo         string
 }
 
-func (config *MailerConfig) Validate() error {
+func (config *Config) Validate() error {
 	return validation.ValidateStruct(
 		config,
 		validation.Field(&config.Host, validation.Required, is.Host),

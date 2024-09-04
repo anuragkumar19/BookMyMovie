@@ -14,11 +14,11 @@ type Persons struct {
 	auth    *auth.Auth
 }
 
-func New(logger *zerolog.Logger, db *database.Database, s *storage.Storage, auth *auth.Auth) Persons {
+func New(logger *zerolog.Logger, db *database.Database, s *storage.Storage, a *auth.Auth) Persons {
 	return Persons{
 		logger:  logger,
 		db:      db,
 		storage: s,
-		auth:    auth,
+		auth:    a,
 	}
 }

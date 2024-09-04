@@ -7,7 +7,7 @@ import (
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
 
-type AuthConfig struct {
+type Config struct {
 	Host string
 
 	AccessTokenSecret    string
@@ -20,7 +20,7 @@ type AuthConfig struct {
 	MaxOTPIncorrectAttempts       int
 }
 
-func (config *AuthConfig) Validate() error {
+func (config *Config) Validate() error {
 	return validation.ValidateStruct(
 		config,
 		validation.Field(&config.Host, validation.Required, is.URL),
@@ -34,8 +34,8 @@ func (config *AuthConfig) Validate() error {
 	)
 }
 
-func DefaultConfig() AuthConfig {
-	return AuthConfig{
+func DefaultConfig() Config {
+	return Config{
 		Host:                          "",
 		AccessTokenSecret:             "",
 		AccessTokenLifetime:           time.Minute,

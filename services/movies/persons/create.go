@@ -22,7 +22,7 @@ type CreateParams struct {
 	About             string
 	ProfilePictureKey string
 	DOB               *time.Time
-	ImdbId            string
+	ImdbID            string
 }
 
 func (params *CreateParams) Transform() *CreateParams {
@@ -52,7 +52,7 @@ func (params *CreateParams) Validate() error {
 		validation.Field(&params.Occupations),
 		validation.Field(&params.ProfilePictureKey),
 		validation.Field(&params.DOB, validation.Max(time.Now()).Error("dob cannot be in future")),
-		validation.Field(&params.ImdbId, validation.Required),
+		validation.Field(&params.ImdbID, validation.Required),
 	)
 }
 
@@ -70,7 +70,7 @@ func (s *Persons) Create(ctx context.Context, params *CreateParams) (id int64, e
 		return 0, err
 	}
 	if !exist {
-		return 0, errors.New("profile picture selected doesn't exit") //TODO: better error
+		return 0, errors.New("profile picture selected doesn't exit") // TODO: better error
 	}
 
 	slg := slug.Make(params.Name)
@@ -86,7 +86,7 @@ func (s *Persons) Create(ctx context.Context, params *CreateParams) (id int64, e
 			Time:  *params.DOB,
 		},
 		About:            params.About,
-		ImdbID:           params.ImdbId,
+		ImdbID:           params.ImdbID,
 		ImdbLastSyncedAt: pgtype.Timestamptz{Valid: false},
 	})
 }

@@ -11,11 +11,11 @@ import (
 
 type Storage struct {
 	logger *zerolog.Logger
-	config *StorageConfig
+	config *Config
 	client *minio.Client
 }
 
-func New(config *StorageConfig, logger *zerolog.Logger) Storage {
+func New(config *Config, logger *zerolog.Logger) Storage {
 	if err := config.Validate(); err != nil {
 		logger.Fatal().Err(err).Msg("storage config validation failed")
 	}

@@ -13,6 +13,7 @@ import (
 )
 
 type Application struct {
+	logger  *zerolog.Logger
 	db      *database.Database
 	storage *storage.Storage
 	mailer  *mailer.Mailer
@@ -35,18 +36,23 @@ func New() Application {
 	logger = logger.Level(conf.logLevel)
 
 	db := database.NewDatabase(conf.database, &logger)
-	storage := storage.New(conf.storage, &logger)
+	s := storage.New(conf.storage, &logger)
 	m := mailer.New(conf.mailer, &logger)
 	authService := auth.New(conf.auth, &logger, &db, &m)
 	usersService := users.New(&logger, &db, &m, &authService)
 
 	return Application{
+		logger:       &logger,
 		db:           &db,
-		storage:      &storage,
+		storage:      &s,
 		mailer:       &m,
 		authService:  &authService,
 		usersService: &usersService,
 	}
+}
+
+func (app *Application) Logger() *zerolog.Logger {
+	return app.logger
 }
 
 func (app *Application) AuthService() *auth.Auth {

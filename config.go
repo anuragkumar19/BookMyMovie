@@ -18,10 +18,10 @@ import (
 type config struct {
 	appHost  string
 	logLevel zerolog.Level
-	mailer   *mailer.MailerConfig
-	database *database.DatabaseConfig
-	storage  *storage.StorageConfig
-	auth     *auth.AuthConfig
+	mailer   *mailer.Config
+	database *database.Config
+	storage  *storage.Config
+	auth     *auth.Config
 }
 
 func (config *config) validate() error {
@@ -52,7 +52,7 @@ func (config *config) parseFromEnvVars() error {
 
 	logLevel, err := zerolog.ParseLevel(levelStr)
 	if err != nil {
-		return fmt.Errorf("invalid log level in env variable : %v", err)
+		return fmt.Errorf("invalid log level in env variable : %w", err)
 	}
 	config.logLevel = logLevel
 
@@ -73,7 +73,7 @@ func (config *config) parseFromEnvVars() error {
 	if mailerPortStr != "" {
 		p, err := strconv.Atoi(mailerPortStr)
 		if err != nil {
-			return fmt.Errorf("cannot parse mailer port from env variable : %v", err)
+			return fmt.Errorf("cannot parse mailer port from env variable : %w", err)
 		}
 		config.mailer.Port = p
 	}
@@ -91,15 +91,15 @@ func (config *config) parseFromEnvVars() error {
 	}
 
 	// database
-	databaseUri := os.Getenv("DATABASE_URI")
-	if databaseUri != "" {
-		config.database.URI = databaseUri
+	databaseURI := os.Getenv("DATABASE_URI")
+	if databaseURI != "" {
+		config.database.URI = databaseURI
 	}
 	maxConnLifetimeStr := os.Getenv("DATABASE_MAX_CONN_LIFETIME")
 	if maxConnLifetimeStr != "" {
 		d, err := time.ParseDuration(maxConnLifetimeStr)
 		if err != nil {
-			return fmt.Errorf("cannot parse duration from env variable : max conn lifetime : %v", err)
+			return fmt.Errorf("cannot parse duration from env variable : max conn lifetime : %w", err)
 		}
 		config.database.MaxConnLifetime = d
 	}
@@ -107,7 +107,7 @@ func (config *config) parseFromEnvVars() error {
 	if maxConnLifetimeJitterStr != "" {
 		d, err := time.ParseDuration(maxConnLifetimeJitterStr)
 		if err != nil {
-			return fmt.Errorf("cannot parse duration from env variable : max conn lifetime jitter : %v", err)
+			return fmt.Errorf("cannot parse duration from env variable : max conn lifetime jitter : %w", err)
 		}
 		config.database.MaxConnLifetimeJitter = d
 	}
@@ -115,7 +115,7 @@ func (config *config) parseFromEnvVars() error {
 	if maxConnIdleTimeStr != "" {
 		d, err := time.ParseDuration(maxConnIdleTimeStr)
 		if err != nil {
-			return fmt.Errorf("cannot parse duration from env variable : max conn ideal time : %v", err)
+			return fmt.Errorf("cannot parse duration from env variable : max conn ideal time : %w", err)
 		}
 		config.database.MaxConnIdleTime = d
 	}
@@ -123,7 +123,7 @@ func (config *config) parseFromEnvVars() error {
 	if healthCheckPeriodStr != "" {
 		d, err := time.ParseDuration(healthCheckPeriodStr)
 		if err != nil {
-			return fmt.Errorf("cannot parse duration from env variable : health check period : %v", err)
+			return fmt.Errorf("cannot parse duration from env variable : health check period : %w", err)
 		}
 		config.database.HealthCheckPeriod = d
 	}
@@ -131,7 +131,7 @@ func (config *config) parseFromEnvVars() error {
 	if maxConnStr != "" {
 		c, err := strconv.Atoi(maxConnStr)
 		if err != nil {
-			return fmt.Errorf("cannot parse database max conn from env variable : %v", err)
+			return fmt.Errorf("cannot parse database max conn from env variable : %w", err)
 		}
 		config.database.MaxConns = int32(c)
 	}
@@ -139,7 +139,7 @@ func (config *config) parseFromEnvVars() error {
 	if minConnStr != "" {
 		c, err := strconv.Atoi(minConnStr)
 		if err != nil {
-			return fmt.Errorf("cannot parse database min conn from env variable : %v", err)
+			return fmt.Errorf("cannot parse database min conn from env variable : %w", err)
 		}
 		config.database.MinConns = int32(c)
 	}
@@ -179,7 +179,7 @@ func (config *config) parseFromEnvVars() error {
 	if accessTokenSecret != "" {
 		config.auth.AccessTokenSecret = accessTokenSecret
 	}
-	//TODO: rest
+	// TODO: rest
 	// accessTokenLifetimeStr := os.Getenv("ACCESS_TOKEN_LIFETIME")
 	// if accessTokenLifetime != "" {
 	// 	config.auth.AccessTokenLifetime = accessTokenLifetime
@@ -188,7 +188,7 @@ func (config *config) parseFromEnvVars() error {
 	return nil
 }
 
-func (config *config) parseFromCLIFlags() error {
+func (*config) parseFromCLIFlags() error {
 	return nil
 }
 
@@ -204,10 +204,10 @@ func newConfig() config {
 	authConf := auth.DefaultConfig()
 	return config{
 		logLevel: zerolog.InfoLevel,
-		mailer:   &mailer.MailerConfig{},
+		mailer:   &mailer.Config{},
 		database: &dbConf,
 		appHost:  "",
 		auth:     &authConf,
-		storage:  &storage.StorageConfig{},
+		storage:  &storage.Config{},
 	}
 }

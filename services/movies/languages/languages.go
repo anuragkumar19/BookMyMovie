@@ -17,7 +17,7 @@ type Languages struct {
 	cache *cache
 }
 
-func New(logger *zerolog.Logger, db *database.Database, auth *auth.Auth) Languages {
+func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Languages {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	languages, err := db.GetAllMoviesLanguages(ctx)
@@ -27,7 +27,7 @@ func New(logger *zerolog.Logger, db *database.Database, auth *auth.Auth) Languag
 	return Languages{
 		logger: logger,
 		db:     db,
-		auth:   auth,
+		auth:   a,
 		cache: &cache{
 			languages: languages,
 		},

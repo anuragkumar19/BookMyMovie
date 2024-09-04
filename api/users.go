@@ -20,7 +20,7 @@ type usersService struct {
 func (s *usersService) GetLoggedInUser(ctx context.Context, r *connect.Request[usersv1.GetLoggedInUserRequest]) (*connect.Response[usersv1.GetLoggedInUserResponse], error) {
 	user, err := s.users.GetLoggedInUser(ctx, r.Header().Get("Authorization"))
 	if err != nil {
-		return nil, err //TODO:
+		return nil, err // TODO:
 	}
 	var dob *date.Date
 	if user.Dob.Valid {

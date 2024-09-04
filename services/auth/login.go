@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
-	services_errors "bookmymovie.app/bookmymovie/services/errors"
+	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -35,38 +35,38 @@ func (data *LoginParams) Validate() error {
 	)
 }
 
-type AuthTokens struct {
+type Tokens struct {
 	RefreshToken      string
 	AccessToken       string
 	AccessTokenExpiry time.Time
 }
 
-func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, error) {
+func (s *Auth) Login(ctx context.Context, params *LoginParams) (Tokens, error) {
 	if err := params.Transform().Validate(); err != nil {
-		return AuthTokens{}, services_errors.ValidationError(err.(validation.Errors))
+		return Tokens{}, serviceserrors.ValidationError(err.(validation.Errors)) //nolint:errorlint
 	}
 
 	token, err := s.db.FindLoginToken(ctx, params.Token)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return AuthTokens{}, services_errors.ErrOTPExpired
+			return Tokens{}, serviceserrors.ErrOTPExpired
 		}
-		return AuthTokens{}, err
+		return Tokens{}, err
 	}
 
 	now := time.Now()
 
 	if token.ExpireAt.Time.Before(now) {
-		return AuthTokens{}, services_errors.ErrOTPExpired
+		return Tokens{}, serviceserrors.ErrOTPExpired
 	}
 	if token.TotalAttempts >= int32(s.config.MaxOTPIncorrectAttempts) {
 		if err := s.db.DeleteLoginToken(ctx, token.Token); err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return AuthTokens{}, services_errors.ErrOTPExpired
+				return Tokens{}, serviceserrors.ErrOTPExpired
 			}
-			return AuthTokens{}, err
+			return Tokens{}, err
 		}
-		return AuthTokens{}, services_errors.ErrOTPExpired
+		return Tokens{}, serviceserrors.ErrOTPExpired
 	}
 
 	if !s.matchOTP(params.OTP, token.Otp) {
@@ -77,23 +77,23 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 			Version:       token.Version,
 		}); err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return AuthTokens{}, services_errors.ErrUpdateConflict
+				return Tokens{}, serviceserrors.ErrUpdateConflict
 			}
-			return AuthTokens{}, err
+			return Tokens{}, err
 		}
-		return AuthTokens{}, services_errors.ErrOTPMismatch
+		return Tokens{}, serviceserrors.ErrOTPMismatch
 	}
 
 	if err := s.db.DeleteLoginToken(ctx, token.Token); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return AuthTokens{}, services_errors.ErrOTPExpired
+			return Tokens{}, serviceserrors.ErrOTPExpired
 		}
-		return AuthTokens{}, err
+		return Tokens{}, err
 	}
 
 	refreshTokenStr, err := s.generateRandomToken()
 	if err != nil {
-		return AuthTokens{}, err
+		return Tokens{}, err
 	}
 	refreshToken, err := s.db.CreateRefreshToken(ctx, &database.CreateRefreshTokenParams{
 		Token:     refreshTokenStr,
@@ -104,14 +104,14 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (AuthTokens, erro
 		UserAgent: params.UserAgent,
 	})
 	if err != nil {
-		return AuthTokens{}, err
+		return Tokens{}, err
 	}
 
 	accessToken, accessTokenExp, err := s.generateAccessToken(&refreshToken)
 	if err != nil {
-		return AuthTokens{}, err
+		return Tokens{}, err
 	}
-	return AuthTokens{
+	return Tokens{
 		RefreshToken:      refreshTokenStr,
 		AccessToken:       accessToken,
 		AccessTokenExpiry: accessTokenExp,

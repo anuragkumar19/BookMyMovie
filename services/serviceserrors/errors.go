@@ -1,4 +1,4 @@
-package services_errors
+package serviceserrors
 
 import (
 	"errors"

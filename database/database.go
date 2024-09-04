@@ -14,7 +14,7 @@ type Database struct {
 	logger *zerolog.Logger
 }
 
-func NewDatabase(config *DatabaseConfig, logger *zerolog.Logger) Database {
+func NewDatabase(config *Config, logger *zerolog.Logger) Database {
 	if err := config.Validate(); err != nil {
 		logger.Fatal().Err(err).Msg("database config validation failed")
 	}

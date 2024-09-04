@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"bookmymovie.app/bookmymovie/database"
-	services_errors "bookmymovie.app/bookmymovie/services/errors"
+	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
 )
 
 type Permission string
@@ -47,7 +47,7 @@ var adminPermission = rolePermissionMap{
 
 var regularUserPermission = rolePermissionMap{}
 
-func (s *Auth) CheckPermissions(auth *AuthMetadata, ps ...Permission) error {
+func (*Auth) CheckPermissions(auth *Metadata, ps ...Permission) error {
 	switch auth.UserRole {
 	case database.RolesAdmin:
 		return checkPermission(adminPermission, ps)

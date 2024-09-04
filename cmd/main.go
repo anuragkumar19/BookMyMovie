@@ -8,8 +8,8 @@ import (
 func main() {
 	app := bookmymovie.New()
 
-	api := api.New(&app)
+	apiServer := api.New(&app)
 
-	api.Run()
+	apiServer.Run()
 
 }

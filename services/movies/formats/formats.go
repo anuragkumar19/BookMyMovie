@@ -17,7 +17,7 @@ type Formats struct {
 	cache *cache
 }
 
-func New(logger *zerolog.Logger, db *database.Database, auth *auth.Auth) Formats {
+func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Formats {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	formats, err := db.GetAllMoviesFormats(ctx)
@@ -27,7 +27,7 @@ func New(logger *zerolog.Logger, db *database.Database, auth *auth.Auth) Formats
 	return Formats{
 		logger: logger,
 		db:     db,
-		auth:   auth,
+		auth:   a,
 		cache: &cache{
 			formats: formats,
 		},

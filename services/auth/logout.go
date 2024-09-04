@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	services_errors "bookmymovie.app/bookmymovie/services/errors"
+	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
 	"github.com/jackc/pgx/v5"
 )
 

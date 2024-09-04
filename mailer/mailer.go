@@ -10,11 +10,11 @@ import (
 type Mailer struct {
 	logger *zerolog.Logger
 	dialer *gomail.Dialer
-	config *MailerConfig
+	config *Config
 	wg     sync.WaitGroup
 }
 
-func New(config *MailerConfig, logger *zerolog.Logger) Mailer {
+func New(config *Config, logger *zerolog.Logger) Mailer {
 	if err := config.Validate(); err != nil {
 		logger.Fatal().Err(err).Msg("mailer config validation failed")
 	}

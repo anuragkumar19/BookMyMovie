@@ -9,7 +9,7 @@ import (
 )
 
 type Auth struct {
-	config *AuthConfig
+	config *Config
 	logger *zerolog.Logger
 	db     *database.Database
 	mailer *mailer.Mailer
@@ -17,14 +17,14 @@ type Auth struct {
 	revokedTokens map[int64]time.Time
 }
 
-func New(config *AuthConfig, logger *zerolog.Logger, db *database.Database, mailer *mailer.Mailer) Auth {
+func New(config *Config, logger *zerolog.Logger, db *database.Database, m *mailer.Mailer) Auth {
 	if err := config.Validate(); err != nil {
 		logger.Fatal().Err(err).Msg("auth config validation failed")
 	}
 	a := Auth{
 		logger:        logger,
 		db:            db,
-		mailer:        mailer,
+		mailer:        m,
 		config:        config,
 		revokedTokens: make(map[int64]time.Time),
 	}

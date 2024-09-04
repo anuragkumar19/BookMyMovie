@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
-	services_errors "bookmymovie.app/bookmymovie/services/errors"
+	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/jackc/pgx/v5"
@@ -32,25 +32,25 @@ func (data *RequestLoginOTPParams) Validate() error {
 
 func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParams) (loginToken string, err error) {
 	if err := params.Transform().Validate(); err != nil {
-		return "", services_errors.ValidationError(err.(validation.Errors))
+		return "", services_errors.ValidationError(err.(validation.Errors)) //nolint:errorlint
 	}
 
 	var isNew bool
 	user, err := s.db.FindUserByEmail(ctx, params.Email)
 
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			id, err := s.db.CreateRegularUser(ctx, params.Email)
-			if err != nil {
-				return "", err
-			}
-			user.ID = id
-			user.Email = params.Email
-			user.Version = 1
-			isNew = true
-		} else {
+		if !errors.Is(err, pgx.ErrNoRows) {
 			return "", err
 		}
+
+		id, err := s.db.CreateRegularUser(ctx, params.Email)
+		if err != nil {
+			return "", err
+		}
+		user.ID = id
+		user.Email = params.Email
+		user.Version = 1
+		isNew = true
 	}
 
 	now := time.Now()
@@ -90,12 +90,11 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 	}); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return "", services_errors.ErrUpdateConflict
-		} else {
-			return "", err
 		}
+		return "", err
 	}
 
-	//TODO: send token+otp link and just otp
+	// TODO: send token+otp link and just otp
 	s.logger.Info().Str("email", user.Email).Str("otp", otp).Str("link", s.generateLoginLink(token, otp)).Time("expire_at", expiry).Bool("is_new", isNew).Msg("mail sent")
 
 	return token, nil

@@ -10,7 +10,7 @@ type CreateMovieParams struct {
 	AccessToken string
 }
 
-func (s *Movies) CreateMovie(ctx context.Context, params *CreateMovieParams) (id int64, err error) {
+func (s *Movies) CreateMovie(_ context.Context, params *CreateMovieParams) (id int64, err error) {
 	user, err := s.auth.GetAuthMetadata(params.AccessToken)
 	if err != nil {
 		return 0, err

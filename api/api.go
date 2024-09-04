@@ -11,7 +11,7 @@ import (
 	"golang.org/x/net/http2/h2c"
 )
 
-type Api struct {
+type API struct {
 	app *bookmymovie.Application
 
 	authService            *authService
@@ -21,15 +21,15 @@ type Api struct {
 	moviesGenresService    *moviesGenresService
 }
 
-func New(app *bookmymovie.Application) Api {
-	return Api{
+func New(app *bookmymovie.Application) API {
+	return API{
 		app:          app,
 		authService:  &authService{auth: app.AuthService()},
 		usersService: &usersService{users: app.UsersService()},
 	}
 }
 
-func (api *Api) Run() {
+func (api *API) Run() {
 	mux := http.NewServeMux()
 
 	{
@@ -53,11 +53,13 @@ func (api *Api) Run() {
 		mux.Handle(path, handler)
 	}
 
-	http.ListenAndServe(
+	if err := http.ListenAndServe(
 		"localhost:8080",
 		// Use h2c so we can serve HTTP/2 without TLS.
 		h2c.NewHandler(maxByte(mux), &http2.Server{}),
-	)
+	); err != nil {
+		api.app.Logger().Fatal().Err(err).Msg("failed to start server")
+	}
 }
 
 func maxByte(h http.Handler) http.Handler {

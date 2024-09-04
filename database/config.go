@@ -8,7 +8,7 @@ import (
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
 
-type DatabaseConfig struct {
+type Config struct {
 	URI string
 
 	MaxConnLifetime       time.Duration
@@ -19,8 +19,8 @@ type DatabaseConfig struct {
 	HealthCheckPeriod     time.Duration
 }
 
-func DefaultConfig() DatabaseConfig {
-	return DatabaseConfig{
+func DefaultConfig() Config {
+	return Config{
 		URI:                   "",
 		MaxConnLifetime:       time.Hour,
 		MaxConnLifetimeJitter: 5 * time.Minute,
@@ -31,7 +31,7 @@ func DefaultConfig() DatabaseConfig {
 	}
 }
 
-func (config *DatabaseConfig) Validate() error {
+func (config *Config) Validate() error {
 	return validation.ValidateStruct(
 		config,
 		validation.Field(&config.URI, validation.Required, is.URL),

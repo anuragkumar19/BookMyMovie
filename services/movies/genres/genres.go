@@ -17,7 +17,7 @@ type Genres struct {
 	cache *cache
 }
 
-func New(logger *zerolog.Logger, db *database.Database, auth *auth.Auth) Genres {
+func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Genres {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	genres, err := db.GetAllMoviesGenres(ctx)
@@ -27,7 +27,7 @@ func New(logger *zerolog.Logger, db *database.Database, auth *auth.Auth) Genres 
 	return Genres{
 		logger: logger,
 		db:     db,
-		auth:   auth,
+		auth:   a,
 		cache: &cache{
 			genres: genres,
 		},

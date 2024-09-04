@@ -13,7 +13,7 @@ var (
 )
 
 // TODO: hash otp
-func (s *Auth) generateOTP() (rawOTP string, hash string, err error) {
+func (*Auth) generateOTP() (rawOTP string, hash string, err error) {
 	bigI, err := rand.Int(rand.Reader, big.NewInt(int64(math.Pow10(6)-1)))
 	if err != nil {
 		return "", "", err
@@ -22,6 +22,6 @@ func (s *Auth) generateOTP() (rawOTP string, hash string, err error) {
 	return otp, otp, nil
 }
 
-func (s *Auth) matchOTP(rawOTP string, hash string) bool {
+func (*Auth) matchOTP(rawOTP string, hash string) bool {
 	return rawOTP == hash
 }

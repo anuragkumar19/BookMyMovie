@@ -8,42 +8,42 @@ import (
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
-	services_errors "bookmymovie.app/bookmymovie/services/errors"
+	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type AuthMetadata struct {
+type Metadata struct {
 	UserID         int64
 	UserRole       database.Roles
 	RefreshTokenID int64
 }
 
-func (s *Auth) GetAuthMetadata(accessToken string) (AuthMetadata, error) {
-	token, err := jwt.Parse(accessToken, func(t *jwt.Token) (interface{}, error) {
+func (s *Auth) GetAuthMetadata(accessToken string) (Metadata, error) {
+	token, err := jwt.Parse(accessToken, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 		}
 		return []byte(s.config.AccessTokenSecret), nil
 	})
 	if err != nil {
-		return AuthMetadata{}, services_errors.UnauthorizedError(err)
+		return Metadata{}, services_errors.UnauthorizedError(err)
 	}
 	if !token.Valid {
-		return AuthMetadata{}, services_errors.UnauthorizedError(ErrTokenInvalid)
+		return Metadata{}, services_errors.UnauthorizedError(ErrTokenInvalid)
 	}
-	claims := token.Claims.(jwt.MapClaims)
+	claims := token.Claims.(jwt.MapClaims) //nolint:errorlint,errcheck
 
-	id := int64(claims["id"].(float64))
-	userId := int64(claims["user_id"].(float64))
-	userRole := database.Roles(claims["user_role"].(string))
+	id := int64(claims["id"].(float64))                      //nolint:errorlint,errcheck
+	userID := int64(claims["user_id"].(float64))             //nolint:errorlint,errcheck
+	userRole := database.Roles(claims["user_role"].(string)) //nolint:errorlint,errcheck
 
 	if _, ok := s.revokedTokens[id]; ok {
-		return AuthMetadata{}, services_errors.UnauthorizedError(ErrTokenInvalid)
+		return Metadata{}, services_errors.UnauthorizedError(ErrTokenInvalid)
 	}
 
-	return AuthMetadata{
+	return Metadata{
 		RefreshTokenID: id,
-		UserID:         userId,
+		UserID:         userID,
 		UserRole:       userRole,
 	}, nil
 }
@@ -76,7 +76,7 @@ func (s *Auth) generateAccessToken(rt *database.RefreshToken) (token string, exp
 	now := time.Now()
 	expiry = now.Add(s.config.AccessTokenLifetime)
 
-	claims := t.Claims.(jwt.MapClaims)
+	claims := t.Claims.(jwt.MapClaims) //nolint:errorlint,errcheck
 
 	claims["iss"] = s.config.Host
 	claims["id"] = rt.ID

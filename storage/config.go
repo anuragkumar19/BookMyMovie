@@ -4,7 +4,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-type StorageConfig struct {
+type Config struct {
 	Endpoint         string
 	AccessKey        string
 	Secret           string
@@ -14,7 +14,7 @@ type StorageConfig struct {
 	Region           string
 }
 
-func (config *StorageConfig) Validate() error {
+func (config *Config) Validate() error {
 	return validation.ValidateStruct(
 		config,
 		validation.Field(&config.Endpoint, validation.Required),

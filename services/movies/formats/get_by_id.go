@@ -5,7 +5,7 @@ import (
 	"slices"
 
 	"bookmymovie.app/bookmymovie/database"
-	services_errors "bookmymovie.app/bookmymovie/services/errors"
+	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
 )
 
 func (s *Formats) GetByID(_ context.Context, id string) (database.MoviesFormat, error) {
