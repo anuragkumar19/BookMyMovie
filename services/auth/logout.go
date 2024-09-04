@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -17,7 +17,7 @@ func (s *Auth) Logout(ctx context.Context, accessToken string) error {
 
 	if err := s.db.DeleteRefreshToken(ctx, auth.RefreshTokenID); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return services_errors.ErrUpdateConflict
+			return serviceserrors.ErrUpdateConflict
 		}
 		return err
 	}

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -16,17 +16,17 @@ type AccessToken struct {
 
 func (s *Auth) RefreshAccessToken(ctx context.Context, token string) (AccessToken, error) {
 	if token == "" {
-		return AccessToken{}, services_errors.UnauthorizedError(ErrTokenInvalid)
+		return AccessToken{}, serviceserrors.UnauthorizedError(ErrTokenInvalid)
 	}
 
 	rt, err := s.db.FindRefreshToken(ctx, token)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return AccessToken{}, services_errors.UnauthorizedError(ErrTokenInvalid)
+			return AccessToken{}, serviceserrors.UnauthorizedError(ErrTokenInvalid)
 		}
 	}
 	if time.Now().After(rt.ExpireAt.Time) {
-		return AccessToken{}, services_errors.UnauthorizedError(ErrTokenInvalid)
+		return AccessToken{}, serviceserrors.UnauthorizedError(ErrTokenInvalid)
 	}
 
 	accessToken, accessTokenExp, err := s.generateAccessToken(&rt)

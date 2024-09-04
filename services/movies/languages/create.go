@@ -7,7 +7,7 @@ import (
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
-	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
+	serviceserrorss "bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gosimple/slug"
 )
@@ -44,13 +44,13 @@ func (s *Languages) Create(ctx context.Context, params *CreateParams) (id string
 
 	exist := true
 	if _, err := s.GetByID(ctx, id); err != nil {
-		if !errors.Is(err, services_errors.ErrNotFound) {
+		if !errors.Is(err, serviceserrorss.ErrNotFound) {
 			return "", err
 		}
 		exist = false
 	}
 	if exist {
-		return "", services_errors.ErrAlreadyExist
+		return "", serviceserrorss.ErrAlreadyExist
 	}
 
 	lang, err := s.db.CreateMoviesLanguage(ctx, &database.CreateMoviesLanguageParams{

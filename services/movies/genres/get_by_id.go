@@ -5,7 +5,7 @@ import (
 	"slices"
 
 	"bookmymovie.app/bookmymovie/database"
-	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
+	serviceserrorss "bookmymovie.app/bookmymovie/services/serviceserrors"
 )
 
 func (s *Genres) GetByID(_ context.Context, id string) (database.MoviesGenre, error) {
@@ -13,7 +13,7 @@ func (s *Genres) GetByID(_ context.Context, id string) (database.MoviesGenre, er
 		return g.ID == id
 	})
 	if i == -1 {
-		return database.MoviesGenre{}, services_errors.ErrNotFound
+		return database.MoviesGenre{}, serviceserrorss.ErrNotFound
 	}
 	return s.cache.genres[i], nil
 }

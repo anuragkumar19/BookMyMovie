@@ -7,7 +7,7 @@ import (
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
-	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -21,15 +21,15 @@ func (s *Formats) Delete(ctx context.Context, accessToken string, id string) err
 	}
 
 	if _, err := s.GetByID(ctx, id); err != nil {
-		if errors.Is(err, services_errors.ErrNotFound) {
-			return services_errors.ErrNotFound
+		if errors.Is(err, serviceserrors.ErrNotFound) {
+			return serviceserrors.ErrNotFound
 		}
 		return err
 	}
 
 	if err := s.db.DeleteMoviesFormat(ctx, id); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return services_errors.ErrUpdateConflict
+			return serviceserrors.ErrUpdateConflict
 		}
 		return err
 	}

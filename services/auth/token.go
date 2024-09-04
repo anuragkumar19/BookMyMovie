@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
-	services_errors "bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -26,10 +26,10 @@ func (s *Auth) GetAuthMetadata(accessToken string) (Metadata, error) {
 		return []byte(s.config.AccessTokenSecret), nil
 	})
 	if err != nil {
-		return Metadata{}, services_errors.UnauthorizedError(err)
+		return Metadata{}, serviceserrors.UnauthorizedError(err)
 	}
 	if !token.Valid {
-		return Metadata{}, services_errors.UnauthorizedError(ErrTokenInvalid)
+		return Metadata{}, serviceserrors.UnauthorizedError(ErrTokenInvalid)
 	}
 	claims := token.Claims.(jwt.MapClaims) //nolint:errorlint,errcheck
 
@@ -38,7 +38,7 @@ func (s *Auth) GetAuthMetadata(accessToken string) (Metadata, error) {
 	userRole := database.Roles(claims["user_role"].(string)) //nolint:errorlint,errcheck
 
 	if _, ok := s.revokedTokens[id]; ok {
-		return Metadata{}, services_errors.UnauthorizedError(ErrTokenInvalid)
+		return Metadata{}, serviceserrors.UnauthorizedError(ErrTokenInvalid)
 	}
 
 	return Metadata{
