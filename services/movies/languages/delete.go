@@ -26,6 +26,8 @@ func (s *Languages) Delete(ctx context.Context, authMeta *auth.Metadata, id stri
 		return err
 	}
 
+	// TODO: check if any movies are linked to it
+
 	if err := s.db.DeleteMoviesLanguage(ctx, id); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return serviceserrors.ErrUpdateConflict
