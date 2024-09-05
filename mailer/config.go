@@ -6,14 +6,13 @@ import (
 )
 
 type Config struct {
-	Host     string
-	Port     int
-	Username string
-	Password string
-
-	FromAddress     string
-	FromDisplayName string
-	ReplyTo         string
+	Host            string `conf:"env:HOST,flag:host"`
+	Port            int    `conf:"env:PORT,flag:port"`
+	Username        string `conf:"env:USERNAME,flag:username"`
+	Password        string `conf:"env:PASSWORD,flag:password"`
+	FromAddress     string `conf:"env:FROM_ADDRESS,flag:from-address"`
+	FromDisplayName string `conf:"env:FROM_DISPLAY_NAME,flag:display-name"`
+	ReplyTo         string `conf:"env:REPLY_TO,flag:reply-to"`
 }
 
 func (config *Config) Validate() error {
