@@ -78,7 +78,7 @@ func (s *Auth) generateAccessToken(rt *database.RefreshToken) (token string, exp
 
 	claims := t.Claims.(jwt.MapClaims) //nolint:errorlint,errcheck
 
-	claims["iss"] = s.config.Host
+	claims["iss"] = s.config.AppPublicHost
 	claims["id"] = rt.ID
 	claims["user_id"] = rt.UserID
 	claims["user_role"] = rt.UserRole

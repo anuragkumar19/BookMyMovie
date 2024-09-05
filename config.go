@@ -16,18 +16,18 @@ import (
 )
 
 type config struct {
-	appHost  string
-	logLevel zerolog.Level
-	mailer   *mailer.Config
-	database *database.Config
-	storage  *storage.Config
-	auth     *auth.Config
+	appPublicHost string
+	logLevel      zerolog.Level
+	mailer        *mailer.Config
+	database      *database.Config
+	storage       *storage.Config
+	auth          *auth.Config
 }
 
 func (config *config) validate() error {
 	return validation.ValidateStruct(
 		config,
-		validation.Field(&config.appHost, validation.Required, is.URL),
+		validation.Field(&config.appPublicHost, validation.Required, is.URL),
 		validation.Field(&config.logLevel),
 		validation.Field(&config.mailer),
 		validation.Field(&config.database),
@@ -44,10 +44,10 @@ func (config *config) parseFromEnvVars() error {
 	}
 
 	// host
-	host := os.Getenv("APP_HOST")
+	host := os.Getenv("APP_PUBLIC_HOST")
 	if host != "" {
-		config.appHost = host
-		config.auth.Host = host
+		config.appPublicHost = host
+		config.auth.AppPublicHost = host
 	}
 
 	logLevel, err := zerolog.ParseLevel(levelStr)
@@ -57,19 +57,19 @@ func (config *config) parseFromEnvVars() error {
 	config.logLevel = logLevel
 
 	// mailer
-	mailerUsername := os.Getenv("SMTP_USERNAME")
+	mailerUsername := os.Getenv("MAILER_USERNAME")
 	if mailerUsername != "" {
 		config.mailer.Username = mailerUsername
 	}
-	mailerPassword := os.Getenv("SMTP_PASSWORD")
+	mailerPassword := os.Getenv("MAILER_PASSWORD")
 	if mailerPassword != "" {
 		config.mailer.Password = mailerPassword
 	}
-	mailerHost := os.Getenv("SMTP_HOST")
+	mailerHost := os.Getenv("MAILER_HOST")
 	if mailerHost != "" {
 		config.mailer.Host = mailerHost
 	}
-	mailerPortStr := os.Getenv("SMTP_PORT")
+	mailerPortStr := os.Getenv("MAILER_PORT")
 	if mailerPortStr != "" {
 		p, err := strconv.Atoi(mailerPortStr)
 		if err != nil {
@@ -77,15 +77,15 @@ func (config *config) parseFromEnvVars() error {
 		}
 		config.mailer.Port = p
 	}
-	mailerFromAddress := os.Getenv("SMTP_FROM_ADDRESS")
+	mailerFromAddress := os.Getenv("MAILER_FROM_ADDRESS")
 	if mailerFromAddress != "" {
 		config.mailer.FromAddress = mailerFromAddress
 	}
-	mailerFromDisplayName := os.Getenv("SMTP_FROM_DISPLAY_NAME")
+	mailerFromDisplayName := os.Getenv("MAILER_FROM_DISPLAY_NAME")
 	if mailerFromDisplayName != "" {
 		config.mailer.FromDisplayName = mailerFromDisplayName
 	}
-	mailerReplyTo := os.Getenv("SMTP_REPLY_TO")
+	mailerReplyTo := os.Getenv("MAILER_REPLY_TO")
 	if mailerReplyTo != "" {
 		config.mailer.ReplyTo = mailerReplyTo
 	}
@@ -145,37 +145,37 @@ func (config *config) parseFromEnvVars() error {
 	}
 
 	// storage
-	storageEndpoint := os.Getenv("S3_STORAGE_ENDPOINT")
+	storageEndpoint := os.Getenv("STORAGE_ENDPOINT")
 	if storageEndpoint != "" {
 		config.storage.Endpoint = storageEndpoint
 	}
-	storageAccessKey := os.Getenv("S3_STORAGE_ACCESS_KEY")
+	storageAccessKey := os.Getenv("STORAGE_ACCESS_KEY")
 	if storageAccessKey != "" {
 		config.storage.AccessKey = storageAccessKey
 	}
-	storageSecret := os.Getenv("S3_STORAGE_SECRET")
+	storageSecret := os.Getenv("STORAGE_SECRET")
 	if storageSecret != "" {
 		config.storage.Secret = storageSecret
 	}
-	storageBucket := os.Getenv("S3_STORAGE_BUCKET")
+	storageBucket := os.Getenv("STORAGE_BUCKET")
 	if storageBucket != "" {
 		config.storage.Bucket = storageBucket
 	}
-	storageBucketRegion := os.Getenv("S3_STORAGE_BUCKET_REGION")
+	storageBucketRegion := os.Getenv("STORAGE_BUCKET_REGION")
 	if storageBucketRegion != "" {
 		config.storage.Region = storageBucketRegion
 	}
-	storageUseSSL := os.Getenv("S3_STORAGE_USE_SSL")
+	storageUseSSL := os.Getenv("STORAGE_USE_SSL")
 	if storageUseSSL == "true" {
 		config.storage.UseSSL = true
 	}
-	storageAutoCreateBucket := os.Getenv("S3_STORAGE_AUTO_CREATE_BUCKET")
+	storageAutoCreateBucket := os.Getenv("STORAGE_AUTO_CREATE_BUCKET")
 	if storageAutoCreateBucket == "true" {
 		config.storage.AutoCreateBucket = true
 	}
 
 	// auth
-	accessTokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
+	accessTokenSecret := os.Getenv("AUTH_ACCESS_TOKEN_SECRET")
 	if accessTokenSecret != "" {
 		config.auth.AccessTokenSecret = accessTokenSecret
 	}
@@ -203,11 +203,11 @@ func newConfig() config {
 	dbConf := database.DefaultConfig()
 	authConf := auth.DefaultConfig()
 	return config{
-		logLevel: zerolog.InfoLevel,
-		mailer:   &mailer.Config{},
-		database: &dbConf,
-		appHost:  "",
-		auth:     &authConf,
-		storage:  &storage.Config{},
+		logLevel:      zerolog.InfoLevel,
+		mailer:        &mailer.Config{},
+		database:      &dbConf,
+		appPublicHost: "",
+		auth:          &authConf,
+		storage:       &storage.Config{},
 	}
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type Config struct {
-	Host string
+	AppPublicHost string
 
 	AccessTokenSecret    string
 	AccessTokenLifetime  time.Duration
@@ -23,7 +23,7 @@ type Config struct {
 func (config *Config) Validate() error {
 	return validation.ValidateStruct(
 		config,
-		validation.Field(&config.Host, validation.Required, is.URL),
+		validation.Field(&config.AppPublicHost, validation.Required, is.URL),
 		validation.Field(&config.AccessTokenSecret, validation.Required),
 		validation.Field(&config.AccessTokenLifetime, validation.Required),
 		validation.Field(&config.RefreshTokenLifetime, validation.Required),
@@ -36,7 +36,7 @@ func (config *Config) Validate() error {
 
 func DefaultConfig() Config {
 	return Config{
-		Host:                          "",
+		AppPublicHost:                 "",
 		AccessTokenSecret:             "",
 		AccessTokenLifetime:           time.Minute,
 		LoginOTPSendingRate:           10,

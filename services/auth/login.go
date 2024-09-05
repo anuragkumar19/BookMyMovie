@@ -119,5 +119,5 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (Tokens, error) {
 }
 
 func (s *Auth) generateLoginLink(token string, otp string) string {
-	return s.config.Host + "/auth/login?token=" + url.QueryEscape(token) + "&otp=" + url.QueryEscape(otp)
+	return s.config.AppPublicHost + "/auth/login?token=" + url.QueryEscape(token) + "&otp=" + url.QueryEscape(otp)
 }
