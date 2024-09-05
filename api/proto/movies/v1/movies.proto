@@ -3,7 +3,6 @@ syntax = "proto3";
 package movies.v1;
 
 import "google/type/date/date.proto";
-import "shared/type/upload/upload.proto";
 // import "google/type/timestamp/timestamp.proto";
 
 option go_package = "bookmymovie.app/bookmymovie/api/gen/movies/v1;moviesv1";
@@ -126,7 +125,7 @@ message CreatePersonRequest {
   string name = 1;
   repeated string nicknames = 2;
   repeated string occupations = 3;
-  optional shared.type.upload.Upload profile_picture = 4;
+  optional string profile_picture_key = 4;
   optional google.type.Date dob = 5;
   string about = 6;
   string imdb_id = 7;

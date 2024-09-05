@@ -11,12 +11,11 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func (s *Formats) Delete(ctx context.Context, accessToken string, id string) error {
-	authMetadata, err := s.auth.GetAuthMetadata(accessToken)
-	if err != nil {
+func (s *Formats) Delete(ctx context.Context, authMeta *auth.Metadata, id string) error {
+	if err := authMeta.Valid(); err != nil {
 		return err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesFormatsDelete); err != nil {
+	if err := s.auth.CheckPermissions(authMeta, auth.MoviesFormatsDelete); err != nil {
 		return err
 	}
 

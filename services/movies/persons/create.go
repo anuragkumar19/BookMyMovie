@@ -14,8 +14,6 @@ import (
 )
 
 type CreateParams struct {
-	AccessToken string
-
 	Name              string
 	Nicknames         []string
 	Occupations       []string
@@ -56,12 +54,11 @@ func (params *CreateParams) Validate() error {
 	)
 }
 
-func (s *Persons) Create(ctx context.Context, params *CreateParams) (id int64, err error) {
-	authMetadata, err := s.auth.GetAuthMetadata(params.AccessToken)
-	if err != nil {
+func (s *Persons) Create(ctx context.Context, authMeta *auth.Metadata, params *CreateParams) (id int64, err error) {
+	if err := authMeta.Valid(); err != nil {
 		return 0, err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesPersonsCreate); err != nil {
+	if err := s.auth.CheckPermissions(authMeta, auth.MoviesPersonsCreate); err != nil {
 		return 0, err
 	}
 

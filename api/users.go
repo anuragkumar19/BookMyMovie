@@ -5,6 +5,7 @@ import (
 
 	usersv1 "bookmymovie.app/bookmymovie/api/gen/users/v1"
 	"bookmymovie.app/bookmymovie/api/gen/users/v1/usersv1connect"
+	"bookmymovie.app/bookmymovie/services/auth"
 	"bookmymovie.app/bookmymovie/services/users"
 	"connectrpc.com/connect"
 	"google.golang.org/genproto/googleapis/type/date"
@@ -14,11 +15,13 @@ import (
 type usersService struct {
 	usersv1connect.UnimplementedUsersServiceHandler
 
+	auth  *auth.Auth
 	users *users.Users
 }
 
 func (s *usersService) GetLoggedInUser(ctx context.Context, r *connect.Request[usersv1.GetLoggedInUserRequest]) (*connect.Response[usersv1.GetLoggedInUserResponse], error) {
-	user, err := s.users.GetLoggedInUser(ctx, r.Header().Get("Authorization"))
+	authMeta := s.auth.GetMetadata(getAccessToken(r))
+	user, err := s.users.GetLoggedInUser(ctx, &authMeta)
 	if err != nil {
 		return nil, err // TODO:
 	}

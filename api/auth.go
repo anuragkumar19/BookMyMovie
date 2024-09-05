@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"strings"
 
 	authv1 "bookmymovie.app/bookmymovie/api/gen/auth/v1"
 	"bookmymovie.app/bookmymovie/services/auth"
@@ -63,10 +64,23 @@ func (s *authService) RefreshAccessToken(ctx context.Context, r *connect.Request
 }
 
 func (s *authService) Logout(ctx context.Context, r *connect.Request[authv1.LogoutRequest]) (*connect.Response[authv1.LogoutResponse], error) {
-	err := s.auth.Logout(ctx, r.Header().Get("Authorization"))
-	if err != nil {
+	authMeta := s.auth.GetMetadata(getAccessToken(r))
+	if err := s.auth.Logout(ctx, &authMeta); err != nil {
 		return nil, err // TODO:
 	}
 	res := connect.NewResponse(&authv1.LogoutResponse{})
 	return res, nil
+}
+
+func getAccessToken[T any](r *connect.Request[T]) string {
+	h := r.Header().Get("Authorization")
+
+	hs := strings.Split(h, " ")
+	if len(hs) != 2 {
+		return ""
+	}
+	if hs[0] != "Bearer" {
+		return ""
+	}
+	return hs[1]
 }

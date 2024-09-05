@@ -25,7 +25,7 @@ func New(app *bookmymovie.Application) API {
 	return API{
 		app:          app,
 		authService:  &authService{auth: app.AuthService()},
-		usersService: &usersService{users: app.UsersService()},
+		usersService: &usersService{users: app.UsersService(), auth: app.AuthService()},
 	}
 }
 

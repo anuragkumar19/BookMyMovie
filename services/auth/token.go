@@ -3,6 +3,7 @@ package auth
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -13,12 +14,37 @@ import (
 )
 
 type Metadata struct {
-	UserID         int64
-	UserRole       database.Roles
-	RefreshTokenID int64
+	userID         int64
+	userRole       database.Roles
+	refreshTokenID int64
+
+	valid bool
+	err   error
 }
 
-func (s *Auth) GetAuthMetadata(accessToken string) (Metadata, error) {
+func (m *Metadata) Valid() error {
+	if !m.valid {
+		if nil == m.err {
+			return errors.New("auth.Metadata must be created from functions available in auth package")
+		}
+		return serviceserrors.UnauthorizedError(m.err)
+	}
+	return nil
+}
+
+func (m *Metadata) UserID() int64 {
+	return m.userID
+}
+
+func (m *Metadata) RefreshTokenID() int64 {
+	return m.refreshTokenID
+}
+
+func (m *Metadata) UserRole() database.Roles {
+	return m.userRole
+}
+
+func (s *Auth) GetMetadata(accessToken string) Metadata {
 	token, err := jwt.Parse(accessToken, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
@@ -26,10 +52,16 @@ func (s *Auth) GetAuthMetadata(accessToken string) (Metadata, error) {
 		return []byte(s.config.AccessTokenSecret), nil
 	})
 	if err != nil {
-		return Metadata{}, serviceserrors.UnauthorizedError(err)
+		return Metadata{
+			valid: false,
+			err:   err,
+		}
 	}
 	if !token.Valid {
-		return Metadata{}, serviceserrors.UnauthorizedError(ErrTokenInvalid)
+		return Metadata{
+			valid: false,
+			err:   ErrTokenInvalid,
+		}
 	}
 	claims := token.Claims.(jwt.MapClaims) //nolint:errorlint,errcheck
 
@@ -38,14 +70,18 @@ func (s *Auth) GetAuthMetadata(accessToken string) (Metadata, error) {
 	userRole := database.Roles(claims["user_role"].(string)) //nolint:errorlint,errcheck
 
 	if _, ok := s.revokedTokens[id]; ok {
-		return Metadata{}, serviceserrors.UnauthorizedError(ErrTokenInvalid)
+		return Metadata{
+			valid: false,
+			err:   ErrTokenInvalid,
+		}
 	}
 
 	return Metadata{
-		RefreshTokenID: id,
-		UserID:         userID,
-		UserRole:       userRole,
-	}, nil
+		refreshTokenID: id,
+		userID:         userID,
+		userRole:       userRole,
+		valid:          true,
+	}
 }
 
 func (s *Auth) startBackgroundRevokedTokenCleanup() {

@@ -7,29 +7,28 @@ import (
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
-	serviceserrorss "bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	"github.com/jackc/pgx/v5"
 )
 
-func (s *Genres) Delete(ctx context.Context, accessToken string, id string) error {
-	authMetadata, err := s.auth.GetAuthMetadata(accessToken)
-	if err != nil {
+func (s *Genres) Delete(ctx context.Context, authMeta *auth.Metadata, id string) error {
+	if err := authMeta.Valid(); err != nil {
 		return err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesGenresDelete); err != nil {
+	if err := s.auth.CheckPermissions(authMeta, auth.MoviesGenresDelete); err != nil {
 		return err
 	}
 
 	if _, err := s.GetByID(ctx, id); err != nil {
-		if errors.Is(err, serviceserrorss.ErrNotFound) {
-			return serviceserrorss.ErrNotFound
+		if errors.Is(err, serviceserrors.ErrNotFound) {
+			return serviceserrors.ErrNotFound
 		}
 		return err
 	}
 
 	if err := s.db.DeleteMoviesGenre(ctx, id); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return serviceserrorss.ErrUpdateConflict
+			return serviceserrors.ErrUpdateConflict
 		}
 		return err
 	}

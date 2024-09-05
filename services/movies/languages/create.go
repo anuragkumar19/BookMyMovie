@@ -7,13 +7,12 @@ import (
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
-	serviceserrorss "bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gosimple/slug"
 )
 
 type CreateParams struct {
-	AccessToken string
 	DisplayName string
 	EnglishName string
 }
@@ -31,12 +30,11 @@ func (params *CreateParams) Validate() error {
 	)
 }
 
-func (s *Languages) Create(ctx context.Context, params *CreateParams) (id string, err error) {
-	authMetadata, err := s.auth.GetAuthMetadata(params.AccessToken)
-	if err != nil {
+func (s *Languages) Create(ctx context.Context, authMeta *auth.Metadata, params *CreateParams) (id string, err error) {
+	if err := authMeta.Valid(); err != nil {
 		return "", err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesLanguagesCreate); err != nil {
+	if err := s.auth.CheckPermissions(authMeta, auth.MoviesLanguagesCreate); err != nil {
 		return "", err
 	}
 
@@ -44,13 +42,13 @@ func (s *Languages) Create(ctx context.Context, params *CreateParams) (id string
 
 	exist := true
 	if _, err := s.GetByID(ctx, id); err != nil {
-		if !errors.Is(err, serviceserrorss.ErrNotFound) {
+		if !errors.Is(err, serviceserrors.ErrNotFound) {
 			return "", err
 		}
 		exist = false
 	}
 	if exist {
-		return "", serviceserrorss.ErrAlreadyExist
+		return "", serviceserrors.ErrAlreadyExist
 	}
 
 	lang, err := s.db.CreateMoviesLanguage(ctx, &database.CreateMoviesLanguageParams{

@@ -7,15 +7,13 @@ import (
 )
 
 type CreateMovieParams struct {
-	AccessToken string
 }
 
-func (s *Movies) CreateMovie(_ context.Context, params *CreateMovieParams) (id int64, err error) {
-	user, err := s.auth.GetAuthMetadata(params.AccessToken)
-	if err != nil {
+func (s *Movies) CreateMovie(_ context.Context, authMeta *auth.Metadata, _ *CreateMovieParams) (id int64, err error) {
+	if err := authMeta.Valid(); err != nil {
 		return 0, err
 	}
-	if err := s.auth.CheckPermissions(&user, auth.MovieCreate); err != nil {
+	if err := s.auth.CheckPermissions(authMeta, auth.MovieCreate); err != nil {
 		return 0, err
 	}
 	return 1, nil

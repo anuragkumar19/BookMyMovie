@@ -9,7 +9,5 @@ func main() {
 	app := bookmymovie.New()
 
 	apiServer := api.New(&app)
-
 	apiServer.Run()
-
 }

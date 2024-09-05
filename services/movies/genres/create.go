@@ -13,7 +13,6 @@ import (
 )
 
 type CreateParams struct {
-	AccessToken string
 	DisplayName string
 	About       string
 }
@@ -31,12 +30,11 @@ func (params *CreateParams) Validate() error {
 	)
 }
 
-func (s *Genres) Create(ctx context.Context, params *CreateParams) (id string, err error) {
-	authMetadata, err := s.auth.GetAuthMetadata(params.AccessToken)
-	if err != nil {
+func (s *Genres) Create(ctx context.Context, authMeta *auth.Metadata, params *CreateParams) (id string, err error) {
+	if err := authMeta.Valid(); err != nil {
 		return "", err
 	}
-	if err := s.auth.CheckPermissions(&authMetadata, auth.MoviesGenresCreate); err != nil {
+	if err := s.auth.CheckPermissions(authMeta, auth.MoviesGenresCreate); err != nil {
 		return "", err
 	}
 

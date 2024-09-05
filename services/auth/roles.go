@@ -47,8 +47,11 @@ var adminPermission = rolePermissionMap{
 
 var regularUserPermission = rolePermissionMap{}
 
-func (*Auth) CheckPermissions(auth *Metadata, ps ...Permission) error {
-	switch auth.UserRole {
+func (*Auth) CheckPermissions(authMeta *Metadata, ps ...Permission) error {
+	if err := authMeta.Valid(); err != nil {
+		return err
+	}
+	switch authMeta.UserRole() {
 	case database.RolesAdmin:
 		return checkPermission(adminPermission, ps)
 	case database.RolesRegularUser:
