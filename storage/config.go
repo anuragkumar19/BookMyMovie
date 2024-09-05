@@ -5,13 +5,13 @@ import (
 )
 
 type Config struct {
-	Endpoint         string `conf:"env:ENDPOINT,flag:endpoint"`
-	AccessKey        string `conf:"env:ACCESS_KEY,flag:access-key"`
-	Secret           string `conf:"env:SECRET,flag:secret"`
-	UseSSL           bool   `conf:"env:USE_SSL,flag:use-ssl,default:false"`
-	Bucket           string `conf:"env:BUCKET,flag:bucket"`
-	AutoCreateBucket bool   `conf:"env:AUTO_CREATE_BUCKET,flag:auto-create-bucket,default:false"`
-	Region           string `conf:"evn:REGION,flag:region"`
+	Endpoint         string
+	AccessKey        string
+	Secret           string
+	UseSSL           bool
+	Bucket           string
+	AutoCreateBucket bool
+	Region           string
 }
 
 func (config *Config) Validate() error {

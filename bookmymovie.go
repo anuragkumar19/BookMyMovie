@@ -22,19 +22,23 @@ type Application struct {
 	usersService *users.Users
 }
 
-func New(conf *Config) Application {
+func New() Application {
 	logger := zerolog.New(os.Stdout).With().Timestamp().Logger()
 
-	if err := conf.Validate(); err != nil {
+	conf := newConfig()
+	if err := conf.parse(); err != nil {
+		logger.Fatal().Err(err).Msg("failed to parse config")
+	}
+	if err := conf.validate(); err != nil {
 		logger.Fatal().Err(err).Msg("failed to validate config")
 	}
 
-	logger = logger.Level(conf.LogLevel)
+	logger = logger.Level(conf.logLevel)
 
-	db := database.NewDatabase(conf.Database, &logger)
-	s := storage.New(conf.Storage, &logger)
-	m := mailer.New(conf.Mailer, &logger)
-	authService := auth.New(conf.Auth, &logger, &db, &m)
+	db := database.NewDatabase(conf.database, &logger)
+	s := storage.New(conf.storage, &logger)
+	m := mailer.New(conf.mailer, &logger)
+	authService := auth.New(conf.auth, &logger, &db, &m)
 	usersService := users.New(&logger, &db, &m, &authService)
 
 	return Application{

@@ -6,9 +6,7 @@ import (
 )
 
 func main() {
-	appConf := bookmymovie.DefaultConfig()
-
-	app := bookmymovie.New(&appConf)
+	app := bookmymovie.New()
 
 	apiServer := api.New(&app)
 
