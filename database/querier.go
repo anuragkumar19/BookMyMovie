@@ -20,9 +20,9 @@ type Querier interface {
 	DeleteExpiredLoginTokens(ctx context.Context) error
 	DeleteExpiredRefreshTokens(ctx context.Context) error
 	DeleteLoginToken(ctx context.Context, token string) error
-	DeleteMoviesFormat(ctx context.Context, id string) error
-	DeleteMoviesGenre(ctx context.Context, id string) error
-	DeleteMoviesLanguage(ctx context.Context, id string) error
+	DeleteMoviesFormat(ctx context.Context, id int64) error
+	DeleteMoviesGenre(ctx context.Context, id int64) error
+	DeleteMoviesLanguage(ctx context.Context, id int64) error
 	DeleteRefreshToken(ctx context.Context, id int64) error
 	FindLoginToken(ctx context.Context, token string) (FindLoginTokenRow, error)
 	FindRefreshToken(ctx context.Context, token string) (RefreshToken, error)
@@ -31,9 +31,9 @@ type Querier interface {
 	GetAllMoviesFormats(ctx context.Context) ([]MoviesFormat, error)
 	GetAllMoviesGenres(ctx context.Context) ([]MoviesGenre, error)
 	GetAllMoviesLanguages(ctx context.Context) ([]MoviesLanguage, error)
-	GetMoviesFormatByID(ctx context.Context, id string) (MoviesFormat, error)
-	GetMoviesGenreByID(ctx context.Context, id string) (MoviesGenre, error)
-	GetMoviesLanguageByID(ctx context.Context, id string) (MoviesLanguage, error)
+	GetMoviesFormatByID(ctx context.Context, id int64) (MoviesFormat, error)
+	GetMoviesGenreByID(ctx context.Context, id int64) (MoviesGenre, error)
+	GetMoviesLanguageByID(ctx context.Context, id int64) (MoviesLanguage, error)
 	UpdateUserLoginFields(ctx context.Context, arg *UpdateUserLoginFieldsParams) error
 }
 

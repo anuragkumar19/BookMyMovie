@@ -11,134 +11,134 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-type IndiaCbfcRatings string
+type MoviesIndiaCbfcRatings string
 
 const (
-	IndiaCbfcRatingsU  IndiaCbfcRatings = "U"
-	IndiaCbfcRatingsUA IndiaCbfcRatings = "U/A"
-	IndiaCbfcRatingsA  IndiaCbfcRatings = "A"
-	IndiaCbfcRatingsS  IndiaCbfcRatings = "S"
+	MoviesIndiaCbfcRatingsU  MoviesIndiaCbfcRatings = "U"
+	MoviesIndiaCbfcRatingsUA MoviesIndiaCbfcRatings = "U/A"
+	MoviesIndiaCbfcRatingsA  MoviesIndiaCbfcRatings = "A"
+	MoviesIndiaCbfcRatingsS  MoviesIndiaCbfcRatings = "S"
 )
 
-func (e *IndiaCbfcRatings) Scan(src interface{}) error {
+func (e *MoviesIndiaCbfcRatings) Scan(src interface{}) error {
 	switch s := src.(type) {
 	case []byte:
-		*e = IndiaCbfcRatings(s)
+		*e = MoviesIndiaCbfcRatings(s)
 	case string:
-		*e = IndiaCbfcRatings(s)
+		*e = MoviesIndiaCbfcRatings(s)
 	default:
-		return fmt.Errorf("unsupported scan type for IndiaCbfcRatings: %T", src)
+		return fmt.Errorf("unsupported scan type for MoviesIndiaCbfcRatings: %T", src)
 	}
 	return nil
 }
 
-type NullIndiaCbfcRatings struct {
-	IndiaCbfcRatings IndiaCbfcRatings
-	Valid            bool // Valid is true if IndiaCbfcRatings is not NULL
+type NullMoviesIndiaCbfcRatings struct {
+	MoviesIndiaCbfcRatings MoviesIndiaCbfcRatings
+	Valid                  bool // Valid is true if MoviesIndiaCbfcRatings is not NULL
 }
 
 // Scan implements the Scanner interface.
-func (ns *NullIndiaCbfcRatings) Scan(value interface{}) error {
+func (ns *NullMoviesIndiaCbfcRatings) Scan(value interface{}) error {
 	if value == nil {
-		ns.IndiaCbfcRatings, ns.Valid = "", false
+		ns.MoviesIndiaCbfcRatings, ns.Valid = "", false
 		return nil
 	}
 	ns.Valid = true
-	return ns.IndiaCbfcRatings.Scan(value)
+	return ns.MoviesIndiaCbfcRatings.Scan(value)
 }
 
 // Value implements the driver Valuer interface.
-func (ns NullIndiaCbfcRatings) Value() (driver.Value, error) {
+func (ns NullMoviesIndiaCbfcRatings) Value() (driver.Value, error) {
 	if !ns.Valid {
 		return nil, nil
 	}
-	return string(ns.IndiaCbfcRatings), nil
+	return string(ns.MoviesIndiaCbfcRatings), nil
 }
 
-func (e IndiaCbfcRatings) Valid() bool {
+func (e MoviesIndiaCbfcRatings) Valid() bool {
 	switch e {
-	case IndiaCbfcRatingsU,
-		IndiaCbfcRatingsUA,
-		IndiaCbfcRatingsA,
-		IndiaCbfcRatingsS:
+	case MoviesIndiaCbfcRatingsU,
+		MoviesIndiaCbfcRatingsUA,
+		MoviesIndiaCbfcRatingsA,
+		MoviesIndiaCbfcRatingsS:
 		return true
 	}
 	return false
 }
 
-func AllIndiaCbfcRatingsValues() []IndiaCbfcRatings {
-	return []IndiaCbfcRatings{
-		IndiaCbfcRatingsU,
-		IndiaCbfcRatingsUA,
-		IndiaCbfcRatingsA,
-		IndiaCbfcRatingsS,
+func AllMoviesIndiaCbfcRatingsValues() []MoviesIndiaCbfcRatings {
+	return []MoviesIndiaCbfcRatings{
+		MoviesIndiaCbfcRatingsU,
+		MoviesIndiaCbfcRatingsUA,
+		MoviesIndiaCbfcRatingsA,
+		MoviesIndiaCbfcRatingsS,
 	}
 }
 
-type MpaRatings string
+type MoviesMpaRatings string
 
 const (
-	MpaRatingsG    MpaRatings = "G"
-	MpaRatingsPG   MpaRatings = "PG"
-	MpaRatingsPG13 MpaRatings = "PG-13"
-	MpaRatingsR    MpaRatings = "R"
-	MpaRatingsNC17 MpaRatings = "NC-17"
+	MoviesMpaRatingsG    MoviesMpaRatings = "G"
+	MoviesMpaRatingsPG   MoviesMpaRatings = "PG"
+	MoviesMpaRatingsPG13 MoviesMpaRatings = "PG-13"
+	MoviesMpaRatingsR    MoviesMpaRatings = "R"
+	MoviesMpaRatingsNC17 MoviesMpaRatings = "NC-17"
 )
 
-func (e *MpaRatings) Scan(src interface{}) error {
+func (e *MoviesMpaRatings) Scan(src interface{}) error {
 	switch s := src.(type) {
 	case []byte:
-		*e = MpaRatings(s)
+		*e = MoviesMpaRatings(s)
 	case string:
-		*e = MpaRatings(s)
+		*e = MoviesMpaRatings(s)
 	default:
-		return fmt.Errorf("unsupported scan type for MpaRatings: %T", src)
+		return fmt.Errorf("unsupported scan type for MoviesMpaRatings: %T", src)
 	}
 	return nil
 }
 
-type NullMpaRatings struct {
-	MpaRatings MpaRatings
-	Valid      bool // Valid is true if MpaRatings is not NULL
+type NullMoviesMpaRatings struct {
+	MoviesMpaRatings MoviesMpaRatings
+	Valid            bool // Valid is true if MoviesMpaRatings is not NULL
 }
 
 // Scan implements the Scanner interface.
-func (ns *NullMpaRatings) Scan(value interface{}) error {
+func (ns *NullMoviesMpaRatings) Scan(value interface{}) error {
 	if value == nil {
-		ns.MpaRatings, ns.Valid = "", false
+		ns.MoviesMpaRatings, ns.Valid = "", false
 		return nil
 	}
 	ns.Valid = true
-	return ns.MpaRatings.Scan(value)
+	return ns.MoviesMpaRatings.Scan(value)
 }
 
 // Value implements the driver Valuer interface.
-func (ns NullMpaRatings) Value() (driver.Value, error) {
+func (ns NullMoviesMpaRatings) Value() (driver.Value, error) {
 	if !ns.Valid {
 		return nil, nil
 	}
-	return string(ns.MpaRatings), nil
+	return string(ns.MoviesMpaRatings), nil
 }
 
-func (e MpaRatings) Valid() bool {
+func (e MoviesMpaRatings) Valid() bool {
 	switch e {
-	case MpaRatingsG,
-		MpaRatingsPG,
-		MpaRatingsPG13,
-		MpaRatingsR,
-		MpaRatingsNC17:
+	case MoviesMpaRatingsG,
+		MoviesMpaRatingsPG,
+		MoviesMpaRatingsPG13,
+		MoviesMpaRatingsR,
+		MoviesMpaRatingsNC17:
 		return true
 	}
 	return false
 }
 
-func AllMpaRatingsValues() []MpaRatings {
-	return []MpaRatings{
-		MpaRatingsG,
-		MpaRatingsPG,
-		MpaRatingsPG13,
-		MpaRatingsR,
-		MpaRatingsNC17,
+func AllMoviesMpaRatingsValues() []MoviesMpaRatings {
+	return []MoviesMpaRatings{
+		MoviesMpaRatingsG,
+		MoviesMpaRatingsPG,
+		MoviesMpaRatingsPG13,
+		MoviesMpaRatingsR,
+		MoviesMpaRatingsNC17,
 	}
 }
 
@@ -227,20 +227,38 @@ type Movie struct {
 	Slug                       string
 	Poster                     string
 	RunningDurationInMinutes   int32
-	AvailableAudioLanguages    []string
-	AvailableSubtitleLanguages []string
-	AvailableFormats           []string
+	AvailableAudioLanguages    []int64
+	AvailableSubtitleLanguages []int64
+	AvailableFormats           []int64
 	Rating                     string
 	TotalRatingCount           int32
-	Genres                     []string
+	Genres                     []int64
 	ReleaseDate                pgtype.Date
 	IsInCinema                 bool
-	IndiaCbfcRating            IndiaCbfcRatings
-	MpaRating                  MpaRatings
+	IndiaCbfcRating            MoviesIndiaCbfcRatings
+	MpaRating                  MoviesMpaRatings
 	About                      string
 	ImdbID                     string
 	ImdbRating                 string
 	ImdbLastSyncedAt           pgtype.Timestamptz
+}
+
+type MoviesAvailableAudioLanguage struct {
+	MovieID          int64
+	MoviesLanguageID int64
+	Index            int32
+}
+
+type MoviesAvailableFormat struct {
+	MovieID        int64
+	MoviesFormatID int64
+	Index          int32
+}
+
+type MoviesAvailableSubtitleLanguage struct {
+	MovieID          int64
+	MoviesLanguageID int64
+	Index            int32
 }
 
 type MoviesCast struct {
@@ -256,24 +274,33 @@ type MoviesCrew struct {
 }
 
 type MoviesFormat struct {
-	ID          string
-	DisplayName string
+	ID          int64
 	CreatedAt   pgtype.Timestamptz
+	DisplayName string
+	Slug        string
 	About       string
 }
 
 type MoviesGenre struct {
-	ID          string
+	ID          int64
 	CreatedAt   pgtype.Timestamptz
+	Slug        string
 	DisplayName string
 	About       string
 }
 
+type MoviesGenresJoin struct {
+	MovieID       int64
+	MoviesGenreID int64
+	Index         int32
+}
+
 type MoviesLanguage struct {
-	ID          string
+	ID          int64
 	CreatedAt   pgtype.Timestamptz
 	DisplayName string
 	EnglishName string
+	Slug        string
 }
 
 type MoviesPerson struct {

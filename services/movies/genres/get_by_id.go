@@ -8,7 +8,7 @@ import (
 	"bookmymovie.app/bookmymovie/services/serviceserrors"
 )
 
-func (s *Genres) GetByID(_ context.Context, id string) (database.MoviesGenre, error) {
+func (s *Genres) GetByID(_ context.Context, id int64) (database.MoviesGenre, error) {
 	i := slices.IndexFunc(s.cache.genres, func(g database.MoviesGenre) bool {
 		return g.ID == id
 	})

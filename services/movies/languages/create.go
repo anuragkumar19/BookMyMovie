@@ -2,12 +2,10 @@ package languages
 
 import (
 	"context"
-	"errors"
 	"strings"
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gosimple/slug"
 )
@@ -30,34 +28,23 @@ func (params *CreateParams) Validate() error {
 	)
 }
 
-func (s *Languages) Create(ctx context.Context, authMeta *auth.Metadata, params *CreateParams) (id string, err error) {
+func (s *Languages) Create(ctx context.Context, authMeta *auth.Metadata, params *CreateParams) (database.MoviesLanguage, error) {
 	if err := authMeta.Valid(); err != nil {
-		return "", err
+		return database.MoviesLanguage{}, err
 	}
 	if err := s.auth.CheckPermissions(authMeta, auth.MoviesLanguagesCreate); err != nil {
-		return "", err
+		return database.MoviesLanguage{}, err
 	}
 
-	id = slug.Make(params.DisplayName)
-
-	exist := true
-	if _, err := s.GetByID(ctx, id); err != nil {
-		if !errors.Is(err, serviceserrors.ErrNotFound) {
-			return "", err
-		}
-		exist = false
-	}
-	if exist {
-		return "", serviceserrors.ErrAlreadyExist
-	}
+	slg := slug.Make(params.DisplayName)
 
 	lang, err := s.db.CreateMoviesLanguage(ctx, &database.CreateMoviesLanguageParams{
-		ID:          id,
+		Slug:        slg,
 		DisplayName: params.DisplayName,
 		EnglishName: params.EnglishName,
 	})
 	if err != nil {
-		return "", err
+		return database.MoviesLanguage{}, err
 	}
 
 	langs := make([]database.MoviesLanguage, len(s.cache.languages))
@@ -65,5 +52,5 @@ func (s *Languages) Create(ctx context.Context, authMeta *auth.Metadata, params 
 
 	langs = append(langs, lang)
 	s.cache.refresh(langs)
-	return id, nil
+	return lang, nil
 }

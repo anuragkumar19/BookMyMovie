@@ -11,25 +11,26 @@ import (
 
 const createMoviesGenre = `-- name: CreateMoviesGenre :one
 INSERT INTO
-    "movies_genres" ("id", "display_name", "about")
+    "movies_genres" ("slug", "display_name", "about")
 VALUES
     ($1, $2, $3)
 RETURNING
-    id, created_at, display_name, about
+    id, created_at, slug, display_name, about
 `
 
 type CreateMoviesGenreParams struct {
-	ID          string
+	Slug        string
 	DisplayName string
 	About       string
 }
 
 func (q *Queries) CreateMoviesGenre(ctx context.Context, arg *CreateMoviesGenreParams) (MoviesGenre, error) {
-	row := q.db.QueryRow(ctx, createMoviesGenre, arg.ID, arg.DisplayName, arg.About)
+	row := q.db.QueryRow(ctx, createMoviesGenre, arg.Slug, arg.DisplayName, arg.About)
 	var i MoviesGenre
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
+		&i.Slug,
 		&i.DisplayName,
 		&i.About,
 	)
@@ -42,14 +43,14 @@ WHERE
     id = $1
 `
 
-func (q *Queries) DeleteMoviesGenre(ctx context.Context, id string) error {
+func (q *Queries) DeleteMoviesGenre(ctx context.Context, id int64) error {
 	_, err := q.db.Exec(ctx, deleteMoviesGenre, id)
 	return err
 }
 
 const getAllMoviesGenres = `-- name: GetAllMoviesGenres :many
 SELECT
-    id, created_at, display_name, about
+    id, created_at, slug, display_name, about
 FROM
     "movies_genres"
 `
@@ -66,6 +67,7 @@ func (q *Queries) GetAllMoviesGenres(ctx context.Context) ([]MoviesGenre, error)
 		if err := rows.Scan(
 			&i.ID,
 			&i.CreatedAt,
+			&i.Slug,
 			&i.DisplayName,
 			&i.About,
 		); err != nil {
@@ -81,19 +83,20 @@ func (q *Queries) GetAllMoviesGenres(ctx context.Context) ([]MoviesGenre, error)
 
 const getMoviesGenreByID = `-- name: GetMoviesGenreByID :one
 SELECT
-    id, created_at, display_name, about
+    id, created_at, slug, display_name, about
 FROM
     "movies_genres"
 WHERE
     "id" = $1
 `
 
-func (q *Queries) GetMoviesGenreByID(ctx context.Context, id string) (MoviesGenre, error) {
+func (q *Queries) GetMoviesGenreByID(ctx context.Context, id int64) (MoviesGenre, error) {
 	row := q.db.QueryRow(ctx, getMoviesGenreByID, id)
 	var i MoviesGenre
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
+		&i.Slug,
 		&i.DisplayName,
 		&i.About,
 	)

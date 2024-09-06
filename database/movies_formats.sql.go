@@ -11,26 +11,27 @@ import (
 
 const createMoviesFormat = `-- name: CreateMoviesFormat :one
 INSERT INTO
-    "movies_formats" ("id", "display_name", "about")
+    "movies_formats" ("slug", "display_name", "about")
 VALUES
     ($1, $2, $3)
 RETURNING
-    id, display_name, created_at, about
+    id, created_at, display_name, slug, about
 `
 
 type CreateMoviesFormatParams struct {
-	ID          string
+	Slug        string
 	DisplayName string
 	About       string
 }
 
 func (q *Queries) CreateMoviesFormat(ctx context.Context, arg *CreateMoviesFormatParams) (MoviesFormat, error) {
-	row := q.db.QueryRow(ctx, createMoviesFormat, arg.ID, arg.DisplayName, arg.About)
+	row := q.db.QueryRow(ctx, createMoviesFormat, arg.Slug, arg.DisplayName, arg.About)
 	var i MoviesFormat
 	err := row.Scan(
 		&i.ID,
-		&i.DisplayName,
 		&i.CreatedAt,
+		&i.DisplayName,
+		&i.Slug,
 		&i.About,
 	)
 	return i, err
@@ -42,14 +43,14 @@ WHERE
     id = $1
 `
 
-func (q *Queries) DeleteMoviesFormat(ctx context.Context, id string) error {
+func (q *Queries) DeleteMoviesFormat(ctx context.Context, id int64) error {
 	_, err := q.db.Exec(ctx, deleteMoviesFormat, id)
 	return err
 }
 
 const getAllMoviesFormats = `-- name: GetAllMoviesFormats :many
 SELECT
-    id, display_name, created_at, about
+    id, created_at, display_name, slug, about
 FROM
     "movies_formats"
 `
@@ -65,8 +66,9 @@ func (q *Queries) GetAllMoviesFormats(ctx context.Context) ([]MoviesFormat, erro
 		var i MoviesFormat
 		if err := rows.Scan(
 			&i.ID,
-			&i.DisplayName,
 			&i.CreatedAt,
+			&i.DisplayName,
+			&i.Slug,
 			&i.About,
 		); err != nil {
 			return nil, err
@@ -81,20 +83,21 @@ func (q *Queries) GetAllMoviesFormats(ctx context.Context) ([]MoviesFormat, erro
 
 const getMoviesFormatByID = `-- name: GetMoviesFormatByID :one
 SELECT
-    id, display_name, created_at, about
+    id, created_at, display_name, slug, about
 FROM
     "movies_formats"
 WHERE
     "id" = $1
 `
 
-func (q *Queries) GetMoviesFormatByID(ctx context.Context, id string) (MoviesFormat, error) {
+func (q *Queries) GetMoviesFormatByID(ctx context.Context, id int64) (MoviesFormat, error) {
 	row := q.db.QueryRow(ctx, getMoviesFormatByID, id)
 	var i MoviesFormat
 	err := row.Scan(
 		&i.ID,
-		&i.DisplayName,
 		&i.CreatedAt,
+		&i.DisplayName,
+		&i.Slug,
 		&i.About,
 	)
 	return i, err

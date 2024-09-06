@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func (s *Languages) Delete(ctx context.Context, authMeta *auth.Metadata, id string) error {
+func (s *Languages) Delete(ctx context.Context, authMeta *auth.Metadata, id int64) error {
 	if err := authMeta.Valid(); err != nil {
 		return err
 	}
@@ -20,9 +20,6 @@ func (s *Languages) Delete(ctx context.Context, authMeta *auth.Metadata, id stri
 	}
 
 	if _, err := s.GetByID(ctx, id); err != nil {
-		if errors.Is(err, serviceserrors.ErrNotFound) {
-			return serviceserrors.ErrNotFound
-		}
 		return err
 	}
 

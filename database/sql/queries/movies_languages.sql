@@ -1,6 +1,6 @@
 -- name: CreateMoviesLanguage :one
 INSERT INTO
-    "movies_languages" ("id", "display_name", "english_name")
+    "movies_languages" ("slug", "display_name", "english_name")
 VALUES
     ($1, $2, $3)
 RETURNING

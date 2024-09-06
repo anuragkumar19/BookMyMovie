@@ -11,27 +11,28 @@ import (
 
 const createMoviesLanguage = `-- name: CreateMoviesLanguage :one
 INSERT INTO
-    "movies_languages" ("id", "display_name", "english_name")
+    "movies_languages" ("slug", "display_name", "english_name")
 VALUES
     ($1, $2, $3)
 RETURNING
-    id, created_at, display_name, english_name
+    id, created_at, display_name, english_name, slug
 `
 
 type CreateMoviesLanguageParams struct {
-	ID          string
+	Slug        string
 	DisplayName string
 	EnglishName string
 }
 
 func (q *Queries) CreateMoviesLanguage(ctx context.Context, arg *CreateMoviesLanguageParams) (MoviesLanguage, error) {
-	row := q.db.QueryRow(ctx, createMoviesLanguage, arg.ID, arg.DisplayName, arg.EnglishName)
+	row := q.db.QueryRow(ctx, createMoviesLanguage, arg.Slug, arg.DisplayName, arg.EnglishName)
 	var i MoviesLanguage
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
 		&i.DisplayName,
 		&i.EnglishName,
+		&i.Slug,
 	)
 	return i, err
 }
@@ -42,14 +43,14 @@ WHERE
     id = $1
 `
 
-func (q *Queries) DeleteMoviesLanguage(ctx context.Context, id string) error {
+func (q *Queries) DeleteMoviesLanguage(ctx context.Context, id int64) error {
 	_, err := q.db.Exec(ctx, deleteMoviesLanguage, id)
 	return err
 }
 
 const getAllMoviesLanguages = `-- name: GetAllMoviesLanguages :many
 SELECT
-    id, created_at, display_name, english_name
+    id, created_at, display_name, english_name, slug
 FROM
     "movies_languages"
 `
@@ -68,6 +69,7 @@ func (q *Queries) GetAllMoviesLanguages(ctx context.Context) ([]MoviesLanguage, 
 			&i.CreatedAt,
 			&i.DisplayName,
 			&i.EnglishName,
+			&i.Slug,
 		); err != nil {
 			return nil, err
 		}
@@ -81,14 +83,14 @@ func (q *Queries) GetAllMoviesLanguages(ctx context.Context) ([]MoviesLanguage, 
 
 const getMoviesLanguageByID = `-- name: GetMoviesLanguageByID :one
 SELECT
-    id, created_at, display_name, english_name
+    id, created_at, display_name, english_name, slug
 FROM
     "movies_languages"
 WHERE
     "id" = $1
 `
 
-func (q *Queries) GetMoviesLanguageByID(ctx context.Context, id string) (MoviesLanguage, error) {
+func (q *Queries) GetMoviesLanguageByID(ctx context.Context, id int64) (MoviesLanguage, error) {
 	row := q.db.QueryRow(ctx, getMoviesLanguageByID, id)
 	var i MoviesLanguage
 	err := row.Scan(
@@ -96,6 +98,7 @@ func (q *Queries) GetMoviesLanguageByID(ctx context.Context, id string) (MoviesL
 		&i.CreatedAt,
 		&i.DisplayName,
 		&i.EnglishName,
+		&i.Slug,
 	)
 	return i, err
 }

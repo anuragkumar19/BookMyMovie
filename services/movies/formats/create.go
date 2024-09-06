@@ -2,12 +2,10 @@ package formats
 
 import (
 	"context"
-	"errors"
 	"strings"
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gosimple/slug"
 )
@@ -30,34 +28,23 @@ func (params *CreateParams) Validate() error {
 	)
 }
 
-func (s *Formats) Create(ctx context.Context, authMeta *auth.Metadata, params *CreateParams) (id string, err error) {
+func (s *Formats) Create(ctx context.Context, authMeta *auth.Metadata, params *CreateParams) (database.MoviesFormat, error) {
 	if err := authMeta.Valid(); err != nil {
-		return "", err
+		return database.MoviesFormat{}, err
 	}
 	if err := s.auth.CheckPermissions(authMeta, auth.MoviesFormatsCreate); err != nil {
-		return "", err
+		return database.MoviesFormat{}, err
 	}
 
-	id = slug.Make(params.DisplayName)
-
-	exist := true
-	if _, err := s.GetByID(ctx, id); err != nil {
-		if !errors.Is(err, serviceserrors.ErrNotFound) {
-			return "", err
-		}
-		exist = false
-	}
-	if exist {
-		return "", serviceserrors.ErrAlreadyExist
-	}
+	slg := slug.Make(params.DisplayName)
 
 	format, err := s.db.CreateMoviesFormat(ctx, &database.CreateMoviesFormatParams{
-		ID:          id,
+		Slug:        slg,
 		DisplayName: params.DisplayName,
 		About:       params.About,
 	})
 	if err != nil {
-		return "", err
+		return database.MoviesFormat{}, err
 	}
 
 	formats := make([]database.MoviesFormat, len(s.cache.formats))
@@ -65,5 +52,5 @@ func (s *Formats) Create(ctx context.Context, authMeta *auth.Metadata, params *C
 
 	formats = append(formats, format)
 	s.cache.refresh(formats)
-	return id, nil
+	return format, nil
 }

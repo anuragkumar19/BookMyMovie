@@ -2,12 +2,10 @@ package genres
 
 import (
 	"context"
-	"errors"
 	"strings"
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gosimple/slug"
 )
@@ -30,34 +28,23 @@ func (params *CreateParams) Validate() error {
 	)
 }
 
-func (s *Genres) Create(ctx context.Context, authMeta *auth.Metadata, params *CreateParams) (id string, err error) {
+func (s *Genres) Create(ctx context.Context, authMeta *auth.Metadata, params *CreateParams) (database.MoviesGenre, error) {
 	if err := authMeta.Valid(); err != nil {
-		return "", err
+		return database.MoviesGenre{}, err
 	}
 	if err := s.auth.CheckPermissions(authMeta, auth.MoviesGenresCreate); err != nil {
-		return "", err
+		return database.MoviesGenre{}, err
 	}
 
-	id = slug.Make(params.DisplayName)
-
-	exist := true
-	if _, err := s.GetByID(ctx, id); err != nil {
-		if !errors.Is(err, serviceserrors.ErrNotFound) {
-			return "", err
-		}
-		exist = false
-	}
-	if exist {
-		return "", serviceserrors.ErrAlreadyExist
-	}
+	slg := slug.Make(params.DisplayName)
 
 	genre, err := s.db.CreateMoviesGenre(ctx, &database.CreateMoviesGenreParams{
-		ID:          id,
+		Slug:        slg,
 		DisplayName: params.DisplayName,
 		About:       params.About,
 	})
 	if err != nil {
-		return "", err
+		return database.MoviesGenre{}, err
 	}
 
 	genres := make([]database.MoviesGenre, len(s.cache.genres))
@@ -65,5 +52,5 @@ func (s *Genres) Create(ctx context.Context, authMeta *auth.Metadata, params *Cr
 
 	genres = append(genres, genre)
 	s.cache.refresh(genres)
-	return id, nil
+	return genre, nil
 }

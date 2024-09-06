@@ -1,6 +1,6 @@
 -- name: CreateMoviesGenre :one
 INSERT INTO
-    "movies_genres" ("id", "display_name", "about")
+    "movies_genres" ("slug", "display_name", "about")
 VALUES
     ($1, $2, $3)
 RETURNING
