@@ -2,6 +2,7 @@ package formats
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
@@ -17,12 +18,12 @@ type Formats struct {
 	cache *cache
 }
 
-func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Formats {
+func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) (Formats, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	formats, err := db.GetAllMoviesFormats(ctx)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to load formats from database")
+		return Formats{}, errors.Join(errors.New("failed to load formats from database"), err)
 	}
 	return Formats{
 		logger: logger,
@@ -31,5 +32,5 @@ func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Formats {
 		cache: &cache{
 			formats: formats,
 		},
-	}
+	}, nil
 }

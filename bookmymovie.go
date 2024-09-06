@@ -2,11 +2,12 @@ package bookmymovie
 
 import (
 	"context"
-	"os"
+	"errors"
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/mailer"
 	"bookmymovie.app/bookmymovie/services/auth"
+	"bookmymovie.app/bookmymovie/services/movies"
 	"bookmymovie.app/bookmymovie/services/users"
 	"bookmymovie.app/bookmymovie/storage"
 	"github.com/rs/zerolog"
@@ -18,37 +19,44 @@ type Application struct {
 	storage *storage.Storage
 	mailer  *mailer.Mailer
 
-	authService  *auth.Auth
-	usersService *users.Users
+	authService   *auth.Auth
+	usersService  *users.Users
+	moviesService *movies.Movies
 }
 
-func New() Application {
-	logger := zerolog.New(os.Stdout).With().Timestamp().Logger()
-
-	conf := newConfig()
-	if err := conf.parse(); err != nil {
-		logger.Fatal().Err(err).Msg("failed to parse config")
+func New(config *Config, logger *zerolog.Logger) (Application, error) {
+	db, err := database.NewDatabase(config.Database, logger)
+	if err != nil {
+		return Application{}, errors.Join(errors.New("failed to create instance of database.Database"), err)
 	}
-	if err := conf.validate(); err != nil {
-		logger.Fatal().Err(err).Msg("failed to validate config")
+	s, err := storage.New(config.Storage, logger)
+	if err != nil {
+		return Application{}, errors.Join(errors.New("failed to create instance of storage.Storage"), err)
+	}
+	m, err := mailer.New(config.Mailer, logger)
+	if err != nil {
+		return Application{}, errors.Join(errors.New("failed to create instance of mailer.Mailer"), err)
+	}
+	authService, err := auth.New(config.Auth, logger, &db, &m)
+	if err != nil {
+		return Application{}, errors.Join(errors.New("failed to create instance of auth.Auth"), err)
 	}
 
-	logger = logger.Level(conf.logLevel)
+	usersService := users.New(logger, &db, &m, &authService)
 
-	db := database.NewDatabase(conf.database, &logger)
-	s := storage.New(conf.storage, &logger)
-	m := mailer.New(conf.mailer, &logger)
-	authService := auth.New(conf.auth, &logger, &db, &m)
-	usersService := users.New(&logger, &db, &m, &authService)
-
+	moviesService, err := movies.New(logger, &db, &authService)
+	if err != nil {
+		return Application{}, errors.Join(errors.New("failed to create instance of movies.Movies"), err)
+	}
 	return Application{
-		logger:       &logger,
-		db:           &db,
-		storage:      &s,
-		mailer:       &m,
-		authService:  &authService,
-		usersService: &usersService,
-	}
+		logger:        logger,
+		db:            &db,
+		storage:       &s,
+		mailer:        &m,
+		authService:   &authService,
+		usersService:  &usersService,
+		moviesService: &moviesService,
+	}, nil
 }
 
 func (app *Application) Logger() *zerolog.Logger {

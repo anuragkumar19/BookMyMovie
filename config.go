@@ -12,62 +12,47 @@ import (
 	"bookmymovie.app/bookmymovie/storage"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
-	"github.com/rs/zerolog"
 )
 
-type config struct {
-	appPublicHost string
-	logLevel      zerolog.Level
-	mailer        *mailer.Config
-	database      *database.Config
-	storage       *storage.Config
-	auth          *auth.Config
+type Config struct {
+	AppPublicHost string
+	Mailer        *mailer.Config
+	Database      *database.Config
+	Storage       *storage.Config
+	Auth          *auth.Config
 }
 
-func (config *config) validate() error {
+func (config *Config) Validate() error {
 	return validation.ValidateStruct(
 		config,
-		validation.Field(&config.appPublicHost, validation.Required, is.URL),
-		validation.Field(&config.logLevel),
-		validation.Field(&config.mailer),
-		validation.Field(&config.database),
-		validation.Field(&config.auth),
-		validation.Field(&config.storage),
+		validation.Field(&config.AppPublicHost, validation.Required, is.URL),
+		validation.Field(&config.Mailer),
+		validation.Field(&config.Database),
+		validation.Field(&config.Auth),
+		validation.Field(&config.Storage),
 	)
 }
 
-func (config *config) parseFromEnvVars() error {
-	// log level
-	levelStr := os.Getenv("LOG_LEVEL")
-	if levelStr == "" {
-		levelStr = zerolog.InfoLevel.String()
-	}
-
+func (config *Config) ParseFromEnvVars() error {
 	// host
 	host := os.Getenv("APP_PUBLIC_HOST")
 	if host != "" {
-		config.appPublicHost = host
-		config.auth.AppPublicHost = host
+		config.AppPublicHost = host
+		config.Auth.AppPublicHost = host
 	}
-
-	logLevel, err := zerolog.ParseLevel(levelStr)
-	if err != nil {
-		return fmt.Errorf("invalid log level in env variable : %w", err)
-	}
-	config.logLevel = logLevel
 
 	// mailer
 	mailerUsername := os.Getenv("MAILER_USERNAME")
 	if mailerUsername != "" {
-		config.mailer.Username = mailerUsername
+		config.Mailer.Username = mailerUsername
 	}
 	mailerPassword := os.Getenv("MAILER_PASSWORD")
 	if mailerPassword != "" {
-		config.mailer.Password = mailerPassword
+		config.Mailer.Password = mailerPassword
 	}
 	mailerHost := os.Getenv("MAILER_HOST")
 	if mailerHost != "" {
-		config.mailer.Host = mailerHost
+		config.Mailer.Host = mailerHost
 	}
 	mailerPortStr := os.Getenv("MAILER_PORT")
 	if mailerPortStr != "" {
@@ -75,25 +60,25 @@ func (config *config) parseFromEnvVars() error {
 		if err != nil {
 			return fmt.Errorf("cannot parse mailer port from env variable : %w", err)
 		}
-		config.mailer.Port = p
+		config.Mailer.Port = p
 	}
 	mailerFromAddress := os.Getenv("MAILER_FROM_ADDRESS")
 	if mailerFromAddress != "" {
-		config.mailer.FromAddress = mailerFromAddress
+		config.Mailer.FromAddress = mailerFromAddress
 	}
 	mailerFromDisplayName := os.Getenv("MAILER_FROM_DISPLAY_NAME")
 	if mailerFromDisplayName != "" {
-		config.mailer.FromDisplayName = mailerFromDisplayName
+		config.Mailer.FromDisplayName = mailerFromDisplayName
 	}
 	mailerReplyTo := os.Getenv("MAILER_REPLY_TO")
 	if mailerReplyTo != "" {
-		config.mailer.ReplyTo = mailerReplyTo
+		config.Mailer.ReplyTo = mailerReplyTo
 	}
 
 	// database
 	databaseURI := os.Getenv("DATABASE_URI")
 	if databaseURI != "" {
-		config.database.URI = databaseURI
+		config.Database.URI = databaseURI
 	}
 	maxConnLifetimeStr := os.Getenv("DATABASE_MAX_CONN_LIFETIME")
 	if maxConnLifetimeStr != "" {
@@ -101,7 +86,7 @@ func (config *config) parseFromEnvVars() error {
 		if err != nil {
 			return fmt.Errorf("cannot parse duration from env variable : max conn lifetime : %w", err)
 		}
-		config.database.MaxConnLifetime = d
+		config.Database.MaxConnLifetime = d
 	}
 	maxConnLifetimeJitterStr := os.Getenv("DATABASE_MAX_CONN_LIFETIME_JITTER")
 	if maxConnLifetimeJitterStr != "" {
@@ -109,7 +94,7 @@ func (config *config) parseFromEnvVars() error {
 		if err != nil {
 			return fmt.Errorf("cannot parse duration from env variable : max conn lifetime jitter : %w", err)
 		}
-		config.database.MaxConnLifetimeJitter = d
+		config.Database.MaxConnLifetimeJitter = d
 	}
 	maxConnIdleTimeStr := os.Getenv("DATABASE_MAX_CONN_IDEAL_TIME")
 	if maxConnIdleTimeStr != "" {
@@ -117,7 +102,7 @@ func (config *config) parseFromEnvVars() error {
 		if err != nil {
 			return fmt.Errorf("cannot parse duration from env variable : max conn ideal time : %w", err)
 		}
-		config.database.MaxConnIdleTime = d
+		config.Database.MaxConnIdleTime = d
 	}
 	healthCheckPeriodStr := os.Getenv("DATABASE_MAX_CONN_IDEAL_TIME")
 	if healthCheckPeriodStr != "" {
@@ -125,7 +110,7 @@ func (config *config) parseFromEnvVars() error {
 		if err != nil {
 			return fmt.Errorf("cannot parse duration from env variable : health check period : %w", err)
 		}
-		config.database.HealthCheckPeriod = d
+		config.Database.HealthCheckPeriod = d
 	}
 	maxConnStr := os.Getenv("DATABASE_MAX_CONN")
 	if maxConnStr != "" {
@@ -133,7 +118,7 @@ func (config *config) parseFromEnvVars() error {
 		if err != nil {
 			return fmt.Errorf("cannot parse database max conn from env variable : %w", err)
 		}
-		config.database.MaxConns = int32(c)
+		config.Database.MaxConns = int32(c)
 	}
 	minConnStr := os.Getenv("DATABASE_MIN_CONN")
 	if minConnStr != "" {
@@ -141,43 +126,43 @@ func (config *config) parseFromEnvVars() error {
 		if err != nil {
 			return fmt.Errorf("cannot parse database min conn from env variable : %w", err)
 		}
-		config.database.MinConns = int32(c)
+		config.Database.MinConns = int32(c)
 	}
 
 	// storage
 	storageEndpoint := os.Getenv("STORAGE_ENDPOINT")
 	if storageEndpoint != "" {
-		config.storage.Endpoint = storageEndpoint
+		config.Storage.Endpoint = storageEndpoint
 	}
 	storageAccessKey := os.Getenv("STORAGE_ACCESS_KEY")
 	if storageAccessKey != "" {
-		config.storage.AccessKey = storageAccessKey
+		config.Storage.AccessKey = storageAccessKey
 	}
 	storageSecret := os.Getenv("STORAGE_SECRET")
 	if storageSecret != "" {
-		config.storage.Secret = storageSecret
+		config.Storage.Secret = storageSecret
 	}
 	storageBucket := os.Getenv("STORAGE_BUCKET")
 	if storageBucket != "" {
-		config.storage.Bucket = storageBucket
+		config.Storage.Bucket = storageBucket
 	}
 	storageBucketRegion := os.Getenv("STORAGE_BUCKET_REGION")
 	if storageBucketRegion != "" {
-		config.storage.Region = storageBucketRegion
+		config.Storage.Region = storageBucketRegion
 	}
 	storageUseSSL := os.Getenv("STORAGE_USE_SSL")
 	if storageUseSSL == "true" {
-		config.storage.UseSSL = true
+		config.Storage.UseSSL = true
 	}
 	storageAutoCreateBucket := os.Getenv("STORAGE_AUTO_CREATE_BUCKET")
 	if storageAutoCreateBucket == "true" {
-		config.storage.AutoCreateBucket = true
+		config.Storage.AutoCreateBucket = true
 	}
 
 	// auth
 	accessTokenSecret := os.Getenv("AUTH_ACCESS_TOKEN_SECRET")
 	if accessTokenSecret != "" {
-		config.auth.AccessTokenSecret = accessTokenSecret
+		config.Auth.AccessTokenSecret = accessTokenSecret
 	}
 	// TODO: rest
 	// accessTokenLifetimeStr := os.Getenv("ACCESS_TOKEN_LIFETIME")
@@ -188,26 +173,25 @@ func (config *config) parseFromEnvVars() error {
 	return nil
 }
 
-func (*config) parseFromCLIFlags() error {
+func (*Config) ParseFromCLIFlags() error {
 	return nil
 }
 
-func (config *config) parse() error {
-	if err := config.parseFromEnvVars(); err != nil {
+func (config *Config) parse() error {
+	if err := config.ParseFromEnvVars(); err != nil {
 		return err
 	}
-	return config.parseFromCLIFlags()
+	return config.ParseFromCLIFlags()
 }
 
-func newConfig() config {
+func DefaultConfig() Config {
 	dbConf := database.DefaultConfig()
 	authConf := auth.DefaultConfig()
-	return config{
-		logLevel:      zerolog.InfoLevel,
-		mailer:        &mailer.Config{},
-		database:      &dbConf,
-		appPublicHost: "",
-		auth:          &authConf,
-		storage:       &storage.Config{},
+	return Config{
+		Mailer:        &mailer.Config{},
+		Database:      &dbConf,
+		AppPublicHost: "",
+		Auth:          &authConf,
+		Storage:       &storage.Config{},
 	}
 }

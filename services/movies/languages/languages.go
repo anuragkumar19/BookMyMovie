@@ -2,6 +2,7 @@ package languages
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
@@ -17,12 +18,12 @@ type Languages struct {
 	cache *cache
 }
 
-func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Languages {
+func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) (Languages, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	languages, err := db.GetAllMoviesLanguages(ctx)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to load languages from database")
+		return Languages{}, errors.Join(errors.New("failed to load languages from database"), err)
 	}
 	return Languages{
 		logger: logger,
@@ -31,5 +32,5 @@ func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Languages 
 		cache: &cache{
 			languages: languages,
 		},
-	}
+	}, nil
 }

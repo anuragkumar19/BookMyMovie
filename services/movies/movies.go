@@ -1,6 +1,8 @@
 package movies
 
 import (
+	"errors"
+
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
 	"bookmymovie.app/bookmymovie/services/movies/formats"
@@ -19,10 +21,19 @@ type Movies struct {
 	genres    *genres.Genres
 }
 
-func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Movies {
-	l := languages.New(logger, db, a)
-	f := formats.New(logger, db, a)
-	g := genres.New(logger, db, a)
+func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) (Movies, error) {
+	l, err := languages.New(logger, db, a)
+	if err != nil {
+		return Movies{}, errors.Join(errors.New("failed to create instance of languages.Languages"), err)
+	}
+	f, err := formats.New(logger, db, a)
+	if err != nil {
+		return Movies{}, errors.Join(errors.New("failed to create instance of formats.Format"), err)
+	}
+	g, err := genres.New(logger, db, a)
+	if err != nil {
+		return Movies{}, errors.Join(errors.New("failed to create instance of genres.Genre"), err)
+	}
 	return Movies{
 		logger:    logger,
 		db:        db,
@@ -30,7 +41,7 @@ func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Movies {
 		languages: &l,
 		formats:   &f,
 		genres:    &g,
-	}
+	}, nil
 }
 
 func (s *Movies) LanguagesService() *languages.Languages {

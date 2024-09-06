@@ -1,6 +1,7 @@
 package mailer
 
 import (
+	"errors"
 	"sync"
 
 	"github.com/rs/zerolog"
@@ -14,14 +15,14 @@ type Mailer struct {
 	wg     sync.WaitGroup
 }
 
-func New(config *Config, logger *zerolog.Logger) Mailer {
+func New(config *Config, logger *zerolog.Logger) (Mailer, error) {
 	if err := config.Validate(); err != nil {
-		logger.Fatal().Err(err).Msg("mailer config validation failed")
+		return Mailer{}, errors.Join(errors.New("mailer config validation failed"), err)
 	}
 
 	dialer := gomail.NewDialer(config.Host, config.Port, config.Username, config.Password)
 	if _, err := dialer.Dial(); err != nil {
-		logger.Fatal().Err(err).Msg("authentication with smtp server failed")
+		return Mailer{}, errors.Join(errors.New("authentication with smtp server failed"), err)
 	}
 
 	return Mailer{
@@ -29,7 +30,7 @@ func New(config *Config, logger *zerolog.Logger) Mailer {
 		config: config,
 		wg:     sync.WaitGroup{},
 		logger: logger,
-	}
+	}, nil
 }
 
 func (m *Mailer) Wait() {

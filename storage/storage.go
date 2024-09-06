@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/minio/minio-go/v7"
@@ -15,9 +16,9 @@ type Storage struct {
 	client *minio.Client
 }
 
-func New(config *Config, logger *zerolog.Logger) Storage {
+func New(config *Config, logger *zerolog.Logger) (Storage, error) {
 	if err := config.Validate(); err != nil {
-		logger.Fatal().Err(err).Msg("storage config validation failed")
+		return Storage{}, errors.Join(errors.New("storage config validation failed"), err)
 	}
 
 	client, err := minio.New(config.Endpoint, &minio.Options{
@@ -26,7 +27,7 @@ func New(config *Config, logger *zerolog.Logger) Storage {
 		Region: config.Region,
 	})
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to create storage client")
+		return Storage{}, errors.Join(errors.New("failed to create storage client"), err)
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
@@ -34,15 +35,15 @@ func New(config *Config, logger *zerolog.Logger) Storage {
 
 	exist, err := client.BucketExists(ctx, config.Bucket)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to check check bucket existence")
+		return Storage{}, errors.Join(errors.New("failed to check check bucket existence"), err)
 	}
 	if !exist {
 		if !config.AutoCreateBucket {
-			logger.Fatal().Err(err).Bool("auto_create_bucket", config.AutoCreateBucket).Str("bucket", config.Bucket).Msg("bucket with specified name doesn't exits")
+			return Storage{}, errors.Join(errors.New("bucket with specified name doesn't exits"), err)
 		}
 		logger.Info().Bool("auto_create_bucket", config.AutoCreateBucket).Str("bucket", config.Bucket).Msg("bucket doesn't exist creating bucket")
 		if err := client.MakeBucket(ctx, config.Bucket, minio.MakeBucketOptions{}); err != nil {
-			logger.Fatal().Err(err).Bool("auto_create_bucket", config.AutoCreateBucket).Str("bucket", config.Bucket).Msg("failed to create bucket")
+			return Storage{}, errors.Join(errors.New("failed to create bucket"), err)
 		}
 		logger.Info().Bool("auto_create_bucket", config.AutoCreateBucket).Str("bucket", config.Bucket).Msg("bucket created")
 	}
@@ -51,5 +52,5 @@ func New(config *Config, logger *zerolog.Logger) Storage {
 		config: config,
 		logger: logger,
 		client: client,
-	}
+	}, nil
 }

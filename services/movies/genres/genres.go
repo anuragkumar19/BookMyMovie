@@ -2,6 +2,7 @@ package genres
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
@@ -17,12 +18,12 @@ type Genres struct {
 	cache *cache
 }
 
-func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Genres {
+func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) (Genres, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	genres, err := db.GetAllMoviesGenres(ctx)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to load genres from database")
+		return Genres{}, errors.Join(errors.New("failed to load genres from database"), err)
 	}
 	return Genres{
 		logger: logger,
@@ -31,5 +32,5 @@ func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) Genres {
 		cache: &cache{
 			genres: genres,
 		},
-	}
+	}, nil
 }

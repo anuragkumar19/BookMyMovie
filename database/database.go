@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -14,13 +15,13 @@ type Database struct {
 	logger *zerolog.Logger
 }
 
-func NewDatabase(config *Config, logger *zerolog.Logger) Database {
+func NewDatabase(config *Config, logger *zerolog.Logger) (Database, error) {
 	if err := config.Validate(); err != nil {
-		logger.Fatal().Err(err).Msg("database config validation failed")
+		return Database{}, errors.Join(errors.New("database config validation failed"), err)
 	}
 	dbConf, err := pgxpool.ParseConfig(config.URI)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("database config parsing failed")
+		return Database{}, errors.Join(errors.New("database config parsing failed"), err)
 	}
 	dbConf.MaxConnLifetime = config.MaxConnLifetime
 	dbConf.MaxConnLifetimeJitter = config.MaxConnLifetimeJitter
@@ -35,13 +36,13 @@ func NewDatabase(config *Config, logger *zerolog.Logger) Database {
 	// create pool
 	dbPool, err := pgxpool.NewWithConfig(ctx, dbConf)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to create db pool")
+		return Database{}, errors.Join(errors.New("failed to create db pool"), err)
 	}
 
 	// ping db
 	if err := dbPool.Ping(ctx); err != nil {
-		logger.Fatal().Err(err).Msg("failed to ping db")
+		return Database{}, errors.Join(errors.New("failed to ping db"), err)
 	}
 
-	return Database{Pool: dbPool, Queries: New(dbPool), logger: logger}
+	return Database{Pool: dbPool, Queries: New(dbPool), logger: logger}, nil
 }

@@ -29,7 +29,7 @@ func New(app *bookmymovie.Application) API {
 	}
 }
 
-func (api *API) Run() {
+func (api *API) Run() error {
 	mux := http.NewServeMux()
 
 	{
@@ -53,13 +53,11 @@ func (api *API) Run() {
 		mux.Handle(path, handler)
 	}
 
-	if err := http.ListenAndServe(
+	return http.ListenAndServe(
 		"localhost:8080",
 		// Use h2c so we can serve HTTP/2 without TLS.
 		h2c.NewHandler(maxByte(mux), &http2.Server{}),
-	); err != nil {
-		api.app.Logger().Fatal().Err(err).Msg("failed to start server")
-	}
+	)
 }
 
 func maxByte(h http.Handler) http.Handler {

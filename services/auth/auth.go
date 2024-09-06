@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
@@ -17,9 +18,9 @@ type Auth struct {
 	revokedTokens map[int64]time.Time
 }
 
-func New(config *Config, logger *zerolog.Logger, db *database.Database, m *mailer.Mailer) Auth {
+func New(config *Config, logger *zerolog.Logger, db *database.Database, m *mailer.Mailer) (Auth, error) {
 	if err := config.Validate(); err != nil {
-		logger.Fatal().Err(err).Msg("auth config validation failed")
+		return Auth{}, errors.Join(errors.New("auth config validation failed"), err)
 	}
 	a := Auth{
 		logger:        logger,
@@ -30,5 +31,5 @@ func New(config *Config, logger *zerolog.Logger, db *database.Database, m *maile
 	}
 	a.startBackgroundRevokedTokenCleanup()
 
-	return a
+	return a, nil
 }
