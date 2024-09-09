@@ -6,6 +6,7 @@ import (
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
+	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gosimple/slug"
 )
@@ -34,6 +35,13 @@ func (s *Genres) Create(ctx context.Context, authMeta *auth.Metadata, params *Cr
 	}
 	if err := s.auth.CheckPermissions(authMeta, auth.MoviesGenresCreate); err != nil {
 		return database.MoviesGenre{}, err
+	}
+
+	if err := params.Transform().Validate(); err != nil {
+		if _, ok := err.(validation.InternalError); ok { //nolint:errorlint
+			return database.MoviesGenre{}, err
+		}
+		return database.MoviesGenre{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, err.Error())
 	}
 
 	slg := slug.Make(params.DisplayName)

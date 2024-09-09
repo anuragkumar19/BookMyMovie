@@ -64,7 +64,7 @@ func (*Auth) CheckPermissions(authMeta *Metadata, ps ...Permission) error {
 func checkPermission(m rolePermissionMap, ps []Permission) error {
 	for _, p := range ps {
 		if !m[p] {
-			return serviceserrors.UnauthorizedError(fmt.Errorf("user doesn't have permission %s", p))
+			return serviceserrors.New(serviceserrors.ErrorTypePermissionDenied, fmt.Sprintf("user doesn't have permission %s", p))
 		}
 	}
 

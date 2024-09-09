@@ -13,7 +13,7 @@ func (s *Formats) GetByID(_ context.Context, id int64) (database.MoviesFormat, e
 		return f.ID == id
 	})
 	if i == -1 {
-		return database.MoviesFormat{}, serviceserrors.ErrNotFound
+		return database.MoviesFormat{}, serviceserrors.New(serviceserrors.ErrorTypeNotFound, "movie format not found")
 	}
 	return s.cache.formats[i], nil
 }

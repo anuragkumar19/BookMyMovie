@@ -32,7 +32,10 @@ func (data *RequestLoginOTPParams) Validate() error {
 
 func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParams) (loginToken string, err error) {
 	if err := params.Transform().Validate(); err != nil {
-		return "", serviceserrors.ValidationError(err.(validation.Errors)) //nolint:errorlint
+		if _, ok := err.(validation.InternalError); ok { //nolint:errorlint
+			return "", err
+		}
+		return "", serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, err.Error())
 	}
 
 	var isNew bool
@@ -59,7 +62,7 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 		user.TotalLoginTokensSent = 0
 	}
 	if user.TotalLoginTokensSent >= int32(s.config.LoginOTPSendingRate) {
-		return "", serviceserrors.NewRateLimitError(user.LastLoginTokenSentAt.Time.Add(s.config.LoginOTPSendingRateTimeWindow).Sub(now), int(user.TotalLoginTokensSent), user.LastLoginTokenSentAt.Time)
+		return "", serviceserrors.New(serviceserrors.ErrorResourceExhausted, serviceserrors.NewRateLimitMessage(time.Until(user.LastLoginTokenSentAt.Time.Add(s.config.LoginOTPSendingRateTimeWindow)), ""))
 	}
 
 	token, err := s.generateRandomToken()
@@ -89,7 +92,7 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 		Version:              user.Version,
 	}); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return "", serviceserrors.ErrUpdateConflict
+			return "", serviceserrors.New(serviceserrors.ErrorConflict, "")
 		}
 		return "", err
 	}

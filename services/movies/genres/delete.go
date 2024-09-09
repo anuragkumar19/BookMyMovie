@@ -27,7 +27,7 @@ func (s *Genres) Delete(ctx context.Context, authMeta *auth.Metadata, id int64) 
 
 	if err := s.db.DeleteMoviesGenre(ctx, id); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return serviceserrors.ErrUpdateConflict
+			return serviceserrors.New(serviceserrors.ErrorConflict, "")
 		}
 		return err
 	}

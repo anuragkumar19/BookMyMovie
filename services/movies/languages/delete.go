@@ -27,7 +27,7 @@ func (s *Languages) Delete(ctx context.Context, authMeta *auth.Metadata, id int6
 
 	if err := s.db.DeleteMoviesLanguage(ctx, id); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return serviceserrors.ErrUpdateConflict
+			return serviceserrors.New(serviceserrors.ErrorConflict, "")
 		}
 		return err
 	}

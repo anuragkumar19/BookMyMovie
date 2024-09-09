@@ -2,14 +2,9 @@ package auth
 
 import (
 	"crypto/rand"
-	"errors"
 	"fmt"
 	"math"
 	"math/big"
-)
-
-var (
-	ErrTokenInvalid = errors.New("invalid token")
 )
 
 // TODO: hash otp

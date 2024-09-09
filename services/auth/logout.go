@@ -15,7 +15,7 @@ func (s *Auth) Logout(ctx context.Context, authMeta *Metadata) error {
 	}
 	if err := s.db.DeleteRefreshToken(ctx, authMeta.RefreshTokenID()); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return serviceserrors.ErrUpdateConflict
+			return serviceserrors.New(serviceserrors.ErrorConflict, "")
 		}
 		return err
 	}

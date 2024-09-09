@@ -14,6 +14,9 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+var errOTPExpired = errors.New("otp expired")
+var errOTPMismatched = errors.New("otp mismatched")
+
 type LoginParams struct {
 	Token     string
 	OTP       string
@@ -43,13 +46,16 @@ type Tokens struct {
 
 func (s *Auth) Login(ctx context.Context, params *LoginParams) (Tokens, error) {
 	if err := params.Transform().Validate(); err != nil {
-		return Tokens{}, serviceserrors.ValidationError(err.(validation.Errors)) //nolint:errorlint
+		if _, ok := err.(validation.InternalError); ok { //nolint:errorlint
+			return Tokens{}, err
+		}
+		return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, err.Error())
 	}
 
 	token, err := s.db.FindLoginToken(ctx, params.Token)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return Tokens{}, serviceserrors.ErrOTPExpired
+			return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPExpired.Error())
 		}
 		return Tokens{}, err
 	}
@@ -57,16 +63,16 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (Tokens, error) {
 	now := time.Now()
 
 	if token.ExpireAt.Time.Before(now) {
-		return Tokens{}, serviceserrors.ErrOTPExpired
+		return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPExpired.Error())
 	}
 	if token.TotalAttempts >= int32(s.config.MaxOTPIncorrectAttempts) {
 		if err := s.db.DeleteLoginToken(ctx, token.Token); err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return Tokens{}, serviceserrors.ErrOTPExpired
+				return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPExpired.Error())
 			}
 			return Tokens{}, err
 		}
-		return Tokens{}, serviceserrors.ErrOTPExpired
+		return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPExpired.Error())
 	}
 
 	if !s.matchOTP(params.OTP, token.Otp) {
@@ -77,16 +83,16 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (Tokens, error) {
 			Version:       token.Version,
 		}); err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return Tokens{}, serviceserrors.ErrUpdateConflict
+				return Tokens{}, serviceserrors.New(serviceserrors.ErrorConflict, "")
 			}
 			return Tokens{}, err
 		}
-		return Tokens{}, serviceserrors.ErrOTPMismatch
+		return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPMismatched.Error())
 	}
 
 	if err := s.db.DeleteLoginToken(ctx, token.Token); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return Tokens{}, serviceserrors.ErrOTPExpired
+			return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPExpired.Error())
 		}
 		return Tokens{}, err
 	}

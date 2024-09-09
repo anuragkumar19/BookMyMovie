@@ -13,7 +13,7 @@ func (s *Genres) GetByID(_ context.Context, id int64) (database.MoviesGenre, err
 		return g.ID == id
 	})
 	if i == -1 {
-		return database.MoviesGenre{}, serviceserrors.ErrNotFound
+		return database.MoviesGenre{}, serviceserrors.New(serviceserrors.ErrorTypeNotFound, "movie genre not found")
 	}
 	return s.cache.genres[i], nil
 }

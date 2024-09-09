@@ -2,12 +2,12 @@ package persons
 
 import (
 	"context"
-	"errors"
 	"strings"
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
+	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gosimple/slug"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -62,12 +62,19 @@ func (s *Persons) Create(ctx context.Context, authMeta *auth.Metadata, params *C
 		return 0, err
 	}
 
+	if err := params.Transform().Validate(); err != nil {
+		if _, ok := err.(validation.InternalError); ok { //nolint:errorlint
+			return 0, err
+		}
+		return 0, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, err.Error())
+	}
+
 	exist, err := s.storage.Exist(ctx, params.ProfilePictureKey)
 	if err != nil {
 		return 0, err
 	}
 	if !exist {
-		return 0, errors.New("profile picture selected doesn't exit") // TODO: better error
+		return 0, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, "profile picture selected doesn't exit")
 	}
 
 	slg := slug.Make(params.Name)

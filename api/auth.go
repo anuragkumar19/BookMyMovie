@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"bookmymovie.app/bookmymovie"
 	authv1 "bookmymovie.app/bookmymovie/api/gen/auth/v1"
 	"bookmymovie.app/bookmymovie/services/auth"
 	"connectrpc.com/connect"
@@ -11,16 +12,15 @@ import (
 )
 
 type authService struct {
-	// authv1connect.UnimplementedAuthServiceHandler
-	auth *auth.Auth
+	app *bookmymovie.Application
 }
 
 func (s *authService) RequestLoginOTP(ctx context.Context, r *connect.Request[authv1.RequestLoginOTPRequest]) (*connect.Response[authv1.RequestLoginOTPResponse], error) {
-	token, err := s.auth.RequestLoginOTP(ctx, &auth.RequestLoginOTPParams{
+	token, err := s.app.AuthService().RequestLoginOTP(ctx, &auth.RequestLoginOTPParams{
 		Email: r.Msg.GetEmail(),
 	})
 	if err != nil {
-		return nil, err // TODO:
+		return nil, serviceErrorHandler(err)
 	}
 
 	res := connect.NewResponse(&authv1.RequestLoginOTPResponse{
@@ -31,13 +31,13 @@ func (s *authService) RequestLoginOTP(ctx context.Context, r *connect.Request[au
 }
 
 func (s *authService) Login(ctx context.Context, r *connect.Request[authv1.LoginRequest]) (*connect.Response[authv1.LoginResponse], error) {
-	tokens, err := s.auth.Login(ctx, &auth.LoginParams{
+	tokens, err := s.app.AuthService().Login(ctx, &auth.LoginParams{
 		Token:     r.Msg.GetLoginToken(),
 		OTP:       r.Msg.GetOtp(),
 		UserAgent: r.Header().Get("User-Agent"),
 	})
 	if err != nil {
-		return nil, err // TODO:
+		return nil, serviceErrorHandler(err)
 	}
 
 	res := connect.NewResponse(&authv1.LoginResponse{
@@ -50,9 +50,9 @@ func (s *authService) Login(ctx context.Context, r *connect.Request[authv1.Login
 }
 
 func (s *authService) RefreshAccessToken(ctx context.Context, r *connect.Request[authv1.RefreshAccessTokenRequest]) (*connect.Response[authv1.RefreshAccessTokenResponse], error) {
-	tokens, err := s.auth.RefreshAccessToken(ctx, r.Header().Get("Authorization"))
+	tokens, err := s.app.AuthService().RefreshAccessToken(ctx, r.Header().Get("Authorization"))
 	if err != nil {
-		return nil, err // TODO:
+		return nil, serviceErrorHandler(err)
 	}
 
 	res := connect.NewResponse(&authv1.RefreshAccessTokenResponse{
@@ -64,9 +64,9 @@ func (s *authService) RefreshAccessToken(ctx context.Context, r *connect.Request
 }
 
 func (s *authService) Logout(ctx context.Context, r *connect.Request[authv1.LogoutRequest]) (*connect.Response[authv1.LogoutResponse], error) {
-	authMeta := s.auth.GetMetadata(getAccessToken(r))
-	if err := s.auth.Logout(ctx, &authMeta); err != nil {
-		return nil, err // TODO:
+	authMeta := s.app.AuthService().GetMetadata(getAccessToken(r))
+	if err := s.app.AuthService().Logout(ctx, &authMeta); err != nil {
+		return nil, serviceErrorHandler(err)
 	}
 	res := connect.NewResponse(&authv1.LogoutResponse{})
 	return res, nil

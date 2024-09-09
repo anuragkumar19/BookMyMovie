@@ -13,6 +13,10 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+var (
+	errTokenInvalid = errors.New("invalid token")
+)
+
 type Metadata struct {
 	userID         int64
 	userRole       database.Roles
@@ -27,7 +31,7 @@ func (m *Metadata) Valid() error {
 		if nil == m.err {
 			return errors.New("auth.Metadata must be created from functions available in auth package")
 		}
-		return serviceserrors.UnauthorizedError(m.err)
+		return serviceserrors.New(serviceserrors.ErrorConflict, m.err.Error())
 	}
 	return nil
 }
@@ -60,7 +64,7 @@ func (s *Auth) GetMetadata(accessToken string) Metadata {
 	if !token.Valid {
 		return Metadata{
 			valid: false,
-			err:   ErrTokenInvalid,
+			err:   errTokenInvalid,
 		}
 	}
 	claims := token.Claims.(jwt.MapClaims) //nolint:errorlint,errcheck
@@ -72,7 +76,7 @@ func (s *Auth) GetMetadata(accessToken string) Metadata {
 	if _, ok := s.revokedTokens[id]; ok {
 		return Metadata{
 			valid: false,
-			err:   ErrTokenInvalid,
+			err:   errTokenInvalid,
 		}
 	}
 

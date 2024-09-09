@@ -16,17 +16,17 @@ type AccessToken struct {
 
 func (s *Auth) RefreshAccessToken(ctx context.Context, token string) (AccessToken, error) {
 	if token == "" {
-		return AccessToken{}, serviceserrors.UnauthorizedError(ErrTokenInvalid)
+		return AccessToken{}, serviceserrors.New(serviceserrors.ErrorUnauthenticated, errTokenInvalid.Error())
 	}
 
 	rt, err := s.db.FindRefreshToken(ctx, token)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return AccessToken{}, serviceserrors.UnauthorizedError(ErrTokenInvalid)
+			return AccessToken{}, serviceserrors.New(serviceserrors.ErrorUnauthenticated, errTokenInvalid.Error())
 		}
 	}
 	if time.Now().After(rt.ExpireAt.Time) {
-		return AccessToken{}, serviceserrors.UnauthorizedError(ErrTokenInvalid)
+		return AccessToken{}, serviceserrors.New(serviceserrors.ErrorUnauthenticated, errTokenInvalid.Error())
 	}
 
 	accessToken, accessTokenExp, err := s.generateAccessToken(&rt)

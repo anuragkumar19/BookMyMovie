@@ -3,10 +3,9 @@ package api
 import (
 	"context"
 
+	"bookmymovie.app/bookmymovie"
 	usersv1 "bookmymovie.app/bookmymovie/api/gen/users/v1"
 	"bookmymovie.app/bookmymovie/api/gen/users/v1/usersv1connect"
-	"bookmymovie.app/bookmymovie/services/auth"
-	"bookmymovie.app/bookmymovie/services/users"
 	"connectrpc.com/connect"
 	"google.golang.org/genproto/googleapis/type/date"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -15,15 +14,14 @@ import (
 type usersService struct {
 	usersv1connect.UnimplementedUsersServiceHandler
 
-	auth  *auth.Auth
-	users *users.Users
+	app *bookmymovie.Application
 }
 
 func (s *usersService) GetLoggedInUser(ctx context.Context, r *connect.Request[usersv1.GetLoggedInUserRequest]) (*connect.Response[usersv1.GetLoggedInUserResponse], error) {
-	authMeta := s.auth.GetMetadata(getAccessToken(r))
-	user, err := s.users.GetLoggedInUser(ctx, &authMeta)
+	authMeta := s.app.AuthService().GetMetadata(getAccessToken(r))
+	user, err := s.app.UsersService().GetLoggedInUser(ctx, &authMeta)
 	if err != nil {
-		return nil, err // TODO:
+		return nil, serviceErrorHandler(err)
 	}
 	var dob *date.Date
 	if user.Dob.Valid {
