@@ -177,13 +177,6 @@ func (*Config) ParseFromCLIFlags() error {
 	return nil
 }
 
-func (config *Config) parse() error {
-	if err := config.ParseFromEnvVars(); err != nil {
-		return err
-	}
-	return config.ParseFromCLIFlags()
-}
-
 func DefaultConfig() Config {
 	dbConf := database.DefaultConfig()
 	authConf := auth.DefaultConfig()
