@@ -55,7 +55,7 @@ func (s *Genres) Update(ctx context.Context, authMeta *auth.Metadata, params *Up
 
 	genre, err := s.GetByID(ctx, params.ID)
 	if err != nil {
-		return database.MoviesGenre{}, nil
+		return database.MoviesGenre{}, err
 	}
 
 	if params.DisplayName != nil {

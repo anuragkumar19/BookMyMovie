@@ -55,7 +55,7 @@ func (s *Languages) Update(ctx context.Context, authMeta *auth.Metadata, params 
 
 	language, err := s.GetByID(ctx, params.ID)
 	if err != nil {
-		return database.MoviesLanguage{}, nil
+		return database.MoviesLanguage{}, err
 	}
 
 	if params.DisplayName != nil {

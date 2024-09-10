@@ -3,7 +3,6 @@ package genres
 import (
 	"context"
 	"errors"
-	"time"
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
@@ -18,10 +17,7 @@ type Genres struct {
 	cache *cache
 }
 
-func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) (Genres, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
+func New(ctx context.Context, logger *zerolog.Logger, db *database.Database, a *auth.Auth) (Genres, error) {
 	// init cache
 	c := &cache{}
 	genres, err := db.GetAllMoviesGenres(ctx)

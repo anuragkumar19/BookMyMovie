@@ -3,7 +3,6 @@ package storage
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -16,7 +15,7 @@ type Storage struct {
 	client *minio.Client
 }
 
-func New(config *Config, logger *zerolog.Logger) (Storage, error) {
+func New(ctx context.Context, config *Config, logger *zerolog.Logger) (Storage, error) {
 	if err := config.Validate(); err != nil {
 		return Storage{}, errors.Join(errors.New("storage config validation failed"), err)
 	}
@@ -29,9 +28,6 @@ func New(config *Config, logger *zerolog.Logger) (Storage, error) {
 	if err != nil {
 		return Storage{}, errors.Join(errors.New("failed to create storage client"), err)
 	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-	defer cancel()
 
 	exist, err := client.BucketExists(ctx, config.Bucket)
 	if err != nil {

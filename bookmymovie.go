@@ -24,12 +24,12 @@ type Application struct {
 	moviesService *movies.Movies
 }
 
-func New(config *Config, logger *zerolog.Logger) (Application, error) {
-	db, err := database.NewDatabase(config.Database, logger)
+func New(ctx context.Context, config *Config, logger *zerolog.Logger) (Application, error) {
+	db, err := database.NewDatabase(ctx, config.Database, logger)
 	if err != nil {
 		return Application{}, errors.Join(errors.New("failed to create instance of database.Database"), err)
 	}
-	s, err := storage.New(config.Storage, logger)
+	s, err := storage.New(ctx, config.Storage, logger)
 	if err != nil {
 		return Application{}, errors.Join(errors.New("failed to create instance of storage.Storage"), err)
 	}
@@ -44,7 +44,7 @@ func New(config *Config, logger *zerolog.Logger) (Application, error) {
 
 	usersService := users.New(logger, &db, &m, &authService)
 
-	moviesService, err := movies.New(logger, &db, &authService)
+	moviesService, err := movies.New(ctx, logger, &db, &authService)
 	if err != nil {
 		return Application{}, errors.Join(errors.New("failed to create instance of movies.Movies"), err)
 	}

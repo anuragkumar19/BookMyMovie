@@ -3,7 +3,6 @@ package formats
 import (
 	"context"
 	"errors"
-	"time"
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/services/auth"
@@ -18,10 +17,7 @@ type Formats struct {
 	cache *cache
 }
 
-func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) (Formats, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
+func New(ctx context.Context, logger *zerolog.Logger, db *database.Database, a *auth.Auth) (Formats, error) {
 	// init cache
 	c := &cache{}
 	formats, err := db.GetAllMoviesFormats(ctx)

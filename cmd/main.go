@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
+	"time"
 
 	"bookmymovie.app/bookmymovie"
 	"bookmymovie.app/bookmymovie/api"
@@ -31,7 +33,9 @@ func main() {
 	if err := config.ParseFromCLIFlags(); err != nil {
 		logger.Fatal().Err(err).Msg("failed to load app config from cli flags")
 	}
-	app, err := bookmymovie.New(&config, &logger)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	app, err := bookmymovie.New(ctx, &config, &logger)
 	if err != nil {
 		logger.Fatal().Err(err).Msg("failed to create instance on bookmymovie.Application")
 	}

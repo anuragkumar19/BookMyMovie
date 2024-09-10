@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
@@ -15,7 +14,7 @@ type Database struct {
 	logger *zerolog.Logger
 }
 
-func NewDatabase(config *Config, logger *zerolog.Logger) (Database, error) {
+func NewDatabase(ctx context.Context, config *Config, logger *zerolog.Logger) (Database, error) {
 	if err := config.Validate(); err != nil {
 		return Database{}, errors.Join(errors.New("database config validation failed"), err)
 	}
@@ -29,9 +28,6 @@ func NewDatabase(config *Config, logger *zerolog.Logger) (Database, error) {
 	dbConf.MaxConns = config.MaxConns
 	dbConf.MinConns = config.MinConns
 	dbConf.HealthCheckPeriod = config.HealthCheckPeriod
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-	defer cancel()
 
 	// create pool
 	dbPool, err := pgxpool.NewWithConfig(ctx, dbConf)

@@ -55,7 +55,7 @@ func (s *Formats) Update(ctx context.Context, authMeta *auth.Metadata, params *U
 
 	format, err := s.GetByID(ctx, params.ID)
 	if err != nil {
-		return database.MoviesFormat{}, nil
+		return database.MoviesFormat{}, err
 	}
 
 	if params.DisplayName != nil {
