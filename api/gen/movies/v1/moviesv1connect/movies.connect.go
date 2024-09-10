@@ -23,10 +23,10 @@ const _ = connect.IsAtLeastVersion1_13_0
 const (
 	// MoviesLanguagesServiceName is the fully-qualified name of the MoviesLanguagesService service.
 	MoviesLanguagesServiceName = "movies.v1.MoviesLanguagesService"
-	// MoviesGenresServiceName is the fully-qualified name of the MoviesGenresService service.
-	MoviesGenresServiceName = "movies.v1.MoviesGenresService"
 	// MoviesFormatsServiceName is the fully-qualified name of the MoviesFormatsService service.
 	MoviesFormatsServiceName = "movies.v1.MoviesFormatsService"
+	// MoviesGenresServiceName is the fully-qualified name of the MoviesGenresService service.
+	MoviesGenresServiceName = "movies.v1.MoviesGenresService"
 	// MoviesPersonsServiceName is the fully-qualified name of the MoviesPersonsService service.
 	MoviesPersonsServiceName = "movies.v1.MoviesPersonsService"
 	// MoviesServiceName is the fully-qualified name of the MoviesService service.
@@ -54,21 +54,12 @@ const (
 	// MoviesLanguagesServiceCreateLanguageProcedure is the fully-qualified name of the
 	// MoviesLanguagesService's CreateLanguage RPC.
 	MoviesLanguagesServiceCreateLanguageProcedure = "/movies.v1.MoviesLanguagesService/CreateLanguage"
+	// MoviesLanguagesServiceUpdateLanguageProcedure is the fully-qualified name of the
+	// MoviesLanguagesService's UpdateLanguage RPC.
+	MoviesLanguagesServiceUpdateLanguageProcedure = "/movies.v1.MoviesLanguagesService/UpdateLanguage"
 	// MoviesLanguagesServiceDeleteLanguageProcedure is the fully-qualified name of the
 	// MoviesLanguagesService's DeleteLanguage RPC.
 	MoviesLanguagesServiceDeleteLanguageProcedure = "/movies.v1.MoviesLanguagesService/DeleteLanguage"
-	// MoviesGenresServiceGetGenreProcedure is the fully-qualified name of the MoviesGenresService's
-	// GetGenre RPC.
-	MoviesGenresServiceGetGenreProcedure = "/movies.v1.MoviesGenresService/GetGenre"
-	// MoviesGenresServiceGetGenresProcedure is the fully-qualified name of the MoviesGenresService's
-	// GetGenres RPC.
-	MoviesGenresServiceGetGenresProcedure = "/movies.v1.MoviesGenresService/GetGenres"
-	// MoviesGenresServiceCreateGenreProcedure is the fully-qualified name of the MoviesGenresService's
-	// CreateGenre RPC.
-	MoviesGenresServiceCreateGenreProcedure = "/movies.v1.MoviesGenresService/CreateGenre"
-	// MoviesGenresServiceDeleteGenreProcedure is the fully-qualified name of the MoviesGenresService's
-	// DeleteGenre RPC.
-	MoviesGenresServiceDeleteGenreProcedure = "/movies.v1.MoviesGenresService/DeleteGenre"
 	// MoviesFormatsServiceGetFormatProcedure is the fully-qualified name of the MoviesFormatsService's
 	// GetFormat RPC.
 	MoviesFormatsServiceGetFormatProcedure = "/movies.v1.MoviesFormatsService/GetFormat"
@@ -78,9 +69,27 @@ const (
 	// MoviesFormatsServiceCreateFormatProcedure is the fully-qualified name of the
 	// MoviesFormatsService's CreateFormat RPC.
 	MoviesFormatsServiceCreateFormatProcedure = "/movies.v1.MoviesFormatsService/CreateFormat"
+	// MoviesFormatsServiceUpdateFormatProcedure is the fully-qualified name of the
+	// MoviesFormatsService's UpdateFormat RPC.
+	MoviesFormatsServiceUpdateFormatProcedure = "/movies.v1.MoviesFormatsService/UpdateFormat"
 	// MoviesFormatsServiceDeleteFormatProcedure is the fully-qualified name of the
 	// MoviesFormatsService's DeleteFormat RPC.
 	MoviesFormatsServiceDeleteFormatProcedure = "/movies.v1.MoviesFormatsService/DeleteFormat"
+	// MoviesGenresServiceGetGenreProcedure is the fully-qualified name of the MoviesGenresService's
+	// GetGenre RPC.
+	MoviesGenresServiceGetGenreProcedure = "/movies.v1.MoviesGenresService/GetGenre"
+	// MoviesGenresServiceGetGenresProcedure is the fully-qualified name of the MoviesGenresService's
+	// GetGenres RPC.
+	MoviesGenresServiceGetGenresProcedure = "/movies.v1.MoviesGenresService/GetGenres"
+	// MoviesGenresServiceCreateGenreProcedure is the fully-qualified name of the MoviesGenresService's
+	// CreateGenre RPC.
+	MoviesGenresServiceCreateGenreProcedure = "/movies.v1.MoviesGenresService/CreateGenre"
+	// MoviesGenresServiceUpdateGenreProcedure is the fully-qualified name of the MoviesGenresService's
+	// UpdateGenre RPC.
+	MoviesGenresServiceUpdateGenreProcedure = "/movies.v1.MoviesGenresService/UpdateGenre"
+	// MoviesGenresServiceDeleteGenreProcedure is the fully-qualified name of the MoviesGenresService's
+	// DeleteGenre RPC.
+	MoviesGenresServiceDeleteGenreProcedure = "/movies.v1.MoviesGenresService/DeleteGenre"
 	// MoviesPersonsServiceCreatePersonProcedure is the fully-qualified name of the
 	// MoviesPersonsService's CreatePerson RPC.
 	MoviesPersonsServiceCreatePersonProcedure = "/movies.v1.MoviesPersonsService/CreatePerson"
@@ -92,17 +101,20 @@ var (
 	moviesLanguagesServiceGetLanguageMethodDescriptor    = moviesLanguagesServiceServiceDescriptor.Methods().ByName("GetLanguage")
 	moviesLanguagesServiceGetLanguagesMethodDescriptor   = moviesLanguagesServiceServiceDescriptor.Methods().ByName("GetLanguages")
 	moviesLanguagesServiceCreateLanguageMethodDescriptor = moviesLanguagesServiceServiceDescriptor.Methods().ByName("CreateLanguage")
+	moviesLanguagesServiceUpdateLanguageMethodDescriptor = moviesLanguagesServiceServiceDescriptor.Methods().ByName("UpdateLanguage")
 	moviesLanguagesServiceDeleteLanguageMethodDescriptor = moviesLanguagesServiceServiceDescriptor.Methods().ByName("DeleteLanguage")
-	moviesGenresServiceServiceDescriptor                 = v1.File_movies_v1_movies_proto.Services().ByName("MoviesGenresService")
-	moviesGenresServiceGetGenreMethodDescriptor          = moviesGenresServiceServiceDescriptor.Methods().ByName("GetGenre")
-	moviesGenresServiceGetGenresMethodDescriptor         = moviesGenresServiceServiceDescriptor.Methods().ByName("GetGenres")
-	moviesGenresServiceCreateGenreMethodDescriptor       = moviesGenresServiceServiceDescriptor.Methods().ByName("CreateGenre")
-	moviesGenresServiceDeleteGenreMethodDescriptor       = moviesGenresServiceServiceDescriptor.Methods().ByName("DeleteGenre")
 	moviesFormatsServiceServiceDescriptor                = v1.File_movies_v1_movies_proto.Services().ByName("MoviesFormatsService")
 	moviesFormatsServiceGetFormatMethodDescriptor        = moviesFormatsServiceServiceDescriptor.Methods().ByName("GetFormat")
 	moviesFormatsServiceGetFormatsMethodDescriptor       = moviesFormatsServiceServiceDescriptor.Methods().ByName("GetFormats")
 	moviesFormatsServiceCreateFormatMethodDescriptor     = moviesFormatsServiceServiceDescriptor.Methods().ByName("CreateFormat")
+	moviesFormatsServiceUpdateFormatMethodDescriptor     = moviesFormatsServiceServiceDescriptor.Methods().ByName("UpdateFormat")
 	moviesFormatsServiceDeleteFormatMethodDescriptor     = moviesFormatsServiceServiceDescriptor.Methods().ByName("DeleteFormat")
+	moviesGenresServiceServiceDescriptor                 = v1.File_movies_v1_movies_proto.Services().ByName("MoviesGenresService")
+	moviesGenresServiceGetGenreMethodDescriptor          = moviesGenresServiceServiceDescriptor.Methods().ByName("GetGenre")
+	moviesGenresServiceGetGenresMethodDescriptor         = moviesGenresServiceServiceDescriptor.Methods().ByName("GetGenres")
+	moviesGenresServiceCreateGenreMethodDescriptor       = moviesGenresServiceServiceDescriptor.Methods().ByName("CreateGenre")
+	moviesGenresServiceUpdateGenreMethodDescriptor       = moviesGenresServiceServiceDescriptor.Methods().ByName("UpdateGenre")
+	moviesGenresServiceDeleteGenreMethodDescriptor       = moviesGenresServiceServiceDescriptor.Methods().ByName("DeleteGenre")
 	moviesPersonsServiceServiceDescriptor                = v1.File_movies_v1_movies_proto.Services().ByName("MoviesPersonsService")
 	moviesPersonsServiceCreatePersonMethodDescriptor     = moviesPersonsServiceServiceDescriptor.Methods().ByName("CreatePerson")
 	moviesServiceServiceDescriptor                       = v1.File_movies_v1_movies_proto.Services().ByName("MoviesService")
@@ -115,6 +127,7 @@ type MoviesLanguagesServiceClient interface {
 	GetLanguage(context.Context, *connect.Request[v1.GetLanguageRequest]) (*connect.Response[v1.GetLanguageResponse], error)
 	GetLanguages(context.Context, *connect.Request[v1.GetLanguagesRequest]) (*connect.Response[v1.GetLanguagesResponse], error)
 	CreateLanguage(context.Context, *connect.Request[v1.CreateLanguageRequest]) (*connect.Response[v1.CreateLanguageResponse], error)
+	UpdateLanguage(context.Context, *connect.Request[v1.UpdateLanguageRequest]) (*connect.Response[v1.UpdateLanguageResponse], error)
 	DeleteLanguage(context.Context, *connect.Request[v1.DeleteLanguageRequest]) (*connect.Response[v1.DeleteLanguageResponse], error)
 }
 
@@ -146,6 +159,12 @@ func NewMoviesLanguagesServiceClient(httpClient connect.HTTPClient, baseURL stri
 			connect.WithSchema(moviesLanguagesServiceCreateLanguageMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		updateLanguage: connect.NewClient[v1.UpdateLanguageRequest, v1.UpdateLanguageResponse](
+			httpClient,
+			baseURL+MoviesLanguagesServiceUpdateLanguageProcedure,
+			connect.WithSchema(moviesLanguagesServiceUpdateLanguageMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 		deleteLanguage: connect.NewClient[v1.DeleteLanguageRequest, v1.DeleteLanguageResponse](
 			httpClient,
 			baseURL+MoviesLanguagesServiceDeleteLanguageProcedure,
@@ -160,6 +179,7 @@ type moviesLanguagesServiceClient struct {
 	getLanguage    *connect.Client[v1.GetLanguageRequest, v1.GetLanguageResponse]
 	getLanguages   *connect.Client[v1.GetLanguagesRequest, v1.GetLanguagesResponse]
 	createLanguage *connect.Client[v1.CreateLanguageRequest, v1.CreateLanguageResponse]
+	updateLanguage *connect.Client[v1.UpdateLanguageRequest, v1.UpdateLanguageResponse]
 	deleteLanguage *connect.Client[v1.DeleteLanguageRequest, v1.DeleteLanguageResponse]
 }
 
@@ -178,6 +198,11 @@ func (c *moviesLanguagesServiceClient) CreateLanguage(ctx context.Context, req *
 	return c.createLanguage.CallUnary(ctx, req)
 }
 
+// UpdateLanguage calls movies.v1.MoviesLanguagesService.UpdateLanguage.
+func (c *moviesLanguagesServiceClient) UpdateLanguage(ctx context.Context, req *connect.Request[v1.UpdateLanguageRequest]) (*connect.Response[v1.UpdateLanguageResponse], error) {
+	return c.updateLanguage.CallUnary(ctx, req)
+}
+
 // DeleteLanguage calls movies.v1.MoviesLanguagesService.DeleteLanguage.
 func (c *moviesLanguagesServiceClient) DeleteLanguage(ctx context.Context, req *connect.Request[v1.DeleteLanguageRequest]) (*connect.Response[v1.DeleteLanguageResponse], error) {
 	return c.deleteLanguage.CallUnary(ctx, req)
@@ -189,6 +214,7 @@ type MoviesLanguagesServiceHandler interface {
 	GetLanguage(context.Context, *connect.Request[v1.GetLanguageRequest]) (*connect.Response[v1.GetLanguageResponse], error)
 	GetLanguages(context.Context, *connect.Request[v1.GetLanguagesRequest]) (*connect.Response[v1.GetLanguagesResponse], error)
 	CreateLanguage(context.Context, *connect.Request[v1.CreateLanguageRequest]) (*connect.Response[v1.CreateLanguageResponse], error)
+	UpdateLanguage(context.Context, *connect.Request[v1.UpdateLanguageRequest]) (*connect.Response[v1.UpdateLanguageResponse], error)
 	DeleteLanguage(context.Context, *connect.Request[v1.DeleteLanguageRequest]) (*connect.Response[v1.DeleteLanguageResponse], error)
 }
 
@@ -216,6 +242,12 @@ func NewMoviesLanguagesServiceHandler(svc MoviesLanguagesServiceHandler, opts ..
 		connect.WithSchema(moviesLanguagesServiceCreateLanguageMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	moviesLanguagesServiceUpdateLanguageHandler := connect.NewUnaryHandler(
+		MoviesLanguagesServiceUpdateLanguageProcedure,
+		svc.UpdateLanguage,
+		connect.WithSchema(moviesLanguagesServiceUpdateLanguageMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	moviesLanguagesServiceDeleteLanguageHandler := connect.NewUnaryHandler(
 		MoviesLanguagesServiceDeleteLanguageProcedure,
 		svc.DeleteLanguage,
@@ -230,6 +262,8 @@ func NewMoviesLanguagesServiceHandler(svc MoviesLanguagesServiceHandler, opts ..
 			moviesLanguagesServiceGetLanguagesHandler.ServeHTTP(w, r)
 		case MoviesLanguagesServiceCreateLanguageProcedure:
 			moviesLanguagesServiceCreateLanguageHandler.ServeHTTP(w, r)
+		case MoviesLanguagesServiceUpdateLanguageProcedure:
+			moviesLanguagesServiceUpdateLanguageHandler.ServeHTTP(w, r)
 		case MoviesLanguagesServiceDeleteLanguageProcedure:
 			moviesLanguagesServiceDeleteLanguageHandler.ServeHTTP(w, r)
 		default:
@@ -253,154 +287,12 @@ func (UnimplementedMoviesLanguagesServiceHandler) CreateLanguage(context.Context
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesLanguagesService.CreateLanguage is not implemented"))
 }
 
+func (UnimplementedMoviesLanguagesServiceHandler) UpdateLanguage(context.Context, *connect.Request[v1.UpdateLanguageRequest]) (*connect.Response[v1.UpdateLanguageResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesLanguagesService.UpdateLanguage is not implemented"))
+}
+
 func (UnimplementedMoviesLanguagesServiceHandler) DeleteLanguage(context.Context, *connect.Request[v1.DeleteLanguageRequest]) (*connect.Response[v1.DeleteLanguageResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesLanguagesService.DeleteLanguage is not implemented"))
-}
-
-// MoviesGenresServiceClient is a client for the movies.v1.MoviesGenresService service.
-type MoviesGenresServiceClient interface {
-	GetGenre(context.Context, *connect.Request[v1.GetGenreRequest]) (*connect.Response[v1.GetGenreResponse], error)
-	GetGenres(context.Context, *connect.Request[v1.GetGenresRequest]) (*connect.Response[v1.GetGenresResponse], error)
-	CreateGenre(context.Context, *connect.Request[v1.CreateGenreRequest]) (*connect.Response[v1.CreateGenreResponse], error)
-	DeleteGenre(context.Context, *connect.Request[v1.DeleteGenreRequest]) (*connect.Response[v1.DeleteGenreResponse], error)
-}
-
-// NewMoviesGenresServiceClient constructs a client for the movies.v1.MoviesGenresService service.
-// By default, it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped
-// responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the
-// connect.WithGRPC() or connect.WithGRPCWeb() options.
-//
-// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
-// http://api.acme.com or https://acme.com/grpc).
-func NewMoviesGenresServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) MoviesGenresServiceClient {
-	baseURL = strings.TrimRight(baseURL, "/")
-	return &moviesGenresServiceClient{
-		getGenre: connect.NewClient[v1.GetGenreRequest, v1.GetGenreResponse](
-			httpClient,
-			baseURL+MoviesGenresServiceGetGenreProcedure,
-			connect.WithSchema(moviesGenresServiceGetGenreMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		getGenres: connect.NewClient[v1.GetGenresRequest, v1.GetGenresResponse](
-			httpClient,
-			baseURL+MoviesGenresServiceGetGenresProcedure,
-			connect.WithSchema(moviesGenresServiceGetGenresMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		createGenre: connect.NewClient[v1.CreateGenreRequest, v1.CreateGenreResponse](
-			httpClient,
-			baseURL+MoviesGenresServiceCreateGenreProcedure,
-			connect.WithSchema(moviesGenresServiceCreateGenreMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		deleteGenre: connect.NewClient[v1.DeleteGenreRequest, v1.DeleteGenreResponse](
-			httpClient,
-			baseURL+MoviesGenresServiceDeleteGenreProcedure,
-			connect.WithSchema(moviesGenresServiceDeleteGenreMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-	}
-}
-
-// moviesGenresServiceClient implements MoviesGenresServiceClient.
-type moviesGenresServiceClient struct {
-	getGenre    *connect.Client[v1.GetGenreRequest, v1.GetGenreResponse]
-	getGenres   *connect.Client[v1.GetGenresRequest, v1.GetGenresResponse]
-	createGenre *connect.Client[v1.CreateGenreRequest, v1.CreateGenreResponse]
-	deleteGenre *connect.Client[v1.DeleteGenreRequest, v1.DeleteGenreResponse]
-}
-
-// GetGenre calls movies.v1.MoviesGenresService.GetGenre.
-func (c *moviesGenresServiceClient) GetGenre(ctx context.Context, req *connect.Request[v1.GetGenreRequest]) (*connect.Response[v1.GetGenreResponse], error) {
-	return c.getGenre.CallUnary(ctx, req)
-}
-
-// GetGenres calls movies.v1.MoviesGenresService.GetGenres.
-func (c *moviesGenresServiceClient) GetGenres(ctx context.Context, req *connect.Request[v1.GetGenresRequest]) (*connect.Response[v1.GetGenresResponse], error) {
-	return c.getGenres.CallUnary(ctx, req)
-}
-
-// CreateGenre calls movies.v1.MoviesGenresService.CreateGenre.
-func (c *moviesGenresServiceClient) CreateGenre(ctx context.Context, req *connect.Request[v1.CreateGenreRequest]) (*connect.Response[v1.CreateGenreResponse], error) {
-	return c.createGenre.CallUnary(ctx, req)
-}
-
-// DeleteGenre calls movies.v1.MoviesGenresService.DeleteGenre.
-func (c *moviesGenresServiceClient) DeleteGenre(ctx context.Context, req *connect.Request[v1.DeleteGenreRequest]) (*connect.Response[v1.DeleteGenreResponse], error) {
-	return c.deleteGenre.CallUnary(ctx, req)
-}
-
-// MoviesGenresServiceHandler is an implementation of the movies.v1.MoviesGenresService service.
-type MoviesGenresServiceHandler interface {
-	GetGenre(context.Context, *connect.Request[v1.GetGenreRequest]) (*connect.Response[v1.GetGenreResponse], error)
-	GetGenres(context.Context, *connect.Request[v1.GetGenresRequest]) (*connect.Response[v1.GetGenresResponse], error)
-	CreateGenre(context.Context, *connect.Request[v1.CreateGenreRequest]) (*connect.Response[v1.CreateGenreResponse], error)
-	DeleteGenre(context.Context, *connect.Request[v1.DeleteGenreRequest]) (*connect.Response[v1.DeleteGenreResponse], error)
-}
-
-// NewMoviesGenresServiceHandler builds an HTTP handler from the service implementation. It returns
-// the path on which to mount the handler and the handler itself.
-//
-// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
-// and JSON codecs. They also support gzip compression.
-func NewMoviesGenresServiceHandler(svc MoviesGenresServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	moviesGenresServiceGetGenreHandler := connect.NewUnaryHandler(
-		MoviesGenresServiceGetGenreProcedure,
-		svc.GetGenre,
-		connect.WithSchema(moviesGenresServiceGetGenreMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	moviesGenresServiceGetGenresHandler := connect.NewUnaryHandler(
-		MoviesGenresServiceGetGenresProcedure,
-		svc.GetGenres,
-		connect.WithSchema(moviesGenresServiceGetGenresMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	moviesGenresServiceCreateGenreHandler := connect.NewUnaryHandler(
-		MoviesGenresServiceCreateGenreProcedure,
-		svc.CreateGenre,
-		connect.WithSchema(moviesGenresServiceCreateGenreMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	moviesGenresServiceDeleteGenreHandler := connect.NewUnaryHandler(
-		MoviesGenresServiceDeleteGenreProcedure,
-		svc.DeleteGenre,
-		connect.WithSchema(moviesGenresServiceDeleteGenreMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	return "/movies.v1.MoviesGenresService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case MoviesGenresServiceGetGenreProcedure:
-			moviesGenresServiceGetGenreHandler.ServeHTTP(w, r)
-		case MoviesGenresServiceGetGenresProcedure:
-			moviesGenresServiceGetGenresHandler.ServeHTTP(w, r)
-		case MoviesGenresServiceCreateGenreProcedure:
-			moviesGenresServiceCreateGenreHandler.ServeHTTP(w, r)
-		case MoviesGenresServiceDeleteGenreProcedure:
-			moviesGenresServiceDeleteGenreHandler.ServeHTTP(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	})
-}
-
-// UnimplementedMoviesGenresServiceHandler returns CodeUnimplemented from all methods.
-type UnimplementedMoviesGenresServiceHandler struct{}
-
-func (UnimplementedMoviesGenresServiceHandler) GetGenre(context.Context, *connect.Request[v1.GetGenreRequest]) (*connect.Response[v1.GetGenreResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesGenresService.GetGenre is not implemented"))
-}
-
-func (UnimplementedMoviesGenresServiceHandler) GetGenres(context.Context, *connect.Request[v1.GetGenresRequest]) (*connect.Response[v1.GetGenresResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesGenresService.GetGenres is not implemented"))
-}
-
-func (UnimplementedMoviesGenresServiceHandler) CreateGenre(context.Context, *connect.Request[v1.CreateGenreRequest]) (*connect.Response[v1.CreateGenreResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesGenresService.CreateGenre is not implemented"))
-}
-
-func (UnimplementedMoviesGenresServiceHandler) DeleteGenre(context.Context, *connect.Request[v1.DeleteGenreRequest]) (*connect.Response[v1.DeleteGenreResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesGenresService.DeleteGenre is not implemented"))
 }
 
 // MoviesFormatsServiceClient is a client for the movies.v1.MoviesFormatsService service.
@@ -408,6 +300,7 @@ type MoviesFormatsServiceClient interface {
 	GetFormat(context.Context, *connect.Request[v1.GetFormatRequest]) (*connect.Response[v1.GetFormatResponse], error)
 	GetFormats(context.Context, *connect.Request[v1.GetFormatsRequest]) (*connect.Response[v1.GetFormatsResponse], error)
 	CreateFormat(context.Context, *connect.Request[v1.CreateFormatRequest]) (*connect.Response[v1.CreateFormatResponse], error)
+	UpdateFormat(context.Context, *connect.Request[v1.UpdateFormatRequest]) (*connect.Response[v1.UpdateFormatResponse], error)
 	DeleteFormat(context.Context, *connect.Request[v1.DeleteFormatRequest]) (*connect.Response[v1.DeleteFormatResponse], error)
 }
 
@@ -439,6 +332,12 @@ func NewMoviesFormatsServiceClient(httpClient connect.HTTPClient, baseURL string
 			connect.WithSchema(moviesFormatsServiceCreateFormatMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		updateFormat: connect.NewClient[v1.UpdateFormatRequest, v1.UpdateFormatResponse](
+			httpClient,
+			baseURL+MoviesFormatsServiceUpdateFormatProcedure,
+			connect.WithSchema(moviesFormatsServiceUpdateFormatMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 		deleteFormat: connect.NewClient[v1.DeleteFormatRequest, v1.DeleteFormatResponse](
 			httpClient,
 			baseURL+MoviesFormatsServiceDeleteFormatProcedure,
@@ -453,6 +352,7 @@ type moviesFormatsServiceClient struct {
 	getFormat    *connect.Client[v1.GetFormatRequest, v1.GetFormatResponse]
 	getFormats   *connect.Client[v1.GetFormatsRequest, v1.GetFormatsResponse]
 	createFormat *connect.Client[v1.CreateFormatRequest, v1.CreateFormatResponse]
+	updateFormat *connect.Client[v1.UpdateFormatRequest, v1.UpdateFormatResponse]
 	deleteFormat *connect.Client[v1.DeleteFormatRequest, v1.DeleteFormatResponse]
 }
 
@@ -471,6 +371,11 @@ func (c *moviesFormatsServiceClient) CreateFormat(ctx context.Context, req *conn
 	return c.createFormat.CallUnary(ctx, req)
 }
 
+// UpdateFormat calls movies.v1.MoviesFormatsService.UpdateFormat.
+func (c *moviesFormatsServiceClient) UpdateFormat(ctx context.Context, req *connect.Request[v1.UpdateFormatRequest]) (*connect.Response[v1.UpdateFormatResponse], error) {
+	return c.updateFormat.CallUnary(ctx, req)
+}
+
 // DeleteFormat calls movies.v1.MoviesFormatsService.DeleteFormat.
 func (c *moviesFormatsServiceClient) DeleteFormat(ctx context.Context, req *connect.Request[v1.DeleteFormatRequest]) (*connect.Response[v1.DeleteFormatResponse], error) {
 	return c.deleteFormat.CallUnary(ctx, req)
@@ -481,6 +386,7 @@ type MoviesFormatsServiceHandler interface {
 	GetFormat(context.Context, *connect.Request[v1.GetFormatRequest]) (*connect.Response[v1.GetFormatResponse], error)
 	GetFormats(context.Context, *connect.Request[v1.GetFormatsRequest]) (*connect.Response[v1.GetFormatsResponse], error)
 	CreateFormat(context.Context, *connect.Request[v1.CreateFormatRequest]) (*connect.Response[v1.CreateFormatResponse], error)
+	UpdateFormat(context.Context, *connect.Request[v1.UpdateFormatRequest]) (*connect.Response[v1.UpdateFormatResponse], error)
 	DeleteFormat(context.Context, *connect.Request[v1.DeleteFormatRequest]) (*connect.Response[v1.DeleteFormatResponse], error)
 }
 
@@ -508,6 +414,12 @@ func NewMoviesFormatsServiceHandler(svc MoviesFormatsServiceHandler, opts ...con
 		connect.WithSchema(moviesFormatsServiceCreateFormatMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	moviesFormatsServiceUpdateFormatHandler := connect.NewUnaryHandler(
+		MoviesFormatsServiceUpdateFormatProcedure,
+		svc.UpdateFormat,
+		connect.WithSchema(moviesFormatsServiceUpdateFormatMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	moviesFormatsServiceDeleteFormatHandler := connect.NewUnaryHandler(
 		MoviesFormatsServiceDeleteFormatProcedure,
 		svc.DeleteFormat,
@@ -522,6 +434,8 @@ func NewMoviesFormatsServiceHandler(svc MoviesFormatsServiceHandler, opts ...con
 			moviesFormatsServiceGetFormatsHandler.ServeHTTP(w, r)
 		case MoviesFormatsServiceCreateFormatProcedure:
 			moviesFormatsServiceCreateFormatHandler.ServeHTTP(w, r)
+		case MoviesFormatsServiceUpdateFormatProcedure:
+			moviesFormatsServiceUpdateFormatHandler.ServeHTTP(w, r)
 		case MoviesFormatsServiceDeleteFormatProcedure:
 			moviesFormatsServiceDeleteFormatHandler.ServeHTTP(w, r)
 		default:
@@ -545,8 +459,184 @@ func (UnimplementedMoviesFormatsServiceHandler) CreateFormat(context.Context, *c
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesFormatsService.CreateFormat is not implemented"))
 }
 
+func (UnimplementedMoviesFormatsServiceHandler) UpdateFormat(context.Context, *connect.Request[v1.UpdateFormatRequest]) (*connect.Response[v1.UpdateFormatResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesFormatsService.UpdateFormat is not implemented"))
+}
+
 func (UnimplementedMoviesFormatsServiceHandler) DeleteFormat(context.Context, *connect.Request[v1.DeleteFormatRequest]) (*connect.Response[v1.DeleteFormatResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesFormatsService.DeleteFormat is not implemented"))
+}
+
+// MoviesGenresServiceClient is a client for the movies.v1.MoviesGenresService service.
+type MoviesGenresServiceClient interface {
+	GetGenre(context.Context, *connect.Request[v1.GetGenreRequest]) (*connect.Response[v1.GetGenreResponse], error)
+	GetGenres(context.Context, *connect.Request[v1.GetGenresRequest]) (*connect.Response[v1.GetGenresResponse], error)
+	CreateGenre(context.Context, *connect.Request[v1.CreateGenreRequest]) (*connect.Response[v1.CreateGenreResponse], error)
+	UpdateGenre(context.Context, *connect.Request[v1.UpdateGenreRequest]) (*connect.Response[v1.UpdateGenreResponse], error)
+	DeleteGenre(context.Context, *connect.Request[v1.DeleteGenreRequest]) (*connect.Response[v1.DeleteGenreResponse], error)
+}
+
+// NewMoviesGenresServiceClient constructs a client for the movies.v1.MoviesGenresService service.
+// By default, it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped
+// responses, and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the
+// connect.WithGRPC() or connect.WithGRPCWeb() options.
+//
+// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
+// http://api.acme.com or https://acme.com/grpc).
+func NewMoviesGenresServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) MoviesGenresServiceClient {
+	baseURL = strings.TrimRight(baseURL, "/")
+	return &moviesGenresServiceClient{
+		getGenre: connect.NewClient[v1.GetGenreRequest, v1.GetGenreResponse](
+			httpClient,
+			baseURL+MoviesGenresServiceGetGenreProcedure,
+			connect.WithSchema(moviesGenresServiceGetGenreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		getGenres: connect.NewClient[v1.GetGenresRequest, v1.GetGenresResponse](
+			httpClient,
+			baseURL+MoviesGenresServiceGetGenresProcedure,
+			connect.WithSchema(moviesGenresServiceGetGenresMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		createGenre: connect.NewClient[v1.CreateGenreRequest, v1.CreateGenreResponse](
+			httpClient,
+			baseURL+MoviesGenresServiceCreateGenreProcedure,
+			connect.WithSchema(moviesGenresServiceCreateGenreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		updateGenre: connect.NewClient[v1.UpdateGenreRequest, v1.UpdateGenreResponse](
+			httpClient,
+			baseURL+MoviesGenresServiceUpdateGenreProcedure,
+			connect.WithSchema(moviesGenresServiceUpdateGenreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		deleteGenre: connect.NewClient[v1.DeleteGenreRequest, v1.DeleteGenreResponse](
+			httpClient,
+			baseURL+MoviesGenresServiceDeleteGenreProcedure,
+			connect.WithSchema(moviesGenresServiceDeleteGenreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+	}
+}
+
+// moviesGenresServiceClient implements MoviesGenresServiceClient.
+type moviesGenresServiceClient struct {
+	getGenre    *connect.Client[v1.GetGenreRequest, v1.GetGenreResponse]
+	getGenres   *connect.Client[v1.GetGenresRequest, v1.GetGenresResponse]
+	createGenre *connect.Client[v1.CreateGenreRequest, v1.CreateGenreResponse]
+	updateGenre *connect.Client[v1.UpdateGenreRequest, v1.UpdateGenreResponse]
+	deleteGenre *connect.Client[v1.DeleteGenreRequest, v1.DeleteGenreResponse]
+}
+
+// GetGenre calls movies.v1.MoviesGenresService.GetGenre.
+func (c *moviesGenresServiceClient) GetGenre(ctx context.Context, req *connect.Request[v1.GetGenreRequest]) (*connect.Response[v1.GetGenreResponse], error) {
+	return c.getGenre.CallUnary(ctx, req)
+}
+
+// GetGenres calls movies.v1.MoviesGenresService.GetGenres.
+func (c *moviesGenresServiceClient) GetGenres(ctx context.Context, req *connect.Request[v1.GetGenresRequest]) (*connect.Response[v1.GetGenresResponse], error) {
+	return c.getGenres.CallUnary(ctx, req)
+}
+
+// CreateGenre calls movies.v1.MoviesGenresService.CreateGenre.
+func (c *moviesGenresServiceClient) CreateGenre(ctx context.Context, req *connect.Request[v1.CreateGenreRequest]) (*connect.Response[v1.CreateGenreResponse], error) {
+	return c.createGenre.CallUnary(ctx, req)
+}
+
+// UpdateGenre calls movies.v1.MoviesGenresService.UpdateGenre.
+func (c *moviesGenresServiceClient) UpdateGenre(ctx context.Context, req *connect.Request[v1.UpdateGenreRequest]) (*connect.Response[v1.UpdateGenreResponse], error) {
+	return c.updateGenre.CallUnary(ctx, req)
+}
+
+// DeleteGenre calls movies.v1.MoviesGenresService.DeleteGenre.
+func (c *moviesGenresServiceClient) DeleteGenre(ctx context.Context, req *connect.Request[v1.DeleteGenreRequest]) (*connect.Response[v1.DeleteGenreResponse], error) {
+	return c.deleteGenre.CallUnary(ctx, req)
+}
+
+// MoviesGenresServiceHandler is an implementation of the movies.v1.MoviesGenresService service.
+type MoviesGenresServiceHandler interface {
+	GetGenre(context.Context, *connect.Request[v1.GetGenreRequest]) (*connect.Response[v1.GetGenreResponse], error)
+	GetGenres(context.Context, *connect.Request[v1.GetGenresRequest]) (*connect.Response[v1.GetGenresResponse], error)
+	CreateGenre(context.Context, *connect.Request[v1.CreateGenreRequest]) (*connect.Response[v1.CreateGenreResponse], error)
+	UpdateGenre(context.Context, *connect.Request[v1.UpdateGenreRequest]) (*connect.Response[v1.UpdateGenreResponse], error)
+	DeleteGenre(context.Context, *connect.Request[v1.DeleteGenreRequest]) (*connect.Response[v1.DeleteGenreResponse], error)
+}
+
+// NewMoviesGenresServiceHandler builds an HTTP handler from the service implementation. It returns
+// the path on which to mount the handler and the handler itself.
+//
+// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
+// and JSON codecs. They also support gzip compression.
+func NewMoviesGenresServiceHandler(svc MoviesGenresServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	moviesGenresServiceGetGenreHandler := connect.NewUnaryHandler(
+		MoviesGenresServiceGetGenreProcedure,
+		svc.GetGenre,
+		connect.WithSchema(moviesGenresServiceGetGenreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesGenresServiceGetGenresHandler := connect.NewUnaryHandler(
+		MoviesGenresServiceGetGenresProcedure,
+		svc.GetGenres,
+		connect.WithSchema(moviesGenresServiceGetGenresMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesGenresServiceCreateGenreHandler := connect.NewUnaryHandler(
+		MoviesGenresServiceCreateGenreProcedure,
+		svc.CreateGenre,
+		connect.WithSchema(moviesGenresServiceCreateGenreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesGenresServiceUpdateGenreHandler := connect.NewUnaryHandler(
+		MoviesGenresServiceUpdateGenreProcedure,
+		svc.UpdateGenre,
+		connect.WithSchema(moviesGenresServiceUpdateGenreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesGenresServiceDeleteGenreHandler := connect.NewUnaryHandler(
+		MoviesGenresServiceDeleteGenreProcedure,
+		svc.DeleteGenre,
+		connect.WithSchema(moviesGenresServiceDeleteGenreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	return "/movies.v1.MoviesGenresService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case MoviesGenresServiceGetGenreProcedure:
+			moviesGenresServiceGetGenreHandler.ServeHTTP(w, r)
+		case MoviesGenresServiceGetGenresProcedure:
+			moviesGenresServiceGetGenresHandler.ServeHTTP(w, r)
+		case MoviesGenresServiceCreateGenreProcedure:
+			moviesGenresServiceCreateGenreHandler.ServeHTTP(w, r)
+		case MoviesGenresServiceUpdateGenreProcedure:
+			moviesGenresServiceUpdateGenreHandler.ServeHTTP(w, r)
+		case MoviesGenresServiceDeleteGenreProcedure:
+			moviesGenresServiceDeleteGenreHandler.ServeHTTP(w, r)
+		default:
+			http.NotFound(w, r)
+		}
+	})
+}
+
+// UnimplementedMoviesGenresServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedMoviesGenresServiceHandler struct{}
+
+func (UnimplementedMoviesGenresServiceHandler) GetGenre(context.Context, *connect.Request[v1.GetGenreRequest]) (*connect.Response[v1.GetGenreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesGenresService.GetGenre is not implemented"))
+}
+
+func (UnimplementedMoviesGenresServiceHandler) GetGenres(context.Context, *connect.Request[v1.GetGenresRequest]) (*connect.Response[v1.GetGenresResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesGenresService.GetGenres is not implemented"))
+}
+
+func (UnimplementedMoviesGenresServiceHandler) CreateGenre(context.Context, *connect.Request[v1.CreateGenreRequest]) (*connect.Response[v1.CreateGenreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesGenresService.CreateGenre is not implemented"))
+}
+
+func (UnimplementedMoviesGenresServiceHandler) UpdateGenre(context.Context, *connect.Request[v1.UpdateGenreRequest]) (*connect.Response[v1.UpdateGenreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesGenresService.UpdateGenre is not implemented"))
+}
+
+func (UnimplementedMoviesGenresServiceHandler) DeleteGenre(context.Context, *connect.Request[v1.DeleteGenreRequest]) (*connect.Response[v1.DeleteGenreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesGenresService.DeleteGenre is not implemented"))
 }
 
 // MoviesPersonsServiceClient is a client for the movies.v1.MoviesPersonsService service.

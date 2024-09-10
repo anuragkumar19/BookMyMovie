@@ -7,20 +7,25 @@ import "google/type/date/date.proto";
 
 option go_package = "bookmymovie.app/bookmymovie/api/gen/movies/v1;moviesv1";
 
+message Language {
+  int64 id = 1;
+  string display_name = 2;
+  string english_name = 3;
+  string slug = 4;
+}
+
 message GetLanguageRequest {
-  string id = 1;
+  int64 id = 1;
 }
 
 message GetLanguageResponse {
-  string id = 1;
-  string display_name = 2;
-  string english_name = 3;
+  Language language = 1;
 }
 
 message GetLanguagesRequest {}
 
 message GetLanguagesResponse {
-  repeated GetLanguageResponse languages = 1;
+  repeated Language languages = 1;
 }
 
 message CreateLanguageRequest {
@@ -29,11 +34,21 @@ message CreateLanguageRequest {
 }
 
 message CreateLanguageResponse {
-  string id = 1;
+  Language language = 1;
+}
+
+message UpdateLanguageRequest {
+  int64 id = 1;
+  optional string display_name = 2;
+  optional string english_name = 3;
+}
+
+message UpdateLanguageResponse {
+  Language language = 1;
 }
 
 message DeleteLanguageRequest {
-  string id = 1;
+  int64 id = 1;
 }
 
 message DeleteLanguageResponse {}
@@ -42,61 +57,29 @@ service MoviesLanguagesService {
   rpc GetLanguage(GetLanguageRequest) returns (GetLanguageResponse);
   rpc GetLanguages(GetLanguagesRequest) returns (GetLanguagesResponse);
   rpc CreateLanguage(CreateLanguageRequest) returns (CreateLanguageResponse);
+  rpc UpdateLanguage(UpdateLanguageRequest) returns (UpdateLanguageResponse);
   rpc DeleteLanguage(DeleteLanguageRequest) returns (DeleteLanguageResponse);
 }
 
-message GetGenreRequest {
-  string id = 1;
-}
-
-message GetGenreResponse {
-  string id = 1;
+message Format {
+  int64 id = 1;
   string display_name = 2;
   string about = 3;
-}
-
-message GetGenresRequest {}
-
-message GetGenresResponse {
-  repeated GetGenreResponse genres = 1;
-}
-
-message CreateGenreRequest {
-  string display_name = 1;
-  string about = 2;
-}
-
-message CreateGenreResponse {
-  string id = 1;
-}
-
-message DeleteGenreRequest {
-  string id = 1;
-}
-
-message DeleteGenreResponse {}
-
-service MoviesGenresService {
-  rpc GetGenre(GetGenreRequest) returns (GetGenreResponse);
-  rpc GetGenres(GetGenresRequest) returns (GetGenresResponse);
-  rpc CreateGenre(CreateGenreRequest) returns (CreateGenreResponse);
-  rpc DeleteGenre(DeleteGenreRequest) returns (DeleteGenreResponse);
+  string slug = 4;
 }
 
 message GetFormatRequest {
-  string id = 1;
+  int64 id = 1;
 }
 
 message GetFormatResponse {
-  string id = 1;
-  string display_name = 2;
-  string about = 3;
+  Format format = 1;
 }
 
 message GetFormatsRequest {}
 
 message GetFormatsResponse {
-  repeated GetFormatResponse formats = 1;
+  repeated Format formats = 1;
 }
 
 message CreateFormatRequest {
@@ -105,11 +88,21 @@ message CreateFormatRequest {
 }
 
 message CreateFormatResponse {
-  string id = 1;
+  Format format = 1;
+}
+
+message UpdateFormatRequest {
+  int64 id = 1;
+  optional string display_name = 2;
+  optional string about = 3;
+}
+
+message UpdateFormatResponse {
+  Format format = 1;
 }
 
 message DeleteFormatRequest {
-  string id = 1;
+  int64 id = 1;
 }
 
 message DeleteFormatResponse {}
@@ -118,7 +111,62 @@ service MoviesFormatsService {
   rpc GetFormat(GetFormatRequest) returns (GetFormatResponse);
   rpc GetFormats(GetFormatsRequest) returns (GetFormatsResponse);
   rpc CreateFormat(CreateFormatRequest) returns (CreateFormatResponse);
+  rpc UpdateFormat(UpdateFormatRequest) returns (UpdateFormatResponse);
   rpc DeleteFormat(DeleteFormatRequest) returns (DeleteFormatResponse);
+}
+
+message Genre {
+  int64 id = 1;
+  string display_name = 2;
+  string about = 3;
+  string slug = 4;
+}
+
+message GetGenreRequest {
+  int64 id = 1;
+}
+
+message GetGenreResponse {
+  Genre genre = 1;
+}
+
+message GetGenresRequest {}
+
+message GetGenresResponse {
+  repeated Genre genres = 1;
+}
+
+message CreateGenreRequest {
+  string display_name = 1;
+  string about = 2;
+}
+
+message CreateGenreResponse {
+  Genre genre = 1;
+}
+
+message UpdateGenreRequest {
+  int64 id = 1;
+  optional string display_name = 2;
+  optional string about = 3;
+}
+
+message UpdateGenreResponse {
+  Genre genre = 1;
+}
+
+message DeleteGenreRequest {
+  int64 id = 1;
+}
+
+message DeleteGenreResponse {}
+
+service MoviesGenresService {
+  rpc GetGenre(GetGenreRequest) returns (GetGenreResponse);
+  rpc GetGenres(GetGenresRequest) returns (GetGenresResponse);
+  rpc CreateGenre(CreateGenreRequest) returns (CreateGenreResponse);
+  rpc UpdateGenre(UpdateGenreRequest) returns (UpdateGenreResponse);
+  rpc DeleteGenre(DeleteGenreRequest) returns (DeleteGenreResponse);
 }
 
 message CreatePersonRequest {

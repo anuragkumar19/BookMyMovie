@@ -130,11 +130,6 @@ enable = [
     # Check Prometheus metrics naming via promlint.
     "promlinter",
 
-    # https://github.com/ghostiam/protogetter
-    # Reports direct reads from proto message fields when getters should be
-    # used.
-    "protogetter",
-
     # https://github.com/mgechev/revive
     # Fast, configurable, extensible, flexible, and beautiful linter for Go.
     # Drop-in replacement of golint.

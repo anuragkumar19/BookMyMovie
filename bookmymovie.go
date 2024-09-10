@@ -71,6 +71,10 @@ func (app *Application) UsersService() *users.Users {
 	return app.usersService
 }
 
+func (app *Application) MoviesService() *movies.Movies {
+	return app.moviesService
+}
+
 func (app *Application) Shutdown(_ context.Context) error {
 	app.mailer.Wait()
 	return nil
