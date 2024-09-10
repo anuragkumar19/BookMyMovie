@@ -55,7 +55,7 @@ func (s *Formats) Create(ctx context.Context, authMeta *auth.Metadata, params *C
 		return database.MoviesFormat{}, err
 	}
 
-	formats := make([]database.MoviesFormat, len(s.cache.formats))
+	formats := make([]database.MoviesFormat, len(s.cache.formats)+1)
 	copy(formats, s.cache.formats)
 
 	formats = append(formats, format)

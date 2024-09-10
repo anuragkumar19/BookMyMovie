@@ -21,16 +21,19 @@ type Genres struct {
 func New(logger *zerolog.Logger, db *database.Database, a *auth.Auth) (Genres, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	// init cache
+	c := &cache{}
 	genres, err := db.GetAllMoviesGenres(ctx)
 	if err != nil {
 		return Genres{}, errors.Join(errors.New("failed to load genres from database"), err)
 	}
+	c.refresh(genres)
+
 	return Genres{
 		logger: logger,
 		db:     db,
 		auth:   a,
-		cache: &cache{
-			genres: genres,
-		},
+		cache:  c,
 	}, nil
 }

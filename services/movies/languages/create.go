@@ -55,7 +55,7 @@ func (s *Languages) Create(ctx context.Context, authMeta *auth.Metadata, params 
 		return database.MoviesLanguage{}, err
 	}
 
-	langs := make([]database.MoviesLanguage, len(s.cache.languages))
+	langs := make([]database.MoviesLanguage, len(s.cache.languages)+1)
 	copy(langs, s.cache.languages)
 
 	langs = append(langs, lang)

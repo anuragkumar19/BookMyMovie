@@ -55,7 +55,7 @@ func (s *Genres) Create(ctx context.Context, authMeta *auth.Metadata, params *Cr
 		return database.MoviesGenre{}, err
 	}
 
-	genres := make([]database.MoviesGenre, len(s.cache.genres))
+	genres := make([]database.MoviesGenre, len(s.cache.genres)+1)
 	copy(genres, s.cache.genres)
 
 	genres = append(genres, genre)
