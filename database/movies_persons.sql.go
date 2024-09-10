@@ -13,33 +13,21 @@ import (
 
 const createMoviesPerson = `-- name: CreateMoviesPerson :one
 INSERT INTO
-    "movies_persons" (
-        "name",
-        "slug",
-        "nicknames",
-        "profile_picture",
-        "occupations",
-        "dob",
-        "about",
-        "imdb_id",
-        "imdb_last_synced_at"
-    )
+    "movies_persons" ("name", "slug", "nicknames", "profile_picture", "occupations", "dob", "about")
 VALUES
-    ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    ($1, $2, $3, $4, $5, $6, $7)
 RETURNING
     "id"
 `
 
 type CreateMoviesPersonParams struct {
-	Name             string
-	Slug             string
-	Nicknames        []string
-	ProfilePicture   string
-	Occupations      []string
-	Dob              pgtype.Date
-	About            string
-	ImdbID           string
-	ImdbLastSyncedAt pgtype.Timestamptz
+	Name           string
+	Slug           string
+	Nicknames      []string
+	ProfilePicture string
+	Occupations    []string
+	Dob            pgtype.Date
+	About          string
 }
 
 func (q *Queries) CreateMoviesPerson(ctx context.Context, arg *CreateMoviesPersonParams) (int64, error) {
@@ -51,10 +39,192 @@ func (q *Queries) CreateMoviesPerson(ctx context.Context, arg *CreateMoviesPerso
 		arg.Occupations,
 		arg.Dob,
 		arg.About,
-		arg.ImdbID,
-		arg.ImdbLastSyncedAt,
 	)
 	var id int64
 	err := row.Scan(&id)
 	return id, err
+}
+
+const deleteMoviesPerson = `-- name: DeleteMoviesPerson :exec
+UPDATE "movies_persons"
+SET
+    "is_deleted" = TRUE,
+    "version" = "version" + 1
+WHERE
+    "id" = $1
+    AND "version" = $2
+    AND "is_deleted" = FALSE
+`
+
+type DeleteMoviesPersonParams struct {
+	ID      int64
+	Version int32
+}
+
+func (q *Queries) DeleteMoviesPerson(ctx context.Context, arg *DeleteMoviesPersonParams) error {
+	_, err := q.db.Exec(ctx, deleteMoviesPerson, arg.ID, arg.Version)
+	return err
+}
+
+const getMoviesPerson = `-- name: GetMoviesPerson :one
+SELECT
+    "id",
+    "name",
+    "slug",
+    "nicknames",
+    "profile_picture",
+    "occupations",
+    "dob",
+    "about" "version"
+FROM
+    "movies_persons"
+WHERE
+    "id" = $1
+    AND "is_deleted" = FALSE
+`
+
+type GetMoviesPersonRow struct {
+	ID             int64
+	Name           string
+	Slug           string
+	Nicknames      []string
+	ProfilePicture string
+	Occupations    []string
+	Dob            pgtype.Date
+	Version        string
+}
+
+func (q *Queries) GetMoviesPerson(ctx context.Context, id int64) (GetMoviesPersonRow, error) {
+	row := q.db.QueryRow(ctx, getMoviesPerson, id)
+	var i GetMoviesPersonRow
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Slug,
+		&i.Nicknames,
+		&i.ProfilePicture,
+		&i.Occupations,
+		&i.Dob,
+		&i.Version,
+	)
+	return i, err
+}
+
+const listMoviesPerson = `-- name: ListMoviesPerson :many
+SELECT
+    "id",
+    "name",
+    "slug",
+    "nicknames",
+    "profile_picture",
+    "occupations",
+    "dob",
+    "about" "version"
+FROM
+    "movies_persons"
+WHERE
+    (
+        "created_at" < $1
+        AND "is_deleted" = FALSE
+    )
+    OR (
+        "deleted_at" > $1
+        AND "is_deleted" = TRUE
+    )
+ORDER BY
+    "created_at" DESC
+LIMIT
+    $2
+OFFSET
+    $3
+`
+
+type ListMoviesPersonParams struct {
+	CreatedAt pgtype.Timestamptz
+	Limit     int32
+	Offset    int32
+}
+
+type ListMoviesPersonRow struct {
+	ID             int64
+	Name           string
+	Slug           string
+	Nicknames      []string
+	ProfilePicture string
+	Occupations    []string
+	Dob            pgtype.Date
+	Version        string
+}
+
+func (q *Queries) ListMoviesPerson(ctx context.Context, arg *ListMoviesPersonParams) ([]ListMoviesPersonRow, error) {
+	rows, err := q.db.Query(ctx, listMoviesPerson, arg.CreatedAt, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListMoviesPersonRow
+	for rows.Next() {
+		var i ListMoviesPersonRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Slug,
+			&i.Nicknames,
+			&i.ProfilePicture,
+			&i.Occupations,
+			&i.Dob,
+			&i.Version,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateMoviesPerson = `-- name: UpdateMoviesPerson :exec
+UPDATE "movies_persons"
+SET
+    "name" = $1,
+    "slug" = $2,
+    "nicknames" = $3,
+    "profile_picture" = $4,
+    "occupations" = $5,
+    "dob" = $6,
+    "about" = $7,
+    "version" = "version" + 1
+WHERE
+    "id" = $8
+    AND "version" = $9
+    AND "is_deleted" = FALSE
+`
+
+type UpdateMoviesPersonParams struct {
+	Name           string
+	Slug           string
+	Nicknames      []string
+	ProfilePicture string
+	Occupations    []string
+	Dob            pgtype.Date
+	About          string
+	ID             int64
+	Version        int32
+}
+
+func (q *Queries) UpdateMoviesPerson(ctx context.Context, arg *UpdateMoviesPersonParams) error {
+	_, err := q.db.Exec(ctx, updateMoviesPerson,
+		arg.Name,
+		arg.Slug,
+		arg.Nicknames,
+		arg.ProfilePicture,
+		arg.Occupations,
+		arg.Dob,
+		arg.About,
+		arg.ID,
+		arg.Version,
+	)
+	return err
 }

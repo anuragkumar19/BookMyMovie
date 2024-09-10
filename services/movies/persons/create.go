@@ -20,17 +20,16 @@ type CreateParams struct {
 	About             string
 	ProfilePictureKey string
 	DOB               *time.Time
-	ImdbID            string
 }
 
 func (params *CreateParams) Transform() *CreateParams {
 	params.Name = strings.TrimSpace(params.Name)
-	nicknames := []string{}
+	nicknames := make([]string, 0, len(params.Nicknames))
 	for _, n := range params.Nicknames {
 		nicknames = append(nicknames, strings.TrimSpace(n))
 	}
 	params.Nicknames = nicknames
-	occupations := []string{}
+	occupations := make([]string, 0, len(params.Occupations))
 	for _, n := range params.Occupations {
 		occupations = append(occupations, strings.TrimSpace(n))
 	}
@@ -46,11 +45,10 @@ func (params *CreateParams) Validate() error {
 		params,
 		validation.Field(&params.Name, validation.Required),
 		validation.Field(&params.About, validation.Required),
-		validation.Field(&params.Nicknames),
-		validation.Field(&params.Occupations),
+		validation.Field(&params.Nicknames, validation.NotNil),
+		validation.Field(&params.Occupations, validation.NotNil),
 		validation.Field(&params.ProfilePictureKey),
 		validation.Field(&params.DOB, validation.Max(time.Now()).Error("dob cannot be in future")),
-		validation.Field(&params.ImdbID, validation.Required),
 	)
 }
 
@@ -89,8 +87,6 @@ func (s *Persons) Create(ctx context.Context, authMeta *auth.Metadata, params *C
 			Valid: params.DOB != nil,
 			Time:  *params.DOB,
 		},
-		About:            params.About,
-		ImdbID:           params.ImdbID,
-		ImdbLastSyncedAt: pgtype.Timestamptz{Valid: false},
+		About: params.About,
 	})
 }

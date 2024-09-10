@@ -33,7 +33,8 @@ UPDATE "movies_languages"
 SET
     "slug" = $1,
     "display_name" = $2,
-    "english_name" = $3
+    "english_name" = $3,
+    "version" = "version" + 1
 WHERE
     "id" = $4
     AND "version" = $5;

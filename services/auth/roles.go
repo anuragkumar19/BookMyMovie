@@ -29,6 +29,7 @@ const (
 	MoviesFormatsUpdate Permission = "movies:formats:update"
 
 	MoviesPersonsCreate Permission = "movies:persons:create"
+	MoviesPersonsList   Permission = "movies:persons:list"
 	MoviesPersonsUpdate Permission = "movies:persons:update"
 	MoviesPersonsDelete Permission = "movies:persons:delete"
 )
@@ -44,6 +45,7 @@ var adminPermission = rolePermissionMap{
 	MoviesGenresDelete:    true,
 	MoviesGenresUpdate:    true,
 	MoviesPersonsCreate:   true,
+	MoviesPersonsList:     true,
 	MoviesPersonsUpdate:   true,
 	MoviesPersonsDelete:   true,
 	MoviesFormatsCreate:   true,

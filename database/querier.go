@@ -27,6 +27,7 @@ type Querier interface {
 	DeleteMoviesFormat(ctx context.Context, id int64) error
 	DeleteMoviesGenre(ctx context.Context, id int64) error
 	DeleteMoviesLanguage(ctx context.Context, id int64) error
+	DeleteMoviesPerson(ctx context.Context, arg *DeleteMoviesPersonParams) error
 	DeleteRefreshToken(ctx context.Context, id int64) error
 	FindLoginToken(ctx context.Context, token string) (FindLoginTokenRow, error)
 	FindRefreshToken(ctx context.Context, token string) (RefreshToken, error)
@@ -38,9 +39,12 @@ type Querier interface {
 	GetMoviesFormatByID(ctx context.Context, id int64) (MoviesFormat, error)
 	GetMoviesGenreByID(ctx context.Context, id int64) (MoviesGenre, error)
 	GetMoviesLanguageByID(ctx context.Context, id int64) (MoviesLanguage, error)
+	GetMoviesPerson(ctx context.Context, id int64) (GetMoviesPersonRow, error)
+	ListMoviesPerson(ctx context.Context, arg *ListMoviesPersonParams) ([]ListMoviesPersonRow, error)
 	UpdateMoviesFormat(ctx context.Context, arg *UpdateMoviesFormatParams) error
 	UpdateMoviesGenre(ctx context.Context, arg *UpdateMoviesGenreParams) error
 	UpdateMoviesLanguage(ctx context.Context, arg *UpdateMoviesLanguageParams) error
+	UpdateMoviesPerson(ctx context.Context, arg *UpdateMoviesPersonParams) error
 	UpdateUserLoginFields(ctx context.Context, arg *UpdateUserLoginFieldsParams) error
 }
 

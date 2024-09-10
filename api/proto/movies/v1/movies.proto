@@ -176,7 +176,6 @@ message CreatePersonRequest {
   optional string profile_picture_key = 4;
   optional google.type.Date dob = 5;
   string about = 6;
-  string imdb_id = 7;
 }
 
 message CreatePersonResponse {

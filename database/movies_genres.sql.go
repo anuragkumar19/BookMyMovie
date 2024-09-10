@@ -130,7 +130,8 @@ UPDATE "movies_genres"
 SET
     "slug" = $1,
     "display_name" = $2,
-    "about" = $3
+    "about" = $3,
+    "version" = "version" + 1
 WHERE
     "id" = $4
     AND "version" = $5

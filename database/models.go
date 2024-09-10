@@ -238,9 +238,6 @@ type Movie struct {
 	IndiaCbfcRating            MoviesIndiaCbfcRatings
 	MpaRating                  MoviesMpaRatings
 	About                      string
-	ImdbID                     string
-	ImdbRating                 string
-	ImdbLastSyncedAt           pgtype.Timestamptz
 }
 
 type MoviesAvailableAudioLanguage struct {
@@ -307,18 +304,18 @@ type MoviesLanguage struct {
 }
 
 type MoviesPerson struct {
-	ID               int64
-	CreatedAt        pgtype.Timestamptz
-	Version          int32
-	Name             string
-	Slug             string
-	Nicknames        []string
-	ProfilePicture   string
-	Occupations      []string
-	Dob              pgtype.Date
-	About            string
-	ImdbID           string
-	ImdbLastSyncedAt pgtype.Timestamptz
+	ID             int64
+	CreatedAt      pgtype.Timestamptz
+	Version        int32
+	Name           string
+	Slug           string
+	Nicknames      []string
+	ProfilePicture string
+	Occupations    []string
+	Dob            pgtype.Date
+	About          string
+	IsDeleted      bool
+	DeletedAt      pgtype.Timestamptz
 }
 
 type MoviesReview struct {
