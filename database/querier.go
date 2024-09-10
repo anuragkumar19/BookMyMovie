@@ -10,6 +10,10 @@ import (
 
 type Querier interface {
 	AttemptLoginToken(ctx context.Context, arg *AttemptLoginTokenParams) error
+	CheckIfAnyMoviesAvailableAudioLanguagesExist(ctx context.Context, moviesLanguageID int64) (bool, error)
+	CheckIfAnyMoviesAvailableFormatsExist(ctx context.Context, moviesFormatID int64) (bool, error)
+	CheckIfAnyMoviesAvailableSubtitleLanguagesExist(ctx context.Context, moviesLanguageID int64) (bool, error)
+	CheckIfAnyMoviesGenresJoinExist(ctx context.Context, moviesGenreID int64) (bool, error)
 	CreateLoginToken(ctx context.Context, arg *CreateLoginTokenParams) error
 	CreateMoviesFormat(ctx context.Context, arg *CreateMoviesFormatParams) (MoviesFormat, error)
 	CreateMoviesGenre(ctx context.Context, arg *CreateMoviesGenreParams) (MoviesGenre, error)

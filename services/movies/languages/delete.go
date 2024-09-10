@@ -23,7 +23,21 @@ func (s *Languages) Delete(ctx context.Context, authMeta *auth.Metadata, id int6
 		return err
 	}
 
-	// TODO: check if any movies are linked to it
+	exist, err := s.db.CheckIfAnyMoviesAvailableAudioLanguagesExist(ctx, id)
+	if err != nil {
+		return err
+	}
+	if exist {
+		return serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, "movies language is linked to one or many movies, so it cannot be deleted")
+	}
+
+	exist2, err := s.db.CheckIfAnyMoviesAvailableSubtitleLanguagesExist(ctx, id)
+	if err != nil {
+		return err
+	}
+	if exist2 {
+		return serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, "movies language is linked to one or many movies, so it cannot be deleted")
+	}
 
 	if err := s.db.DeleteMoviesLanguage(ctx, id); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

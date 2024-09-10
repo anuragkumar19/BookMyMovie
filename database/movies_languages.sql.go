@@ -9,6 +9,44 @@ import (
 	"context"
 )
 
+const checkIfAnyMoviesAvailableAudioLanguagesExist = `-- name: CheckIfAnyMoviesAvailableAudioLanguagesExist :one
+SELECT
+    EXISTS (
+        SELECT
+            1
+        FROM
+            "movies_available_audio_languages"
+        WHERE
+            "movies_language_id" = $1
+    )
+`
+
+func (q *Queries) CheckIfAnyMoviesAvailableAudioLanguagesExist(ctx context.Context, moviesLanguageID int64) (bool, error) {
+	row := q.db.QueryRow(ctx, checkIfAnyMoviesAvailableAudioLanguagesExist, moviesLanguageID)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
+const checkIfAnyMoviesAvailableSubtitleLanguagesExist = `-- name: CheckIfAnyMoviesAvailableSubtitleLanguagesExist :one
+SELECT
+    EXISTS (
+        SELECT
+            1
+        FROM
+            "movies_available_subtitle_languages"
+        WHERE
+            "movies_language_id" = $1
+    )
+`
+
+func (q *Queries) CheckIfAnyMoviesAvailableSubtitleLanguagesExist(ctx context.Context, moviesLanguageID int64) (bool, error) {
+	row := q.db.QueryRow(ctx, checkIfAnyMoviesAvailableSubtitleLanguagesExist, moviesLanguageID)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const createMoviesLanguage = `-- name: CreateMoviesLanguage :one
 INSERT INTO
     "movies_languages" ("slug", "display_name", "english_name")

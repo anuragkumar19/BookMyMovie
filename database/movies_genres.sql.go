@@ -9,6 +9,25 @@ import (
 	"context"
 )
 
+const checkIfAnyMoviesGenresJoinExist = `-- name: CheckIfAnyMoviesGenresJoinExist :one
+SELECT
+    EXISTS (
+        SELECT
+            1
+        FROM
+            "movies_genres_join"
+        WHERE
+            "movies_genre_id" = $1
+    )
+`
+
+func (q *Queries) CheckIfAnyMoviesGenresJoinExist(ctx context.Context, moviesGenreID int64) (bool, error) {
+	row := q.db.QueryRow(ctx, checkIfAnyMoviesGenresJoinExist, moviesGenreID)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const createMoviesGenre = `-- name: CreateMoviesGenre :one
 INSERT INTO
     "movies_genres" ("slug", "display_name", "about")

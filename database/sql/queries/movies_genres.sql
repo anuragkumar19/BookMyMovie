@@ -6,6 +6,17 @@ VALUES
 RETURNING
     *;
 
+-- name: CheckIfAnyMoviesGenresJoinExist :one
+SELECT
+    EXISTS (
+        SELECT
+            1
+        FROM
+            "movies_genres_join"
+        WHERE
+            "movies_genre_id" = $1
+    );
+
 -- name: UpdateMoviesGenre :exec
 UPDATE "movies_genres"
 SET

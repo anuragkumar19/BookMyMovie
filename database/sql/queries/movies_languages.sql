@@ -6,6 +6,28 @@ VALUES
 RETURNING
     *;
 
+-- name: CheckIfAnyMoviesAvailableAudioLanguagesExist :one
+SELECT
+    EXISTS (
+        SELECT
+            1
+        FROM
+            "movies_available_audio_languages"
+        WHERE
+            "movies_language_id" = $1
+    );
+
+-- name: CheckIfAnyMoviesAvailableSubtitleLanguagesExist :one
+SELECT
+    EXISTS (
+        SELECT
+            1
+        FROM
+            "movies_available_subtitle_languages"
+        WHERE
+            "movies_language_id" = $1
+    );
+
 -- name: UpdateMoviesLanguage :exec
 UPDATE "movies_languages"
 SET

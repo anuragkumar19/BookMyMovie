@@ -23,7 +23,13 @@ func (s *Genres) Delete(ctx context.Context, authMeta *auth.Metadata, id int64) 
 		return err
 	}
 
-	// TODO: check if any movies are linked to it
+	exist, err := s.db.CheckIfAnyMoviesGenresJoinExist(ctx, id)
+	if err != nil {
+		return err
+	}
+	if exist {
+		return serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, "movies genre is linked to one or many movies, so it cannot be deleted")
+	}
 
 	if err := s.db.DeleteMoviesGenre(ctx, id); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

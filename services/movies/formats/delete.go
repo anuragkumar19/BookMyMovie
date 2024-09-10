@@ -23,7 +23,13 @@ func (s *Formats) Delete(ctx context.Context, authMeta *auth.Metadata, id int64)
 		return err
 	}
 
-	// TODO: check if any movies are linked to it
+	exist, err := s.db.CheckIfAnyMoviesAvailableFormatsExist(ctx, id)
+	if err != nil {
+		return err
+	}
+	if exist {
+		return serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, "movies format is linked to one or many movies, so it cannot be deleted")
+	}
 
 	if err := s.db.DeleteMoviesFormat(ctx, id); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

@@ -6,6 +6,17 @@ VALUES
 RETURNING
     *;
 
+-- name: CheckIfAnyMoviesAvailableFormatsExist :one
+SELECT
+    EXISTS (
+        SELECT
+            1
+        FROM
+            "movies_available_formats"
+        WHERE
+            "movies_format_id" = $1
+    );
+
 -- name: UpdateMoviesFormat :exec
 UPDATE "movies_formats"
 SET

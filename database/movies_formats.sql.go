@@ -9,6 +9,25 @@ import (
 	"context"
 )
 
+const checkIfAnyMoviesAvailableFormatsExist = `-- name: CheckIfAnyMoviesAvailableFormatsExist :one
+SELECT
+    EXISTS (
+        SELECT
+            1
+        FROM
+            "movies_available_formats"
+        WHERE
+            "movies_format_id" = $1
+    )
+`
+
+func (q *Queries) CheckIfAnyMoviesAvailableFormatsExist(ctx context.Context, moviesFormatID int64) (bool, error) {
+	row := q.db.QueryRow(ctx, checkIfAnyMoviesAvailableFormatsExist, moviesFormatID)
+	var exists bool
+	err := row.Scan(&exists)
+	return exists, err
+}
+
 const createMoviesFormat = `-- name: CreateMoviesFormat :one
 INSERT INTO
     "movies_formats" ("slug", "display_name", "about")
