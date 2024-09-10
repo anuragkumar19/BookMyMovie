@@ -5,18 +5,24 @@ import (
 	"fmt"
 	"math"
 	"math/big"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
-// TODO: hash otp
 func (*Auth) generateOTP() (rawOTP string, hash string, err error) {
 	bigI, err := rand.Int(rand.Reader, big.NewInt(int64(math.Pow10(6)-1)))
 	if err != nil {
 		return "", "", err
 	}
 	otp := fmt.Sprintf("%06d", bigI.Int64())
-	return otp, otp, nil
+
+	b, err := bcrypt.GenerateFromPassword([]byte(otp), 12)
+	if err != nil {
+		return "", "", err
+	}
+	return otp, string(b), nil
 }
 
 func (*Auth) matchOTP(rawOTP string, hash string) bool {
-	return rawOTP == hash
+	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(rawOTP)) == nil
 }
