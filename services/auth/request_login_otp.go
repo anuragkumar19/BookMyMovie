@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
+	"bookmymovie.app/bookmymovie/mailer"
 	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
@@ -97,8 +98,18 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 		return "", err
 	}
 
-	// TODO: send token+otp link and just otp
-	s.logger.Info().Str("email", user.Email).Str("otp", otp).Str("link", s.generateLoginLink(token, otp)).Time("expire_at", expiry).Bool("is_new", isNew).Msg("mail sent")
+	link := s.generateLoginLink(token, otp)
+	msg, err := mailer.NewLoginMessage(ctx, &mailer.LoginMessageParams{
+		OTP:        otp,
+		Link:       link,
+		IsNew:      isNew,
+		Email:      user.Email,
+		ExpiryTime: s.config.LoginOTPLifetime,
+	})
+	if err != nil {
+		return "", err
+	}
+	s.mailer.SendMessage(&msg)
 
 	return token, nil
 }
