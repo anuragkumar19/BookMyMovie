@@ -15,7 +15,7 @@ INSERT INTO
 VALUES
     ($1, $2, $3)
 RETURNING
-    id, created_at, display_name, slug, about
+    id, created_at, version, display_name, slug, about
 `
 
 type CreateMoviesFormatParams struct {
@@ -30,6 +30,7 @@ func (q *Queries) CreateMoviesFormat(ctx context.Context, arg *CreateMoviesForma
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
+		&i.Version,
 		&i.DisplayName,
 		&i.Slug,
 		&i.About,
@@ -50,7 +51,7 @@ func (q *Queries) DeleteMoviesFormat(ctx context.Context, id int64) error {
 
 const getAllMoviesFormats = `-- name: GetAllMoviesFormats :many
 SELECT
-    id, created_at, display_name, slug, about
+    id, created_at, version, display_name, slug, about
 FROM
     "movies_formats"
 `
@@ -67,6 +68,7 @@ func (q *Queries) GetAllMoviesFormats(ctx context.Context) ([]MoviesFormat, erro
 		if err := rows.Scan(
 			&i.ID,
 			&i.CreatedAt,
+			&i.Version,
 			&i.DisplayName,
 			&i.Slug,
 			&i.About,
@@ -83,7 +85,7 @@ func (q *Queries) GetAllMoviesFormats(ctx context.Context) ([]MoviesFormat, erro
 
 const getMoviesFormatByID = `-- name: GetMoviesFormatByID :one
 SELECT
-    id, created_at, display_name, slug, about
+    id, created_at, version, display_name, slug, about
 FROM
     "movies_formats"
 WHERE
@@ -96,9 +98,40 @@ func (q *Queries) GetMoviesFormatByID(ctx context.Context, id int64) (MoviesForm
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
+		&i.Version,
 		&i.DisplayName,
 		&i.Slug,
 		&i.About,
 	)
 	return i, err
+}
+
+const updateMoviesFormat = `-- name: UpdateMoviesFormat :exec
+UPDATE "movies_formats"
+SET
+    "slug" = $1,
+    "display_name" = $2,
+    "about" = $3
+WHERE
+    "id" = $4
+    AND "version" = $5
+`
+
+type UpdateMoviesFormatParams struct {
+	Slug        string
+	DisplayName string
+	About       string
+	ID          int64
+	Version     int32
+}
+
+func (q *Queries) UpdateMoviesFormat(ctx context.Context, arg *UpdateMoviesFormatParams) error {
+	_, err := q.db.Exec(ctx, updateMoviesFormat,
+		arg.Slug,
+		arg.DisplayName,
+		arg.About,
+		arg.ID,
+		arg.Version,
+	)
+	return err
 }

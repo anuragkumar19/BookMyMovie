@@ -6,6 +6,16 @@ VALUES
 RETURNING
     *;
 
+-- name: UpdateMoviesGenre :exec
+UPDATE "movies_genres"
+SET
+    "slug" = $1,
+    "display_name" = $2,
+    "about" = $3
+WHERE
+    "id" = $4
+    AND "version" = $5;
+
 -- name: GetAllMoviesGenres :many
 SELECT
     *

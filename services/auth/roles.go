@@ -18,12 +18,15 @@ const (
 
 	MoviesLanguagesCreate Permission = "movies:languages:create"
 	MoviesLanguagesDelete Permission = "movies:languages:delete"
+	MoviesLanguagesUpdate Permission = "movies:languages:update"
 
 	MoviesGenresCreate Permission = "movies:genres:create"
 	MoviesGenresDelete Permission = "movies:genres:delete"
+	MoviesGenresUpdate Permission = "movies:genres:update"
 
 	MoviesFormatsCreate Permission = "movies:formats:create"
 	MoviesFormatsDelete Permission = "movies:formats:delete"
+	MoviesFormatsUpdate Permission = "movies:formats:update"
 
 	MoviesPersonsCreate Permission = "movies:persons:create"
 	MoviesPersonsUpdate Permission = "movies:persons:update"
@@ -36,13 +39,16 @@ var adminPermission = rolePermissionMap{
 	MovieDelete:           true,
 	MoviesLanguagesCreate: true,
 	MoviesLanguagesDelete: true,
+	MoviesLanguagesUpdate: true,
 	MoviesGenresCreate:    true,
 	MoviesGenresDelete:    true,
+	MoviesGenresUpdate:    true,
 	MoviesPersonsCreate:   true,
 	MoviesPersonsUpdate:   true,
 	MoviesPersonsDelete:   true,
 	MoviesFormatsCreate:   true,
 	MoviesFormatsDelete:   true,
+	MoviesFormatsUpdate:   true,
 }
 
 var regularUserPermission = rolePermissionMap{}

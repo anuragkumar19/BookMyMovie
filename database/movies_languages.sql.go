@@ -15,7 +15,7 @@ INSERT INTO
 VALUES
     ($1, $2, $3)
 RETURNING
-    id, created_at, display_name, english_name, slug
+    id, created_at, version, display_name, english_name, slug
 `
 
 type CreateMoviesLanguageParams struct {
@@ -30,6 +30,7 @@ func (q *Queries) CreateMoviesLanguage(ctx context.Context, arg *CreateMoviesLan
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
+		&i.Version,
 		&i.DisplayName,
 		&i.EnglishName,
 		&i.Slug,
@@ -50,7 +51,7 @@ func (q *Queries) DeleteMoviesLanguage(ctx context.Context, id int64) error {
 
 const getAllMoviesLanguages = `-- name: GetAllMoviesLanguages :many
 SELECT
-    id, created_at, display_name, english_name, slug
+    id, created_at, version, display_name, english_name, slug
 FROM
     "movies_languages"
 `
@@ -67,6 +68,7 @@ func (q *Queries) GetAllMoviesLanguages(ctx context.Context) ([]MoviesLanguage, 
 		if err := rows.Scan(
 			&i.ID,
 			&i.CreatedAt,
+			&i.Version,
 			&i.DisplayName,
 			&i.EnglishName,
 			&i.Slug,
@@ -83,7 +85,7 @@ func (q *Queries) GetAllMoviesLanguages(ctx context.Context) ([]MoviesLanguage, 
 
 const getMoviesLanguageByID = `-- name: GetMoviesLanguageByID :one
 SELECT
-    id, created_at, display_name, english_name, slug
+    id, created_at, version, display_name, english_name, slug
 FROM
     "movies_languages"
 WHERE
@@ -96,9 +98,40 @@ func (q *Queries) GetMoviesLanguageByID(ctx context.Context, id int64) (MoviesLa
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
+		&i.Version,
 		&i.DisplayName,
 		&i.EnglishName,
 		&i.Slug,
 	)
 	return i, err
+}
+
+const updateMoviesLanguage = `-- name: UpdateMoviesLanguage :exec
+UPDATE "movies_languages"
+SET
+    "slug" = $1,
+    "display_name" = $2,
+    "english_name" = $3
+WHERE
+    "id" = $4
+    AND "version" = $5
+`
+
+type UpdateMoviesLanguageParams struct {
+	Slug        string
+	DisplayName string
+	EnglishName string
+	ID          int64
+	Version     int32
+}
+
+func (q *Queries) UpdateMoviesLanguage(ctx context.Context, arg *UpdateMoviesLanguageParams) error {
+	_, err := q.db.Exec(ctx, updateMoviesLanguage,
+		arg.Slug,
+		arg.DisplayName,
+		arg.EnglishName,
+		arg.ID,
+		arg.Version,
+	)
+	return err
 }

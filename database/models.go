@@ -276,6 +276,7 @@ type MoviesCrew struct {
 type MoviesFormat struct {
 	ID          int64
 	CreatedAt   pgtype.Timestamptz
+	Version     int32
 	DisplayName string
 	Slug        string
 	About       string
@@ -284,6 +285,7 @@ type MoviesFormat struct {
 type MoviesGenre struct {
 	ID          int64
 	CreatedAt   pgtype.Timestamptz
+	Version     int32
 	Slug        string
 	DisplayName string
 	About       string
@@ -298,6 +300,7 @@ type MoviesGenresJoin struct {
 type MoviesLanguage struct {
 	ID          int64
 	CreatedAt   pgtype.Timestamptz
+	Version     int32
 	DisplayName string
 	EnglishName string
 	Slug        string

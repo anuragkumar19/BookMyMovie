@@ -6,6 +6,16 @@ VALUES
 RETURNING
     *;
 
+-- name: UpdateMoviesLanguage :exec
+UPDATE "movies_languages"
+SET
+    "slug" = $1,
+    "display_name" = $2,
+    "english_name" = $3
+WHERE
+    "id" = $4
+    AND "version" = $5;
+
 -- name: GetAllMoviesLanguages :many
 SELECT
     *

@@ -15,7 +15,7 @@ INSERT INTO
 VALUES
     ($1, $2, $3)
 RETURNING
-    id, created_at, slug, display_name, about
+    id, created_at, version, slug, display_name, about
 `
 
 type CreateMoviesGenreParams struct {
@@ -30,6 +30,7 @@ func (q *Queries) CreateMoviesGenre(ctx context.Context, arg *CreateMoviesGenreP
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
+		&i.Version,
 		&i.Slug,
 		&i.DisplayName,
 		&i.About,
@@ -50,7 +51,7 @@ func (q *Queries) DeleteMoviesGenre(ctx context.Context, id int64) error {
 
 const getAllMoviesGenres = `-- name: GetAllMoviesGenres :many
 SELECT
-    id, created_at, slug, display_name, about
+    id, created_at, version, slug, display_name, about
 FROM
     "movies_genres"
 `
@@ -67,6 +68,7 @@ func (q *Queries) GetAllMoviesGenres(ctx context.Context) ([]MoviesGenre, error)
 		if err := rows.Scan(
 			&i.ID,
 			&i.CreatedAt,
+			&i.Version,
 			&i.Slug,
 			&i.DisplayName,
 			&i.About,
@@ -83,7 +85,7 @@ func (q *Queries) GetAllMoviesGenres(ctx context.Context) ([]MoviesGenre, error)
 
 const getMoviesGenreByID = `-- name: GetMoviesGenreByID :one
 SELECT
-    id, created_at, slug, display_name, about
+    id, created_at, version, slug, display_name, about
 FROM
     "movies_genres"
 WHERE
@@ -96,9 +98,40 @@ func (q *Queries) GetMoviesGenreByID(ctx context.Context, id int64) (MoviesGenre
 	err := row.Scan(
 		&i.ID,
 		&i.CreatedAt,
+		&i.Version,
 		&i.Slug,
 		&i.DisplayName,
 		&i.About,
 	)
 	return i, err
+}
+
+const updateMoviesGenre = `-- name: UpdateMoviesGenre :exec
+UPDATE "movies_genres"
+SET
+    "slug" = $1,
+    "display_name" = $2,
+    "about" = $3
+WHERE
+    "id" = $4
+    AND "version" = $5
+`
+
+type UpdateMoviesGenreParams struct {
+	Slug        string
+	DisplayName string
+	About       string
+	ID          int64
+	Version     int32
+}
+
+func (q *Queries) UpdateMoviesGenre(ctx context.Context, arg *UpdateMoviesGenreParams) error {
+	_, err := q.db.Exec(ctx, updateMoviesGenre,
+		arg.Slug,
+		arg.DisplayName,
+		arg.About,
+		arg.ID,
+		arg.Version,
+	)
+	return err
 }

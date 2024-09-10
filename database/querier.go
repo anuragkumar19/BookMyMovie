@@ -34,6 +34,9 @@ type Querier interface {
 	GetMoviesFormatByID(ctx context.Context, id int64) (MoviesFormat, error)
 	GetMoviesGenreByID(ctx context.Context, id int64) (MoviesGenre, error)
 	GetMoviesLanguageByID(ctx context.Context, id int64) (MoviesLanguage, error)
+	UpdateMoviesFormat(ctx context.Context, arg *UpdateMoviesFormatParams) error
+	UpdateMoviesGenre(ctx context.Context, arg *UpdateMoviesGenreParams) error
+	UpdateMoviesLanguage(ctx context.Context, arg *UpdateMoviesLanguageParams) error
 	UpdateUserLoginFields(ctx context.Context, arg *UpdateUserLoginFieldsParams) error
 }
 
