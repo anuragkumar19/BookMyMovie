@@ -14,9 +14,9 @@ type Config struct {
 	Region           string
 }
 
-func (config *Config) Validate() error {
+func (config Config) Validate() error {
 	return validation.ValidateStruct(
-		config,
+		&config,
 		validation.Field(&config.Endpoint, validation.Required),
 		validation.Field(&config.AccessKey, validation.Required),
 		validation.Field(&config.Secret, validation.Required),

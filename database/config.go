@@ -31,9 +31,9 @@ func DefaultConfig() Config {
 	}
 }
 
-func (config *Config) Validate() error {
+func (config Config) Validate() error {
 	return validation.ValidateStruct(
-		config,
+		&config,
 		validation.Field(&config.URI, validation.Required, is.URL),
 		validation.Field(&config.MinConns, validation.Required, validation.Min(1)),
 		validation.Field(&config.MaxConns, validation.Required, validation.Min(config.MinConns).Error("should be greater than or equal to MinConn")),

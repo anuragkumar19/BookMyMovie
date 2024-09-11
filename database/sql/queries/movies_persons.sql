@@ -15,7 +15,8 @@ SELECT
     "profile_picture",
     "occupations",
     "dob",
-    "about" "version"
+    "about",
+    "version"
 FROM
     "movies_persons"
 WHERE

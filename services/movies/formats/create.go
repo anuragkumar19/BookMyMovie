@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"bookmymovie.app/bookmymovie/database"
+	"bookmymovie.app/bookmymovie/services"
 	"bookmymovie.app/bookmymovie/services/auth"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gosimple/slug"
 )
@@ -22,8 +22,8 @@ func (params *CreateParams) Transform() *CreateParams {
 	return params
 }
 
-func (params *CreateParams) Validate() error {
-	return validation.ValidateStruct(params,
+func (params CreateParams) Validate() error {
+	return validation.ValidateStruct(&params,
 		validation.Field(&params.DisplayName, validation.Required),
 		validation.Field(&params.About, validation.Required),
 	)
@@ -41,7 +41,7 @@ func (s *Formats) Create(ctx context.Context, authMeta *auth.Metadata, params *C
 		if _, ok := err.(validation.InternalError); ok { //nolint:errorlint
 			return database.MoviesFormat{}, err
 		}
-		return database.MoviesFormat{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, err.Error())
+		return database.MoviesFormat{}, services.NewError(services.ErrorTypeInvalidArgument, err.Error())
 	}
 
 	slg := slug.Make(params.DisplayName)

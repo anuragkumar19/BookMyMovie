@@ -4,13 +4,13 @@ import (
 	"context"
 
 	"bookmymovie.app/bookmymovie/database"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services"
 )
 
 func (s *Languages) GetByID(_ context.Context, id int64) (database.MoviesLanguage, error) {
 	l, ok := s.cache.index[id]
 	if !ok {
-		return database.MoviesLanguage{}, serviceserrors.New(serviceserrors.ErrorTypeNotFound, "movies language not found")
+		return database.MoviesLanguage{}, services.NewError(services.ErrorTypeNotFound, "movies language not found")
 	}
 	return l, nil
 }

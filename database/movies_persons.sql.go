@@ -75,7 +75,8 @@ SELECT
     "profile_picture",
     "occupations",
     "dob",
-    "about" "version"
+    "about",
+    "version"
 FROM
     "movies_persons"
 WHERE
@@ -91,7 +92,8 @@ type GetMoviesPersonRow struct {
 	ProfilePicture string
 	Occupations    []string
 	Dob            pgtype.Date
-	Version        string
+	About          string
+	Version        int32
 }
 
 func (q *Queries) GetMoviesPerson(ctx context.Context, id int64) (GetMoviesPersonRow, error) {
@@ -105,6 +107,7 @@ func (q *Queries) GetMoviesPerson(ctx context.Context, id int64) (GetMoviesPerso
 		&i.ProfilePicture,
 		&i.Occupations,
 		&i.Dob,
+		&i.About,
 		&i.Version,
 	)
 	return i, err

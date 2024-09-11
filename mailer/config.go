@@ -16,9 +16,9 @@ type Config struct {
 	ReplyTo         string
 }
 
-func (config *Config) Validate() error {
+func (config Config) Validate() error {
 	return validation.ValidateStruct(
-		config,
+		&config,
 		validation.Field(&config.Host, validation.Required, is.Host),
 		validation.Field(&config.Port, validation.Required), // is.Port,
 

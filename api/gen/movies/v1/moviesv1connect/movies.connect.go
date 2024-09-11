@@ -90,36 +90,72 @@ const (
 	// MoviesGenresServiceDeleteGenreProcedure is the fully-qualified name of the MoviesGenresService's
 	// DeleteGenre RPC.
 	MoviesGenresServiceDeleteGenreProcedure = "/movies.v1.MoviesGenresService/DeleteGenre"
+	// MoviesPersonsServiceGetPersonProcedure is the fully-qualified name of the MoviesPersonsService's
+	// GetPerson RPC.
+	MoviesPersonsServiceGetPersonProcedure = "/movies.v1.MoviesPersonsService/GetPerson"
 	// MoviesPersonsServiceCreatePersonProcedure is the fully-qualified name of the
 	// MoviesPersonsService's CreatePerson RPC.
 	MoviesPersonsServiceCreatePersonProcedure = "/movies.v1.MoviesPersonsService/CreatePerson"
+	// MoviesPersonsServiceUpdatePersonProcedure is the fully-qualified name of the
+	// MoviesPersonsService's UpdatePerson RPC.
+	MoviesPersonsServiceUpdatePersonProcedure = "/movies.v1.MoviesPersonsService/UpdatePerson"
+	// MoviesPersonsServiceUpdatePersonAddOccupationProcedure is the fully-qualified name of the
+	// MoviesPersonsService's UpdatePersonAddOccupation RPC.
+	MoviesPersonsServiceUpdatePersonAddOccupationProcedure = "/movies.v1.MoviesPersonsService/UpdatePersonAddOccupation"
+	// MoviesPersonsServiceUpdatePersonRemoveOccupationProcedure is the fully-qualified name of the
+	// MoviesPersonsService's UpdatePersonRemoveOccupation RPC.
+	MoviesPersonsServiceUpdatePersonRemoveOccupationProcedure = "/movies.v1.MoviesPersonsService/UpdatePersonRemoveOccupation"
+	// MoviesPersonsServiceUpdatePersonAddNicknameProcedure is the fully-qualified name of the
+	// MoviesPersonsService's UpdatePersonAddNickname RPC.
+	MoviesPersonsServiceUpdatePersonAddNicknameProcedure = "/movies.v1.MoviesPersonsService/UpdatePersonAddNickname"
+	// MoviesPersonsServiceUpdatePersonRemoveNicknameProcedure is the fully-qualified name of the
+	// MoviesPersonsService's UpdatePersonRemoveNickname RPC.
+	MoviesPersonsServiceUpdatePersonRemoveNicknameProcedure = "/movies.v1.MoviesPersonsService/UpdatePersonRemoveNickname"
+	// MoviesPersonsServiceDeletePersonProcedure is the fully-qualified name of the
+	// MoviesPersonsService's DeletePerson RPC.
+	MoviesPersonsServiceDeletePersonProcedure = "/movies.v1.MoviesPersonsService/DeletePerson"
+	// MoviesPersonsServiceListPersonsProcedure is the fully-qualified name of the
+	// MoviesPersonsService's ListPersons RPC.
+	MoviesPersonsServiceListPersonsProcedure = "/movies.v1.MoviesPersonsService/ListPersons"
+	// MoviesPersonsServiceSearchPersonProcedure is the fully-qualified name of the
+	// MoviesPersonsService's SearchPerson RPC.
+	MoviesPersonsServiceSearchPersonProcedure = "/movies.v1.MoviesPersonsService/SearchPerson"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
-	moviesLanguagesServiceServiceDescriptor              = v1.File_movies_v1_movies_proto.Services().ByName("MoviesLanguagesService")
-	moviesLanguagesServiceGetLanguageMethodDescriptor    = moviesLanguagesServiceServiceDescriptor.Methods().ByName("GetLanguage")
-	moviesLanguagesServiceGetLanguagesMethodDescriptor   = moviesLanguagesServiceServiceDescriptor.Methods().ByName("GetLanguages")
-	moviesLanguagesServiceCreateLanguageMethodDescriptor = moviesLanguagesServiceServiceDescriptor.Methods().ByName("CreateLanguage")
-	moviesLanguagesServiceUpdateLanguageMethodDescriptor = moviesLanguagesServiceServiceDescriptor.Methods().ByName("UpdateLanguage")
-	moviesLanguagesServiceDeleteLanguageMethodDescriptor = moviesLanguagesServiceServiceDescriptor.Methods().ByName("DeleteLanguage")
-	moviesFormatsServiceServiceDescriptor                = v1.File_movies_v1_movies_proto.Services().ByName("MoviesFormatsService")
-	moviesFormatsServiceGetFormatMethodDescriptor        = moviesFormatsServiceServiceDescriptor.Methods().ByName("GetFormat")
-	moviesFormatsServiceGetFormatsMethodDescriptor       = moviesFormatsServiceServiceDescriptor.Methods().ByName("GetFormats")
-	moviesFormatsServiceCreateFormatMethodDescriptor     = moviesFormatsServiceServiceDescriptor.Methods().ByName("CreateFormat")
-	moviesFormatsServiceUpdateFormatMethodDescriptor     = moviesFormatsServiceServiceDescriptor.Methods().ByName("UpdateFormat")
-	moviesFormatsServiceDeleteFormatMethodDescriptor     = moviesFormatsServiceServiceDescriptor.Methods().ByName("DeleteFormat")
-	moviesGenresServiceServiceDescriptor                 = v1.File_movies_v1_movies_proto.Services().ByName("MoviesGenresService")
-	moviesGenresServiceGetGenreMethodDescriptor          = moviesGenresServiceServiceDescriptor.Methods().ByName("GetGenre")
-	moviesGenresServiceGetGenresMethodDescriptor         = moviesGenresServiceServiceDescriptor.Methods().ByName("GetGenres")
-	moviesGenresServiceCreateGenreMethodDescriptor       = moviesGenresServiceServiceDescriptor.Methods().ByName("CreateGenre")
-	moviesGenresServiceUpdateGenreMethodDescriptor       = moviesGenresServiceServiceDescriptor.Methods().ByName("UpdateGenre")
-	moviesGenresServiceDeleteGenreMethodDescriptor       = moviesGenresServiceServiceDescriptor.Methods().ByName("DeleteGenre")
-	moviesPersonsServiceServiceDescriptor                = v1.File_movies_v1_movies_proto.Services().ByName("MoviesPersonsService")
-	moviesPersonsServiceCreatePersonMethodDescriptor     = moviesPersonsServiceServiceDescriptor.Methods().ByName("CreatePerson")
-	moviesServiceServiceDescriptor                       = v1.File_movies_v1_movies_proto.Services().ByName("MoviesService")
-	moviesVideosServiceServiceDescriptor                 = v1.File_movies_v1_movies_proto.Services().ByName("MoviesVideosService")
-	moviesReviewsServiceServiceDescriptor                = v1.File_movies_v1_movies_proto.Services().ByName("MoviesReviewsService")
+	moviesLanguagesServiceServiceDescriptor                          = v1.File_movies_v1_movies_proto.Services().ByName("MoviesLanguagesService")
+	moviesLanguagesServiceGetLanguageMethodDescriptor                = moviesLanguagesServiceServiceDescriptor.Methods().ByName("GetLanguage")
+	moviesLanguagesServiceGetLanguagesMethodDescriptor               = moviesLanguagesServiceServiceDescriptor.Methods().ByName("GetLanguages")
+	moviesLanguagesServiceCreateLanguageMethodDescriptor             = moviesLanguagesServiceServiceDescriptor.Methods().ByName("CreateLanguage")
+	moviesLanguagesServiceUpdateLanguageMethodDescriptor             = moviesLanguagesServiceServiceDescriptor.Methods().ByName("UpdateLanguage")
+	moviesLanguagesServiceDeleteLanguageMethodDescriptor             = moviesLanguagesServiceServiceDescriptor.Methods().ByName("DeleteLanguage")
+	moviesFormatsServiceServiceDescriptor                            = v1.File_movies_v1_movies_proto.Services().ByName("MoviesFormatsService")
+	moviesFormatsServiceGetFormatMethodDescriptor                    = moviesFormatsServiceServiceDescriptor.Methods().ByName("GetFormat")
+	moviesFormatsServiceGetFormatsMethodDescriptor                   = moviesFormatsServiceServiceDescriptor.Methods().ByName("GetFormats")
+	moviesFormatsServiceCreateFormatMethodDescriptor                 = moviesFormatsServiceServiceDescriptor.Methods().ByName("CreateFormat")
+	moviesFormatsServiceUpdateFormatMethodDescriptor                 = moviesFormatsServiceServiceDescriptor.Methods().ByName("UpdateFormat")
+	moviesFormatsServiceDeleteFormatMethodDescriptor                 = moviesFormatsServiceServiceDescriptor.Methods().ByName("DeleteFormat")
+	moviesGenresServiceServiceDescriptor                             = v1.File_movies_v1_movies_proto.Services().ByName("MoviesGenresService")
+	moviesGenresServiceGetGenreMethodDescriptor                      = moviesGenresServiceServiceDescriptor.Methods().ByName("GetGenre")
+	moviesGenresServiceGetGenresMethodDescriptor                     = moviesGenresServiceServiceDescriptor.Methods().ByName("GetGenres")
+	moviesGenresServiceCreateGenreMethodDescriptor                   = moviesGenresServiceServiceDescriptor.Methods().ByName("CreateGenre")
+	moviesGenresServiceUpdateGenreMethodDescriptor                   = moviesGenresServiceServiceDescriptor.Methods().ByName("UpdateGenre")
+	moviesGenresServiceDeleteGenreMethodDescriptor                   = moviesGenresServiceServiceDescriptor.Methods().ByName("DeleteGenre")
+	moviesPersonsServiceServiceDescriptor                            = v1.File_movies_v1_movies_proto.Services().ByName("MoviesPersonsService")
+	moviesPersonsServiceGetPersonMethodDescriptor                    = moviesPersonsServiceServiceDescriptor.Methods().ByName("GetPerson")
+	moviesPersonsServiceCreatePersonMethodDescriptor                 = moviesPersonsServiceServiceDescriptor.Methods().ByName("CreatePerson")
+	moviesPersonsServiceUpdatePersonMethodDescriptor                 = moviesPersonsServiceServiceDescriptor.Methods().ByName("UpdatePerson")
+	moviesPersonsServiceUpdatePersonAddOccupationMethodDescriptor    = moviesPersonsServiceServiceDescriptor.Methods().ByName("UpdatePersonAddOccupation")
+	moviesPersonsServiceUpdatePersonRemoveOccupationMethodDescriptor = moviesPersonsServiceServiceDescriptor.Methods().ByName("UpdatePersonRemoveOccupation")
+	moviesPersonsServiceUpdatePersonAddNicknameMethodDescriptor      = moviesPersonsServiceServiceDescriptor.Methods().ByName("UpdatePersonAddNickname")
+	moviesPersonsServiceUpdatePersonRemoveNicknameMethodDescriptor   = moviesPersonsServiceServiceDescriptor.Methods().ByName("UpdatePersonRemoveNickname")
+	moviesPersonsServiceDeletePersonMethodDescriptor                 = moviesPersonsServiceServiceDescriptor.Methods().ByName("DeletePerson")
+	moviesPersonsServiceListPersonsMethodDescriptor                  = moviesPersonsServiceServiceDescriptor.Methods().ByName("ListPersons")
+	moviesPersonsServiceSearchPersonMethodDescriptor                 = moviesPersonsServiceServiceDescriptor.Methods().ByName("SearchPerson")
+	moviesServiceServiceDescriptor                                   = v1.File_movies_v1_movies_proto.Services().ByName("MoviesService")
+	moviesVideosServiceServiceDescriptor                             = v1.File_movies_v1_movies_proto.Services().ByName("MoviesVideosService")
+	moviesReviewsServiceServiceDescriptor                            = v1.File_movies_v1_movies_proto.Services().ByName("MoviesReviewsService")
 )
 
 // MoviesLanguagesServiceClient is a client for the movies.v1.MoviesLanguagesService service.
@@ -641,7 +677,16 @@ func (UnimplementedMoviesGenresServiceHandler) DeleteGenre(context.Context, *con
 
 // MoviesPersonsServiceClient is a client for the movies.v1.MoviesPersonsService service.
 type MoviesPersonsServiceClient interface {
+	GetPerson(context.Context, *connect.Request[v1.GetPersonRequest]) (*connect.Response[v1.GetPersonResponse], error)
 	CreatePerson(context.Context, *connect.Request[v1.CreatePersonRequest]) (*connect.Response[v1.CreatePersonResponse], error)
+	UpdatePerson(context.Context, *connect.Request[v1.UpdatePersonRequest]) (*connect.Response[v1.UpdatePersonResponse], error)
+	UpdatePersonAddOccupation(context.Context, *connect.Request[v1.UpdatePersonAddOccupationRequest]) (*connect.Response[v1.UpdatePersonAddOccupationResponse], error)
+	UpdatePersonRemoveOccupation(context.Context, *connect.Request[v1.UpdatePersonRemoveOccupationRequest]) (*connect.Response[v1.UpdatePersonRemoveOccupationResponse], error)
+	UpdatePersonAddNickname(context.Context, *connect.Request[v1.UpdatePersonAddNicknameRequest]) (*connect.Response[v1.UpdatePersonAddNicknameResponse], error)
+	UpdatePersonRemoveNickname(context.Context, *connect.Request[v1.UpdatePersonRemoveNicknameRequest]) (*connect.Response[v1.UpdatePersonRemoveNicknameResponse], error)
+	DeletePerson(context.Context, *connect.Request[v1.DeletePersonRequest]) (*connect.Response[v1.DeletePersonResponse], error)
+	ListPersons(context.Context, *connect.Request[v1.ListPersonsRequest]) (*connect.Response[v1.ListPersonsResponse], error)
+	SearchPerson(context.Context, *connect.Request[v1.SearchPersonRequest]) (*connect.Response[v1.SearchPersonResponse], error)
 }
 
 // NewMoviesPersonsServiceClient constructs a client for the movies.v1.MoviesPersonsService service.
@@ -654,10 +699,64 @@ type MoviesPersonsServiceClient interface {
 func NewMoviesPersonsServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) MoviesPersonsServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &moviesPersonsServiceClient{
+		getPerson: connect.NewClient[v1.GetPersonRequest, v1.GetPersonResponse](
+			httpClient,
+			baseURL+MoviesPersonsServiceGetPersonProcedure,
+			connect.WithSchema(moviesPersonsServiceGetPersonMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 		createPerson: connect.NewClient[v1.CreatePersonRequest, v1.CreatePersonResponse](
 			httpClient,
 			baseURL+MoviesPersonsServiceCreatePersonProcedure,
 			connect.WithSchema(moviesPersonsServiceCreatePersonMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		updatePerson: connect.NewClient[v1.UpdatePersonRequest, v1.UpdatePersonResponse](
+			httpClient,
+			baseURL+MoviesPersonsServiceUpdatePersonProcedure,
+			connect.WithSchema(moviesPersonsServiceUpdatePersonMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		updatePersonAddOccupation: connect.NewClient[v1.UpdatePersonAddOccupationRequest, v1.UpdatePersonAddOccupationResponse](
+			httpClient,
+			baseURL+MoviesPersonsServiceUpdatePersonAddOccupationProcedure,
+			connect.WithSchema(moviesPersonsServiceUpdatePersonAddOccupationMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		updatePersonRemoveOccupation: connect.NewClient[v1.UpdatePersonRemoveOccupationRequest, v1.UpdatePersonRemoveOccupationResponse](
+			httpClient,
+			baseURL+MoviesPersonsServiceUpdatePersonRemoveOccupationProcedure,
+			connect.WithSchema(moviesPersonsServiceUpdatePersonRemoveOccupationMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		updatePersonAddNickname: connect.NewClient[v1.UpdatePersonAddNicknameRequest, v1.UpdatePersonAddNicknameResponse](
+			httpClient,
+			baseURL+MoviesPersonsServiceUpdatePersonAddNicknameProcedure,
+			connect.WithSchema(moviesPersonsServiceUpdatePersonAddNicknameMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		updatePersonRemoveNickname: connect.NewClient[v1.UpdatePersonRemoveNicknameRequest, v1.UpdatePersonRemoveNicknameResponse](
+			httpClient,
+			baseURL+MoviesPersonsServiceUpdatePersonRemoveNicknameProcedure,
+			connect.WithSchema(moviesPersonsServiceUpdatePersonRemoveNicknameMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		deletePerson: connect.NewClient[v1.DeletePersonRequest, v1.DeletePersonResponse](
+			httpClient,
+			baseURL+MoviesPersonsServiceDeletePersonProcedure,
+			connect.WithSchema(moviesPersonsServiceDeletePersonMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		listPersons: connect.NewClient[v1.ListPersonsRequest, v1.ListPersonsResponse](
+			httpClient,
+			baseURL+MoviesPersonsServiceListPersonsProcedure,
+			connect.WithSchema(moviesPersonsServiceListPersonsMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		searchPerson: connect.NewClient[v1.SearchPersonRequest, v1.SearchPersonResponse](
+			httpClient,
+			baseURL+MoviesPersonsServiceSearchPersonProcedure,
+			connect.WithSchema(moviesPersonsServiceSearchPersonMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 	}
@@ -665,7 +764,21 @@ func NewMoviesPersonsServiceClient(httpClient connect.HTTPClient, baseURL string
 
 // moviesPersonsServiceClient implements MoviesPersonsServiceClient.
 type moviesPersonsServiceClient struct {
-	createPerson *connect.Client[v1.CreatePersonRequest, v1.CreatePersonResponse]
+	getPerson                    *connect.Client[v1.GetPersonRequest, v1.GetPersonResponse]
+	createPerson                 *connect.Client[v1.CreatePersonRequest, v1.CreatePersonResponse]
+	updatePerson                 *connect.Client[v1.UpdatePersonRequest, v1.UpdatePersonResponse]
+	updatePersonAddOccupation    *connect.Client[v1.UpdatePersonAddOccupationRequest, v1.UpdatePersonAddOccupationResponse]
+	updatePersonRemoveOccupation *connect.Client[v1.UpdatePersonRemoveOccupationRequest, v1.UpdatePersonRemoveOccupationResponse]
+	updatePersonAddNickname      *connect.Client[v1.UpdatePersonAddNicknameRequest, v1.UpdatePersonAddNicknameResponse]
+	updatePersonRemoveNickname   *connect.Client[v1.UpdatePersonRemoveNicknameRequest, v1.UpdatePersonRemoveNicknameResponse]
+	deletePerson                 *connect.Client[v1.DeletePersonRequest, v1.DeletePersonResponse]
+	listPersons                  *connect.Client[v1.ListPersonsRequest, v1.ListPersonsResponse]
+	searchPerson                 *connect.Client[v1.SearchPersonRequest, v1.SearchPersonResponse]
+}
+
+// GetPerson calls movies.v1.MoviesPersonsService.GetPerson.
+func (c *moviesPersonsServiceClient) GetPerson(ctx context.Context, req *connect.Request[v1.GetPersonRequest]) (*connect.Response[v1.GetPersonResponse], error) {
+	return c.getPerson.CallUnary(ctx, req)
 }
 
 // CreatePerson calls movies.v1.MoviesPersonsService.CreatePerson.
@@ -673,9 +786,58 @@ func (c *moviesPersonsServiceClient) CreatePerson(ctx context.Context, req *conn
 	return c.createPerson.CallUnary(ctx, req)
 }
 
+// UpdatePerson calls movies.v1.MoviesPersonsService.UpdatePerson.
+func (c *moviesPersonsServiceClient) UpdatePerson(ctx context.Context, req *connect.Request[v1.UpdatePersonRequest]) (*connect.Response[v1.UpdatePersonResponse], error) {
+	return c.updatePerson.CallUnary(ctx, req)
+}
+
+// UpdatePersonAddOccupation calls movies.v1.MoviesPersonsService.UpdatePersonAddOccupation.
+func (c *moviesPersonsServiceClient) UpdatePersonAddOccupation(ctx context.Context, req *connect.Request[v1.UpdatePersonAddOccupationRequest]) (*connect.Response[v1.UpdatePersonAddOccupationResponse], error) {
+	return c.updatePersonAddOccupation.CallUnary(ctx, req)
+}
+
+// UpdatePersonRemoveOccupation calls movies.v1.MoviesPersonsService.UpdatePersonRemoveOccupation.
+func (c *moviesPersonsServiceClient) UpdatePersonRemoveOccupation(ctx context.Context, req *connect.Request[v1.UpdatePersonRemoveOccupationRequest]) (*connect.Response[v1.UpdatePersonRemoveOccupationResponse], error) {
+	return c.updatePersonRemoveOccupation.CallUnary(ctx, req)
+}
+
+// UpdatePersonAddNickname calls movies.v1.MoviesPersonsService.UpdatePersonAddNickname.
+func (c *moviesPersonsServiceClient) UpdatePersonAddNickname(ctx context.Context, req *connect.Request[v1.UpdatePersonAddNicknameRequest]) (*connect.Response[v1.UpdatePersonAddNicknameResponse], error) {
+	return c.updatePersonAddNickname.CallUnary(ctx, req)
+}
+
+// UpdatePersonRemoveNickname calls movies.v1.MoviesPersonsService.UpdatePersonRemoveNickname.
+func (c *moviesPersonsServiceClient) UpdatePersonRemoveNickname(ctx context.Context, req *connect.Request[v1.UpdatePersonRemoveNicknameRequest]) (*connect.Response[v1.UpdatePersonRemoveNicknameResponse], error) {
+	return c.updatePersonRemoveNickname.CallUnary(ctx, req)
+}
+
+// DeletePerson calls movies.v1.MoviesPersonsService.DeletePerson.
+func (c *moviesPersonsServiceClient) DeletePerson(ctx context.Context, req *connect.Request[v1.DeletePersonRequest]) (*connect.Response[v1.DeletePersonResponse], error) {
+	return c.deletePerson.CallUnary(ctx, req)
+}
+
+// ListPersons calls movies.v1.MoviesPersonsService.ListPersons.
+func (c *moviesPersonsServiceClient) ListPersons(ctx context.Context, req *connect.Request[v1.ListPersonsRequest]) (*connect.Response[v1.ListPersonsResponse], error) {
+	return c.listPersons.CallUnary(ctx, req)
+}
+
+// SearchPerson calls movies.v1.MoviesPersonsService.SearchPerson.
+func (c *moviesPersonsServiceClient) SearchPerson(ctx context.Context, req *connect.Request[v1.SearchPersonRequest]) (*connect.Response[v1.SearchPersonResponse], error) {
+	return c.searchPerson.CallUnary(ctx, req)
+}
+
 // MoviesPersonsServiceHandler is an implementation of the movies.v1.MoviesPersonsService service.
 type MoviesPersonsServiceHandler interface {
+	GetPerson(context.Context, *connect.Request[v1.GetPersonRequest]) (*connect.Response[v1.GetPersonResponse], error)
 	CreatePerson(context.Context, *connect.Request[v1.CreatePersonRequest]) (*connect.Response[v1.CreatePersonResponse], error)
+	UpdatePerson(context.Context, *connect.Request[v1.UpdatePersonRequest]) (*connect.Response[v1.UpdatePersonResponse], error)
+	UpdatePersonAddOccupation(context.Context, *connect.Request[v1.UpdatePersonAddOccupationRequest]) (*connect.Response[v1.UpdatePersonAddOccupationResponse], error)
+	UpdatePersonRemoveOccupation(context.Context, *connect.Request[v1.UpdatePersonRemoveOccupationRequest]) (*connect.Response[v1.UpdatePersonRemoveOccupationResponse], error)
+	UpdatePersonAddNickname(context.Context, *connect.Request[v1.UpdatePersonAddNicknameRequest]) (*connect.Response[v1.UpdatePersonAddNicknameResponse], error)
+	UpdatePersonRemoveNickname(context.Context, *connect.Request[v1.UpdatePersonRemoveNicknameRequest]) (*connect.Response[v1.UpdatePersonRemoveNicknameResponse], error)
+	DeletePerson(context.Context, *connect.Request[v1.DeletePersonRequest]) (*connect.Response[v1.DeletePersonResponse], error)
+	ListPersons(context.Context, *connect.Request[v1.ListPersonsRequest]) (*connect.Response[v1.ListPersonsResponse], error)
+	SearchPerson(context.Context, *connect.Request[v1.SearchPersonRequest]) (*connect.Response[v1.SearchPersonResponse], error)
 }
 
 // NewMoviesPersonsServiceHandler builds an HTTP handler from the service implementation. It returns
@@ -684,16 +846,88 @@ type MoviesPersonsServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewMoviesPersonsServiceHandler(svc MoviesPersonsServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	moviesPersonsServiceGetPersonHandler := connect.NewUnaryHandler(
+		MoviesPersonsServiceGetPersonProcedure,
+		svc.GetPerson,
+		connect.WithSchema(moviesPersonsServiceGetPersonMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	moviesPersonsServiceCreatePersonHandler := connect.NewUnaryHandler(
 		MoviesPersonsServiceCreatePersonProcedure,
 		svc.CreatePerson,
 		connect.WithSchema(moviesPersonsServiceCreatePersonMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	moviesPersonsServiceUpdatePersonHandler := connect.NewUnaryHandler(
+		MoviesPersonsServiceUpdatePersonProcedure,
+		svc.UpdatePerson,
+		connect.WithSchema(moviesPersonsServiceUpdatePersonMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesPersonsServiceUpdatePersonAddOccupationHandler := connect.NewUnaryHandler(
+		MoviesPersonsServiceUpdatePersonAddOccupationProcedure,
+		svc.UpdatePersonAddOccupation,
+		connect.WithSchema(moviesPersonsServiceUpdatePersonAddOccupationMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesPersonsServiceUpdatePersonRemoveOccupationHandler := connect.NewUnaryHandler(
+		MoviesPersonsServiceUpdatePersonRemoveOccupationProcedure,
+		svc.UpdatePersonRemoveOccupation,
+		connect.WithSchema(moviesPersonsServiceUpdatePersonRemoveOccupationMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesPersonsServiceUpdatePersonAddNicknameHandler := connect.NewUnaryHandler(
+		MoviesPersonsServiceUpdatePersonAddNicknameProcedure,
+		svc.UpdatePersonAddNickname,
+		connect.WithSchema(moviesPersonsServiceUpdatePersonAddNicknameMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesPersonsServiceUpdatePersonRemoveNicknameHandler := connect.NewUnaryHandler(
+		MoviesPersonsServiceUpdatePersonRemoveNicknameProcedure,
+		svc.UpdatePersonRemoveNickname,
+		connect.WithSchema(moviesPersonsServiceUpdatePersonRemoveNicknameMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesPersonsServiceDeletePersonHandler := connect.NewUnaryHandler(
+		MoviesPersonsServiceDeletePersonProcedure,
+		svc.DeletePerson,
+		connect.WithSchema(moviesPersonsServiceDeletePersonMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesPersonsServiceListPersonsHandler := connect.NewUnaryHandler(
+		MoviesPersonsServiceListPersonsProcedure,
+		svc.ListPersons,
+		connect.WithSchema(moviesPersonsServiceListPersonsMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	moviesPersonsServiceSearchPersonHandler := connect.NewUnaryHandler(
+		MoviesPersonsServiceSearchPersonProcedure,
+		svc.SearchPerson,
+		connect.WithSchema(moviesPersonsServiceSearchPersonMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/movies.v1.MoviesPersonsService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
+		case MoviesPersonsServiceGetPersonProcedure:
+			moviesPersonsServiceGetPersonHandler.ServeHTTP(w, r)
 		case MoviesPersonsServiceCreatePersonProcedure:
 			moviesPersonsServiceCreatePersonHandler.ServeHTTP(w, r)
+		case MoviesPersonsServiceUpdatePersonProcedure:
+			moviesPersonsServiceUpdatePersonHandler.ServeHTTP(w, r)
+		case MoviesPersonsServiceUpdatePersonAddOccupationProcedure:
+			moviesPersonsServiceUpdatePersonAddOccupationHandler.ServeHTTP(w, r)
+		case MoviesPersonsServiceUpdatePersonRemoveOccupationProcedure:
+			moviesPersonsServiceUpdatePersonRemoveOccupationHandler.ServeHTTP(w, r)
+		case MoviesPersonsServiceUpdatePersonAddNicknameProcedure:
+			moviesPersonsServiceUpdatePersonAddNicknameHandler.ServeHTTP(w, r)
+		case MoviesPersonsServiceUpdatePersonRemoveNicknameProcedure:
+			moviesPersonsServiceUpdatePersonRemoveNicknameHandler.ServeHTTP(w, r)
+		case MoviesPersonsServiceDeletePersonProcedure:
+			moviesPersonsServiceDeletePersonHandler.ServeHTTP(w, r)
+		case MoviesPersonsServiceListPersonsProcedure:
+			moviesPersonsServiceListPersonsHandler.ServeHTTP(w, r)
+		case MoviesPersonsServiceSearchPersonProcedure:
+			moviesPersonsServiceSearchPersonHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -703,8 +937,44 @@ func NewMoviesPersonsServiceHandler(svc MoviesPersonsServiceHandler, opts ...con
 // UnimplementedMoviesPersonsServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedMoviesPersonsServiceHandler struct{}
 
+func (UnimplementedMoviesPersonsServiceHandler) GetPerson(context.Context, *connect.Request[v1.GetPersonRequest]) (*connect.Response[v1.GetPersonResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.GetPerson is not implemented"))
+}
+
 func (UnimplementedMoviesPersonsServiceHandler) CreatePerson(context.Context, *connect.Request[v1.CreatePersonRequest]) (*connect.Response[v1.CreatePersonResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.CreatePerson is not implemented"))
+}
+
+func (UnimplementedMoviesPersonsServiceHandler) UpdatePerson(context.Context, *connect.Request[v1.UpdatePersonRequest]) (*connect.Response[v1.UpdatePersonResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.UpdatePerson is not implemented"))
+}
+
+func (UnimplementedMoviesPersonsServiceHandler) UpdatePersonAddOccupation(context.Context, *connect.Request[v1.UpdatePersonAddOccupationRequest]) (*connect.Response[v1.UpdatePersonAddOccupationResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.UpdatePersonAddOccupation is not implemented"))
+}
+
+func (UnimplementedMoviesPersonsServiceHandler) UpdatePersonRemoveOccupation(context.Context, *connect.Request[v1.UpdatePersonRemoveOccupationRequest]) (*connect.Response[v1.UpdatePersonRemoveOccupationResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.UpdatePersonRemoveOccupation is not implemented"))
+}
+
+func (UnimplementedMoviesPersonsServiceHandler) UpdatePersonAddNickname(context.Context, *connect.Request[v1.UpdatePersonAddNicknameRequest]) (*connect.Response[v1.UpdatePersonAddNicknameResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.UpdatePersonAddNickname is not implemented"))
+}
+
+func (UnimplementedMoviesPersonsServiceHandler) UpdatePersonRemoveNickname(context.Context, *connect.Request[v1.UpdatePersonRemoveNicknameRequest]) (*connect.Response[v1.UpdatePersonRemoveNicknameResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.UpdatePersonRemoveNickname is not implemented"))
+}
+
+func (UnimplementedMoviesPersonsServiceHandler) DeletePerson(context.Context, *connect.Request[v1.DeletePersonRequest]) (*connect.Response[v1.DeletePersonResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.DeletePerson is not implemented"))
+}
+
+func (UnimplementedMoviesPersonsServiceHandler) ListPersons(context.Context, *connect.Request[v1.ListPersonsRequest]) (*connect.Response[v1.ListPersonsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.ListPersons is not implemented"))
+}
+
+func (UnimplementedMoviesPersonsServiceHandler) SearchPerson(context.Context, *connect.Request[v1.SearchPersonRequest]) (*connect.Response[v1.SearchPersonResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("movies.v1.MoviesPersonsService.SearchPerson is not implemented"))
 }
 
 // MoviesServiceClient is a client for the movies.v1.MoviesService service.

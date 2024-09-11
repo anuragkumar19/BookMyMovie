@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
+	"bookmymovie.app/bookmymovie/services"
 	"bookmymovie.app/bookmymovie/services/auth"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gosimple/slug"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -40,9 +40,9 @@ func (params *CreateParams) Transform() *CreateParams {
 	return params
 }
 
-func (params *CreateParams) Validate() error {
+func (params CreateParams) Validate() error {
 	return validation.ValidateStruct(
-		params,
+		&params,
 		validation.Field(&params.Name, validation.Required),
 		validation.Field(&params.About, validation.Required),
 		validation.Field(&params.Nicknames, validation.NotNil),
@@ -64,7 +64,7 @@ func (s *Persons) Create(ctx context.Context, authMeta *auth.Metadata, params *C
 		if _, ok := err.(validation.InternalError); ok { //nolint:errorlint
 			return 0, err
 		}
-		return 0, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, err.Error())
+		return 0, services.NewError(services.ErrorTypeInvalidArgument, err.Error())
 	}
 
 	exist, err := s.storage.Exist(ctx, params.ProfilePictureKey)
@@ -72,7 +72,7 @@ func (s *Persons) Create(ctx context.Context, authMeta *auth.Metadata, params *C
 		return 0, err
 	}
 	if !exist {
-		return 0, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, "profile picture selected doesn't exit")
+		return 0, services.NewError(services.ErrorTypeInvalidArgument, "profile picture selected doesn't exit")
 	}
 
 	slg := slug.Make(params.Name)

@@ -22,9 +22,9 @@ type Config struct {
 	Auth          *auth.Config
 }
 
-func (config *Config) Validate() error {
+func (config Config) Validate() error {
 	return validation.ValidateStruct(
-		config,
+		&config,
 		validation.Field(&config.AppPublicHost, validation.Required, is.URL),
 		validation.Field(&config.Mailer),
 		validation.Field(&config.Database),

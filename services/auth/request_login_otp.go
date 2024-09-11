@@ -8,7 +8,7 @@ import (
 
 	"bookmymovie.app/bookmymovie/database"
 	"bookmymovie.app/bookmymovie/mailer"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/jackc/pgx/v5"
@@ -19,15 +19,15 @@ type RequestLoginOTPParams struct {
 	Email string
 }
 
-func (data *RequestLoginOTPParams) Transform() *RequestLoginOTPParams {
-	data.Email = strings.TrimSpace(data.Email)
-	return data
+func (params *RequestLoginOTPParams) Transform() *RequestLoginOTPParams {
+	params.Email = strings.TrimSpace(params.Email)
+	return params
 }
 
-func (data *RequestLoginOTPParams) Validate() error {
+func (params RequestLoginOTPParams) Validate() error {
 	return validation.ValidateStruct(
-		data,
-		validation.Field(&data.Email, validation.Required, is.Email),
+		&params,
+		validation.Field(&params.Email, validation.Required, is.Email),
 	)
 }
 
@@ -36,7 +36,7 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 		if _, ok := err.(validation.InternalError); ok { //nolint:errorlint
 			return "", err
 		}
-		return "", serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, err.Error())
+		return "", services.NewError(services.ErrorTypeInvalidArgument, err.Error())
 	}
 
 	var isNew bool
@@ -63,7 +63,7 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 		user.TotalLoginTokensSent = 0
 	}
 	if user.TotalLoginTokensSent >= int32(s.config.LoginOTPSendingRate) {
-		return "", serviceserrors.New(serviceserrors.ErrorResourceExhausted, serviceserrors.NewRateLimitMessage(time.Until(user.LastLoginTokenSentAt.Time.Add(s.config.LoginOTPSendingRateTimeWindow)), ""))
+		return "", services.NewError(services.ErrorTypeResourceExhausted, services.NewRateLimitErrorMessage(time.Until(user.LastLoginTokenSentAt.Time.Add(s.config.LoginOTPSendingRateTimeWindow)), ""))
 	}
 
 	token, err := s.generateRandomToken()
@@ -93,7 +93,7 @@ func (s *Auth) RequestLoginOTP(ctx context.Context, params *RequestLoginOTPParam
 		Version:              user.Version,
 	}); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return "", serviceserrors.New(serviceserrors.ErrorConflict, "")
+			return "", services.NewError(services.ErrorTypeConflict, "")
 		}
 		return "", err
 	}

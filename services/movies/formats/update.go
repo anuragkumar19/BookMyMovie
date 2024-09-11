@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"bookmymovie.app/bookmymovie/database"
+	"bookmymovie.app/bookmymovie/services"
 	"bookmymovie.app/bookmymovie/services/auth"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/gosimple/slug"
 	"github.com/jackc/pgx/v5"
@@ -31,8 +31,8 @@ func (params *UpdateParams) Transform() *UpdateParams {
 	return params
 }
 
-func (params *UpdateParams) Validate() error {
-	return validation.ValidateStruct(params,
+func (params UpdateParams) Validate() error {
+	return validation.ValidateStruct(&params,
 		validation.Field(&params.DisplayName, validation.Length(1, 0)),
 		validation.Field(&params.About, validation.Length(1, 0)),
 	)
@@ -50,7 +50,7 @@ func (s *Formats) Update(ctx context.Context, authMeta *auth.Metadata, params *U
 		if _, ok := err.(validation.InternalError); ok { //nolint:errorlint
 			return database.MoviesFormat{}, err
 		}
-		return database.MoviesFormat{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, err.Error())
+		return database.MoviesFormat{}, services.NewError(services.ErrorTypeInvalidArgument, err.Error())
 	}
 
 	format, err := s.GetByID(ctx, params.ID)
@@ -73,7 +73,7 @@ func (s *Formats) Update(ctx context.Context, authMeta *auth.Metadata, params *U
 		Version:     format.Version,
 	}); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return database.MoviesFormat{}, serviceserrors.New(serviceserrors.ErrorConflict, "")
+			return database.MoviesFormat{}, services.NewError(services.ErrorTypeConflict, "")
 		}
 		return database.MoviesFormat{}, err
 	}

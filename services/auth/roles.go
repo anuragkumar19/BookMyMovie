@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"bookmymovie.app/bookmymovie/database"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services"
 )
 
 type Permission string
@@ -72,7 +72,7 @@ func (*Auth) CheckPermissions(authMeta *Metadata, ps ...Permission) error {
 func checkPermission(m rolePermissionMap, ps []Permission) error {
 	for _, p := range ps {
 		if !m[p] {
-			return serviceserrors.New(serviceserrors.ErrorTypePermissionDenied, fmt.Sprintf("user doesn't have permission %s", p))
+			return services.NewError(services.ErrorTypePermissionDenied, fmt.Sprintf("user doesn't have permission %s", p))
 		}
 	}
 

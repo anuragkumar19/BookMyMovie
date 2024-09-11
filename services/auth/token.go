@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -31,7 +31,7 @@ func (m *Metadata) Valid() error {
 		if nil == m.err {
 			return errors.New("auth.Metadata must be created from functions available in auth package")
 		}
-		return serviceserrors.New(serviceserrors.ErrorConflict, m.err.Error())
+		return services.NewError(services.ErrorTypeConflict, m.err.Error())
 	}
 	return nil
 }

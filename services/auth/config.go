@@ -20,9 +20,9 @@ type Config struct {
 	MaxOTPIncorrectAttempts       int
 }
 
-func (config *Config) Validate() error {
+func (config Config) Validate() error {
 	return validation.ValidateStruct(
-		config,
+		&config,
 		validation.Field(&config.AppPublicHost, validation.Required, is.URL),
 		validation.Field(&config.AccessTokenSecret, validation.Required),
 		validation.Field(&config.AccessTokenLifetime, validation.Required),

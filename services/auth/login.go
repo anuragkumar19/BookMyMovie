@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"bookmymovie.app/bookmymovie/database"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
+	"bookmymovie.app/bookmymovie/services"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -23,18 +23,18 @@ type LoginParams struct {
 	UserAgent string
 }
 
-func (data *LoginParams) Transform() *LoginParams {
-	data.OTP = strings.TrimSpace(data.OTP)
-	data.Token = strings.TrimSpace(data.Token)
-	return data
+func (params *LoginParams) Transform() *LoginParams {
+	params.OTP = strings.TrimSpace(params.OTP)
+	params.Token = strings.TrimSpace(params.Token)
+	return params
 }
 
-func (data *LoginParams) Validate() error {
+func (params LoginParams) Validate() error {
 	return validation.ValidateStruct(
-		data,
-		validation.Field(&data.Token, validation.Required),
-		validation.Field(&data.OTP, validation.Required),
-		validation.Field(&data.UserAgent, validation.Required),
+		&params,
+		validation.Field(&params.Token, validation.Required),
+		validation.Field(&params.OTP, validation.Required),
+		validation.Field(&params.UserAgent, validation.Required),
 	)
 }
 
@@ -49,13 +49,13 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (Tokens, error) {
 		if _, ok := err.(validation.InternalError); ok { //nolint:errorlint
 			return Tokens{}, err
 		}
-		return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, err.Error())
+		return Tokens{}, services.NewError(services.ErrorTypeInvalidArgument, err.Error())
 	}
 
 	token, err := s.db.FindLoginToken(ctx, params.Token)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPExpired.Error())
+			return Tokens{}, services.NewError(services.ErrorTypeInvalidArgument, errOTPExpired.Error())
 		}
 		return Tokens{}, err
 	}
@@ -63,16 +63,16 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (Tokens, error) {
 	now := time.Now()
 
 	if token.ExpireAt.Time.Before(now) {
-		return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPExpired.Error())
+		return Tokens{}, services.NewError(services.ErrorTypeInvalidArgument, errOTPExpired.Error())
 	}
 	if token.TotalAttempts >= int32(s.config.MaxOTPIncorrectAttempts) {
 		if err := s.db.DeleteLoginToken(ctx, token.Token); err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPExpired.Error())
+				return Tokens{}, services.NewError(services.ErrorTypeInvalidArgument, errOTPExpired.Error())
 			}
 			return Tokens{}, err
 		}
-		return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPExpired.Error())
+		return Tokens{}, services.NewError(services.ErrorTypeInvalidArgument, errOTPExpired.Error())
 	}
 
 	if !s.matchOTP(params.OTP, token.Otp) {
@@ -83,16 +83,16 @@ func (s *Auth) Login(ctx context.Context, params *LoginParams) (Tokens, error) {
 			Version:       token.Version,
 		}); err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return Tokens{}, serviceserrors.New(serviceserrors.ErrorConflict, "")
+				return Tokens{}, services.NewError(services.ErrorTypeConflict, "")
 			}
 			return Tokens{}, err
 		}
-		return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPMismatched.Error())
+		return Tokens{}, services.NewError(services.ErrorTypeInvalidArgument, errOTPMismatched.Error())
 	}
 
 	if err := s.db.DeleteLoginToken(ctx, token.Token); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return Tokens{}, serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, errOTPExpired.Error())
+			return Tokens{}, services.NewError(services.ErrorTypeInvalidArgument, errOTPExpired.Error())
 		}
 		return Tokens{}, err
 	}

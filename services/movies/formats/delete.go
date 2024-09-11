@@ -6,8 +6,8 @@ import (
 	"slices"
 
 	"bookmymovie.app/bookmymovie/database"
+	"bookmymovie.app/bookmymovie/services"
 	"bookmymovie.app/bookmymovie/services/auth"
-	"bookmymovie.app/bookmymovie/services/serviceserrors"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -28,12 +28,12 @@ func (s *Formats) Delete(ctx context.Context, authMeta *auth.Metadata, id int64)
 		return err
 	}
 	if exist {
-		return serviceserrors.New(serviceserrors.ErrorTypeInvalidArgument, "movies format is linked to one or many movies, so it cannot be deleted")
+		return services.NewError(services.ErrorTypeInvalidArgument, "movies format is linked to one or many movies, so it cannot be deleted")
 	}
 
 	if err := s.db.DeleteMoviesFormat(ctx, id); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return serviceserrors.New(serviceserrors.ErrorConflict, "")
+			return services.NewError(services.ErrorTypeConflict, "")
 		}
 		return err
 	}

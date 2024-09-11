@@ -3,6 +3,7 @@ syntax = "proto3";
 package movies.v1;
 
 import "google/type/date/date.proto";
+import "shared/type/pagination/pagination.proto";
 // import "google/type/timestamp/timestamp.proto";
 
 option go_package = "bookmymovie.app/bookmymovie/api/gen/movies/v1;moviesv1";
@@ -169,6 +170,26 @@ service MoviesGenresService {
   rpc DeleteGenre(DeleteGenreRequest) returns (DeleteGenreResponse);
 }
 
+message Person {
+  int64 id = 1;
+  string name = 2;
+  string slug = 3;
+  repeated string nicknames = 4;
+  repeated string occupations = 5;
+  string profile_picture_url = 6;
+  optional google.type.Date dob = 7;
+  string about = 8;
+  bool is_deleted = 9;
+}
+
+message GetPersonRequest {
+  int64 id = 1;
+}
+
+message GetPersonResponse {
+  Person person = 1;
+}
+
 message CreatePersonRequest {
   string name = 1;
   repeated string nicknames = 2;
@@ -182,8 +203,78 @@ message CreatePersonResponse {
   int64 id = 1;
 }
 
+message UpdatePersonRequest {
+  optional string name = 1;
+  optional string profile_picture_key = 4;
+  optional google.type.Date dob = 5;
+}
+
+message UpdatePersonResponse {
+  Person person = 1;
+}
+
+message UpdatePersonAddOccupationRequest {
+  repeated string occupations = 1;
+}
+message UpdatePersonAddOccupationResponse {
+  repeated string occupations = 1;
+}
+message UpdatePersonRemoveOccupationRequest {
+  repeated string occupations = 1;
+}
+message UpdatePersonRemoveOccupationResponse {
+  repeated string occupations = 1;
+}
+
+message UpdatePersonAddNicknameRequest {
+  repeated string nicknames = 1;
+}
+message UpdatePersonAddNicknameResponse {
+  repeated string nicknames = 1;
+}
+message UpdatePersonRemoveNicknameRequest {
+  repeated string nicknames = 1;
+}
+message UpdatePersonRemoveNicknameResponse {
+  repeated string nicknames = 1;
+}
+
+message DeletePersonRequest {
+  int64 id = 1;
+}
+
+message DeletePersonResponse {}
+
+message ListPersonsRequest {
+  shared.type.pagination.RequestPrams pagination = 1;
+}
+
+message ListPersonsResponse {
+  shared.type.pagination.ResponseMetadata metadata = 1;
+  repeated Person persons = 2;
+}
+
+message SearchPersonRequest {
+  shared.type.pagination.RequestPrams pagination = 1;
+  string query = 2;
+}
+
+message SearchPersonResponse {
+  shared.type.pagination.ResponseMetadata metadata = 1;
+  repeated Person persons = 2;
+}
+
 service MoviesPersonsService {
+  rpc GetPerson(GetPersonRequest) returns (GetPersonResponse);
   rpc CreatePerson(CreatePersonRequest) returns (CreatePersonResponse);
+  rpc UpdatePerson(UpdatePersonRequest) returns (UpdatePersonResponse);
+  rpc UpdatePersonAddOccupation(UpdatePersonAddOccupationRequest) returns (UpdatePersonAddOccupationResponse);
+  rpc UpdatePersonRemoveOccupation(UpdatePersonRemoveOccupationRequest) returns (UpdatePersonRemoveOccupationResponse);
+  rpc UpdatePersonAddNickname(UpdatePersonAddNicknameRequest) returns (UpdatePersonAddNicknameResponse);
+  rpc UpdatePersonRemoveNickname(UpdatePersonRemoveNicknameRequest) returns (UpdatePersonRemoveNicknameResponse);
+  rpc DeletePerson(DeletePersonRequest) returns (DeletePersonResponse);
+  rpc ListPersons(ListPersonsRequest) returns (ListPersonsResponse);
+  rpc SearchPerson(SearchPersonRequest) returns (SearchPersonResponse);
 }
 
 service MoviesService {}
