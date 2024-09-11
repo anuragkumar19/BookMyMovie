@@ -19,12 +19,7 @@ type UpdateParams struct {
 	ID                int64
 	Name              *string
 	ProfilePictureKey *string
-	Dob               *time.Time
-	// TODO: look for possibility of doing all updates in same function
-	AppendOccupations []string
-	RemoveOccupations []string
-	AppendNickname    []string
-	RemoveNickname    []string
+	Dob               **time.Time
 }
 
 func (params *UpdateParams) Transform() *UpdateParams {
@@ -72,10 +67,13 @@ func (s *Persons) Update(ctx context.Context, authMeta *auth.Metadata, params *U
 		person.Slug = slug.Make(*params.Name)
 	}
 	if params.Dob != nil {
-		person.Dob = pgtype.Date{
-			Valid: !params.Dob.IsZero(),
-			Time:  *params.Dob,
+		v := *params.Dob
+		dob := pgtype.Date{}
+		if v != nil {
+			dob.Valid = true
+			dob.Time = *v
 		}
+		person.Dob = dob
 	}
 	if params.ProfilePictureKey != nil {
 		exist, err := s.storage.Exist(ctx, *params.ProfilePictureKey)

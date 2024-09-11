@@ -16,7 +16,7 @@ import (
 
 type UpdateParams struct {
 	Name *string
-	Dob  *time.Time
+	Dob  **time.Time
 }
 
 func (params *UpdateParams) Transform() *UpdateParams {
@@ -53,10 +53,13 @@ func (s *Users) Update(ctx context.Context, authMeta *auth.Metadata, params *Upd
 		user.Name = *params.Name
 	}
 	if params.Dob != nil {
-		user.Dob = pgtype.Date{
-			Valid: params.Dob.IsZero(),
-			Time:  *params.Dob,
+		v := *params.Dob
+		dob := pgtype.Date{}
+		if v != nil {
+			dob.Valid = true
+			dob.Time = *v
 		}
+		user.Dob = dob
 	}
 
 	if err := s.db.UpdateUserProfile(ctx, &database.UpdateUserProfileParams{
