@@ -1,86 +1,99 @@
 package services
 
-import (
-	"slices"
-)
+// import (
+// 	"slices"
+// )
 
-type UpdateField[T any] struct {
-	value T
-	valid bool
-}
+// type UpdateField[T any] struct {
+// 	Value T
+// 	valid bool
+// }
 
-func (f UpdateField[T]) Value(value T) T {
-	if f.valid {
-		return f.value
-	}
-	return value
-}
+// func (f UpdateField[T]) Valid() bool {
+// 	return f.valid
+// }
 
-func NewUpdateField[T any](value T, valid bool) UpdateField[T] {
-	return UpdateField[T]{
-		value: value,
-		valid: valid,
-	}
-}
+// func (f UpdateField[T]) Update(value T) T {
+// 	if f.valid {
+// 		return f.Value
+// 	}
+// 	return value
+// }
 
-func NewValidUpdateField[T any](value T) UpdateField[T] {
-	return UpdateField[T]{
-		value: value,
-		valid: true,
-	}
-}
+// func NewUpdateField[T any](value T, valid bool) UpdateField[T] {
+// 	return UpdateField[T]{
+// 		Value: value,
+// 		valid: valid,
+// 	}
+// }
 
-type Action string
+// func NewValidUpdateField[T any](value T) UpdateField[T] {
+// 	return UpdateField[T]{
+// 		Value: value,
+// 		valid: true,
+// 	}
+// }
 
-const (
-	ActionIgnore  Action = ""
-	ActionReplace Action = "replace"
-	ActionAppend  Action = "append"
-	ActionRemove  Action = "remove"
-)
+// type Action string
 
-type UpdateFieldWithAction[T comparable] struct {
-	value  []T
-	action Action
-}
+// const (
+// 	ActionIgnore  Action = ""
+// 	ActionReplace Action = "replace"
+// 	ActionAppend  Action = "append"
+// 	ActionRemove  Action = "remove"
+// )
 
-func NewUpdateFieldWithAction[T comparable](value []T, action Action) UpdateFieldWithAction[T] {
-	switch action {
-	case ActionReplace, ActionAppend, ActionRemove:
-	default:
-		action = ActionIgnore
-	}
-	return UpdateFieldWithAction[T]{
-		value:  value,
-		action: action,
-	}
-}
+// type UpdateFieldWithAction[T comparable] struct {
+// 	Value  []T
+// 	action Action
+// }
 
-func (f UpdateFieldWithAction[T]) Value(value []T) []T {
-	switch f.action {
-	case ActionAppend:
-		{
-			newS := make([]T, 0, len(value)+len(f.value))
-			newS = append(newS, value...)
-			newS = append(newS, f.value...)
-			return newS
-		}
-	case ActionRemove:
-		{
-			fields := make(map[T]bool)
-			for _, v := range f.value {
-				fields[v] = true
-			}
+// func NewUpdateFieldWithAction[T comparable](value []T, action Action) UpdateFieldWithAction[T] {
+// 	switch action {
+// 	case ActionReplace, ActionAppend, ActionRemove:
+// 	default:
+// 		action = ActionIgnore
+// 	}
+// 	return UpdateFieldWithAction[T]{
+// 		Value:  value,
+// 		action: action,
+// 	}
+// }
 
-			c := slices.Clone(value)
-			return slices.DeleteFunc(c, func(v T) bool {
-				return fields[v]
-			})
-		}
+// func (f UpdateFieldWithAction[T]) Update(value []T) []T {
+// 	switch f.action {
+// 	case ActionAppend:
+// 		{
+// 			newS := make([]T, 0, len(value)+len(f.Value))
+// 			newS = append(newS, value...)
+// 			newS = append(newS, f.Value...)
+// 			return newS
+// 		}
+// 	case ActionRemove:
+// 		{
+// 			fields := make(map[T]bool)
+// 			for _, v := range f.Value {
+// 				fields[v] = true
+// 			}
 
-	case ActionReplace:
-		return f.value
-	default:
-		return value
-	}
-}
+// 			c := slices.Clone(value)
+// 			return slices.DeleteFunc(c, func(v T) bool {
+// 				return fields[v]
+// 			})
+// 		}
+
+// 	case ActionReplace:
+// 		return f.Value
+// 	default:
+// 		return value
+// 	}
+// }
+
+// func (f UpdateFieldWithAction[T]) Valid() bool {
+// 	switch f.action {
+// 	case ActionAppend, ActionReplace, ActionRemove:
+// 		return true
+// 	default:
+// 		return false
+// 	}
+// }

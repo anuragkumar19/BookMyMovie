@@ -46,6 +46,7 @@ type Querier interface {
 	UpdateMoviesLanguage(ctx context.Context, arg *UpdateMoviesLanguageParams) error
 	UpdateMoviesPerson(ctx context.Context, arg *UpdateMoviesPersonParams) error
 	UpdateUserLoginFields(ctx context.Context, arg *UpdateUserLoginFieldsParams) error
+	UpdateUserProfile(ctx context.Context, arg *UpdateUserProfileParams) error
 }
 
 var _ Querier = (*Queries)(nil)

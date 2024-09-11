@@ -6,9 +6,8 @@ import (
 	"bookmymovie.app/bookmymovie"
 	usersv1 "bookmymovie.app/bookmymovie/api/gen/users/v1"
 	"bookmymovie.app/bookmymovie/api/gen/users/v1/usersv1connect"
+	"bookmymovie.app/bookmymovie/services/users"
 	"connectrpc.com/connect"
-	"google.golang.org/genproto/googleapis/type/date"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type usersService struct {
@@ -23,22 +22,24 @@ func (s *usersService) GetLoggedInUser(ctx context.Context, r *connect.Request[u
 	if err != nil {
 		return nil, serviceErrorHandler(err)
 	}
-	var dob *date.Date
-	if user.Dob.Valid {
-		dob = &date.Date{
-			Year:  int32(user.Dob.Time.Year()),
-			Month: int32(user.Dob.Time.Month()),
-			Day:   int32(user.Dob.Time.Day()),
-		}
-	}
 	res := connect.NewResponse(&usersv1.GetLoggedInUserResponse{
-		Id:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		Version:   user.Version,
-		Role:      mapRole(user.Role),
-		Dob:       dob,
-		CreatedAt: timestamppb.New(user.CreatedAt.Time),
+		User: mapUser(&user),
+	})
+	return res, nil
+}
+
+func (s *usersService) UpdateUser(ctx context.Context, r *connect.Request[usersv1.UpdateUserRequest]) (*connect.Response[usersv1.UpdateUserResponse], error) {
+	authMeta := s.app.AuthService().GetMetadata(getAccessToken(r))
+	user, err := s.app.UsersService().Update(ctx, &authMeta, &users.UpdateParams{
+		Name: r.Msg.Name,
+		Dob:  nil,
+	})
+
+	if err != nil {
+		return nil, serviceErrorHandler(err)
+	}
+	res := connect.NewResponse(&usersv1.UpdateUserResponse{
+		User: mapUser(&user),
 	})
 	return res, nil
 }

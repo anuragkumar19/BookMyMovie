@@ -24,19 +24,17 @@ type CreateParams struct {
 
 func (params *CreateParams) Transform() *CreateParams {
 	params.Name = strings.TrimSpace(params.Name)
-	nicknames := make([]string, 0, len(params.Nicknames))
-	for _, n := range params.Nicknames {
-		nicknames = append(nicknames, strings.TrimSpace(n))
-	}
-	params.Nicknames = nicknames
-	occupations := make([]string, 0, len(params.Occupations))
-	for _, n := range params.Occupations {
-		occupations = append(occupations, strings.TrimSpace(n))
-	}
-	params.Occupations = occupations
+
+	params.Nicknames = services.RemoveDuplicate(params.Nicknames)
+	params.Nicknames = services.TrimSlices(params.Nicknames)
+
+	params.Occupations = services.RemoveDuplicate(params.Occupations)
+	params.Occupations = services.TrimSlices(params.Occupations)
+
 	if params.About == "" {
 		params.About = "No information available"
 	}
+
 	return params
 }
 

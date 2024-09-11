@@ -130,3 +130,30 @@ func (q *Queries) UpdateUserLoginFields(ctx context.Context, arg *UpdateUserLogi
 	)
 	return err
 }
+
+const updateUserProfile = `-- name: UpdateUserProfile :exec
+UPDATE "users"
+SET
+    "name" = $1,
+    "dob" = $2
+WHERE
+    "id" = $3
+    AND "version" = $4
+`
+
+type UpdateUserProfileParams struct {
+	Name    string
+	Dob     pgtype.Date
+	ID      int64
+	Version int32
+}
+
+func (q *Queries) UpdateUserProfile(ctx context.Context, arg *UpdateUserProfileParams) error {
+	_, err := q.db.Exec(ctx, updateUserProfile,
+		arg.Name,
+		arg.Dob,
+		arg.ID,
+		arg.Version,
+	)
+	return err
+}

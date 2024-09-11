@@ -28,6 +28,15 @@ WHERE
     "id" = $3
     AND "version" = $4;
 
+-- name: UpdateUserProfile :exec
+UPDATE "users"
+SET
+    "name" = $1,
+    "dob" = $2
+WHERE
+    "id" = $3
+    AND "version" = $4;
+
 -- name: FindUserById :one
 SELECT
     "id",

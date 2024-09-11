@@ -9,6 +9,11 @@ vars:
   BIN: tmp/bookmymovie.exe
 
 tasks:
+  lint:
+    cmds:
+      - sqlc vet
+      - buf lint
+      - golangci-lint run
   build-go:
     cmds:
       - go build -o {{.BIN}} {{.MAIN}}

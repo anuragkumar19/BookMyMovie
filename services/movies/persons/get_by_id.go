@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func (s *Persons) GetById(ctx context.Context, id int64) (database.GetMoviesPersonRow, error) {
+func (s *Persons) GetByID(ctx context.Context, id int64) (database.GetMoviesPersonRow, error) {
 	person, err := s.db.GetMoviesPerson(ctx, id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
