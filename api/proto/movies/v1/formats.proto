@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package movies.v1;
+
+// import "google/type/date.proto";
+// import "shared/type/pagination/pagination.proto";
+
+option go_package = "bookmymovie.app/bookmymovie/api/gen/movies/v1;moviesv1";
+
+message Format {
+  int64 id = 1;
+  string display_name = 2;
+  string about = 3;
+  string slug = 4;
+}
+
+message GetFormatRequest {
+  int64 id = 1;
+}
+
+message GetFormatResponse {
+  Format format = 1;
+}
+
+message GetFormatsRequest {}
+
+message GetFormatsResponse {
+  repeated Format formats = 1;
+}
+
+message CreateFormatRequest {
+  string display_name = 1;
+  string about = 2;
+}
+
+message CreateFormatResponse {
+  Format format = 1;
+}
+
+message UpdateFormatRequest {
+  int64 id = 1;
+  optional string display_name = 2;
+  optional string about = 3;
+}
+
+message UpdateFormatResponse {
+  Format format = 1;
+}
+
+message DeleteFormatRequest {
+  int64 id = 1;
+}
+
+message DeleteFormatResponse {}
+
+service MoviesFormatsService {
+  rpc GetFormat(GetFormatRequest) returns (GetFormatResponse);
+  rpc GetFormats(GetFormatsRequest) returns (GetFormatsResponse);
+  rpc CreateFormat(CreateFormatRequest) returns (CreateFormatResponse);
+  rpc UpdateFormat(UpdateFormatRequest) returns (UpdateFormatResponse);
+  rpc DeleteFormat(DeleteFormatRequest) returns (DeleteFormatResponse);
+}

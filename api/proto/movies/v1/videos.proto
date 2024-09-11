@@ -4,8 +4,7 @@ package movies.v1;
 
 // import "google/type/date.proto";
 // import "shared/type/pagination/pagination.proto";
-// import "google/protobuf/timestamp.proto";
 
 option go_package = "bookmymovie.app/bookmymovie/api/gen/movies/v1;moviesv1";
 
-service MoviesService {}
+service MoviesVideosService {}

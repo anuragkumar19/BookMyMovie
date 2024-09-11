@@ -6,8 +6,8 @@ lint:
   use:
     - DEFAULT
   ignore:
-    - api/proto/google/type/timestamp/timestamp.proto
-    - api/proto/google/type/date/date.proto
+    - api/proto/google/protobuf/timestamp.proto
+    - api/proto/google/type/date.proto
     - api/proto/shared/type/pagination/pagination.proto
 breaking:
   use:

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package shared.type.pagination;
 
-import "google/type/timestamp/timestamp.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "bookmymovie.app/bookmymovie/api/gen/shared/type/pagination;pagination";
 

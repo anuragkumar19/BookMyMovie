@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package users.v1;
 
-import "google/type/date/date.proto";
-import "google/type/timestamp/timestamp.proto";
+import "google/type/date.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "bookmymovie.app/bookmymovie/api/gen/users/v1;usersv1";
 
