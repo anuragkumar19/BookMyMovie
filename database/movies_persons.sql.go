@@ -48,8 +48,16 @@ func (q *Queries) CreateMoviesPerson(ctx context.Context, arg *CreateMoviesPerso
 const deleteMoviesPerson = `-- name: DeleteMoviesPerson :exec
 UPDATE "movies_persons"
 SET
+    "version" = "version" + 1,
     "is_deleted" = TRUE,
-    "version" = "version" + 1
+    "deleted_at" = NOW(),
+    "name" = '',
+    "slug" = '',
+    "nicknames" = '{}',
+    "profile_picture" = '',
+    "occupations" = '{}',
+    "dob" = NOW(),
+    "about" = ''
 WHERE
     "id" = $1
     AND "version" = $2
