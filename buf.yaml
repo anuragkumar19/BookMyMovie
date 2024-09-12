@@ -5,10 +5,6 @@ modules:
 lint:
   use:
     - DEFAULT
-  ignore:
-    - api/proto/google/protobuf/timestamp.proto
-    - api/proto/google/type/date.proto
-    - api/proto/shared/type/pagination/pagination.proto
 breaking:
   use:
     - FILE

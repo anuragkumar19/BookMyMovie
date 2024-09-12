@@ -1,18 +1,18 @@
 syntax = "proto3";
 
-package shared.type.pagination;
+package shared.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "bookmymovie.app/bookmymovie/api/gen/shared/type/pagination;pagination";
+option go_package = "bookmymovie.app/bookmymovie/api/gen/shared/v1;sharedv1";
 
-message RequestPrams {
+message PaginationRequestParams {
   int32 page = 1;
   int32 offset = 2;
   google.protobuf.Timestamp timestamp = 3;
 }
 
-message ResponseMetadata {
+message PaginationResponseMetadata {
   int32 page = 1;
   int32 offset = 2;
   google.protobuf.Timestamp timestamp = 3;

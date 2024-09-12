@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package movies.v1;
 
-import "google/type/date.proto";
-import "shared/type/pagination/pagination.proto";
+import "google/protobuf/timestamp.proto";
+import "shared/v1/pagination.proto";
 
 option go_package = "bookmymovie.app/bookmymovie/api/gen/movies/v1;moviesv1";
 
@@ -14,7 +14,7 @@ message Person {
   repeated string nicknames = 4;
   repeated string occupations = 5;
   string profile_picture_url = 6;
-  optional google.type.Date dob = 7;
+  optional google.protobuf.Timestamp dob = 7;
   string about = 8;
   bool is_deleted = 9;
 }
@@ -32,7 +32,7 @@ message CreatePersonRequest {
   repeated string nicknames = 2;
   repeated string occupations = 3;
   optional string profile_picture_key = 4;
-  optional google.type.Date dob = 5;
+  optional google.protobuf.Timestamp dob = 5;
   string about = 6;
 }
 
@@ -43,7 +43,7 @@ message CreatePersonResponse {
 message UpdatePersonRequest {
   optional string name = 1;
   optional string profile_picture_key = 4;
-  optional google.type.Date dob = 5;
+  optional google.protobuf.Timestamp dob = 5;
 }
 
 message UpdatePersonResponse {
@@ -83,21 +83,21 @@ message DeletePersonRequest {
 message DeletePersonResponse {}
 
 message ListPersonsRequest {
-  shared.type.pagination.RequestPrams pagination = 1;
+  shared.v1.PaginationRequestParams pagination = 1;
 }
 
 message ListPersonsResponse {
-  shared.type.pagination.ResponseMetadata metadata = 1;
+  shared.v1.PaginationResponseMetadata metadata = 1;
   repeated Person persons = 2;
 }
 
 message SearchPersonRequest {
-  shared.type.pagination.RequestPrams pagination = 1;
+  shared.v1.PaginationRequestParams pagination = 1;
   string query = 2;
 }
 
 message SearchPersonResponse {
-  shared.type.pagination.ResponseMetadata metadata = 1;
+  shared.v1.PaginationResponseMetadata metadata = 1;
   repeated Person persons = 2;
 }
 

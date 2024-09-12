@@ -1,12 +1,9 @@
 package api
 
 import (
-	"time"
-
 	moviesv1 "bookmymovie.app/bookmymovie/api/gen/movies/v1"
 	usersv1 "bookmymovie.app/bookmymovie/api/gen/users/v1"
 	"bookmymovie.app/bookmymovie/database"
-	"google.golang.org/genproto/googleapis/type/date"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -54,26 +51,18 @@ func mapSlice[T any, S any](f func(*T) S, s []T) []S {
 	return ss
 }
 
-func mapDate(t time.Time, valid bool) *date.Date {
-	if !valid {
-		return nil
-	}
-
-	return &date.Date{
-		Year:  int32(t.Year()),
-		Month: int32(t.Month()),
-		Day:   int32(t.Day()),
-	}
-}
-
 func mapUser(user *database.FindUserByIdRow) *usersv1.User {
+	var dob *timestamppb.Timestamp
+	if user.Dob.Valid {
+		dob = timestamppb.New(user.Dob.Time)
+	}
 	return &usersv1.User{
 		Id:        user.ID,
 		Name:      user.Name,
 		Email:     user.Email,
 		Version:   user.Version,
 		Role:      mapRole(user.Role),
-		Dob:       mapDate(user.Dob.Time, user.Dob.Valid),
+		Dob:       dob,
 		CreatedAt: timestamppb.New(user.CreatedAt.Time),
 	}
 }

@@ -13,7 +13,6 @@ require (
 	github.com/rs/zerolog v1.33.0
 	golang.org/x/crypto v0.27.0
 	golang.org/x/net v0.29.0
-	google.golang.org/genproto v0.0.0-20240812133136-8ffd90a71988
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	jaytaylor.com/html2text v0.0.0-20230321000545-74c2419ad056
