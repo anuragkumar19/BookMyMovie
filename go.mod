@@ -4,12 +4,14 @@ go 1.23.1
 
 require (
 	connectrpc.com/connect v1.16.2
+	connectrpc.com/cors v0.1.0
 	github.com/a-h/templ v0.2.771
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/gosimple/slug v1.14.0
 	github.com/jackc/pgx/v5 v5.6.0
 	github.com/minio/minio-go/v7 v7.0.76
+	github.com/rs/cors v1.11.0
 	github.com/rs/zerolog v1.33.0
 	golang.org/x/crypto v0.27.0
 	golang.org/x/net v0.29.0

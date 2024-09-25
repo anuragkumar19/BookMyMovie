@@ -7,6 +7,8 @@ import (
 	"bookmymovie.app/bookmymovie/api/gen/auth/v1/authv1connect"
 	"bookmymovie.app/bookmymovie/api/gen/movies/v1/moviesv1connect"
 	"bookmymovie.app/bookmymovie/api/gen/users/v1/usersv1connect"
+	connectcors "connectrpc.com/cors"
+	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
@@ -53,10 +55,17 @@ func (api *API) Run() error {
 		mux.Handle(path, handler)
 	}
 
+	corsMiddleware := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: connectcors.AllowedMethods(),
+		AllowedHeaders: connectcors.AllowedHeaders(),
+		ExposedHeaders: connectcors.ExposedHeaders(),
+	})
+
 	return http.ListenAndServe(
 		"localhost:8080",
 		// Use h2c so we can serve HTTP/2 without TLS.
-		h2c.NewHandler(maxByte(mux), &http2.Server{}),
+		h2c.NewHandler(maxByte(corsMiddleware.Handler(mux)), &http2.Server{}),
 	)
 }
 
