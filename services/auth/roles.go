@@ -30,8 +30,13 @@ const (
 
 	MoviesPersonsCreate Permission = "movies:persons:create"
 	MoviesPersonsList   Permission = "movies:persons:list"
+	MoviesPersonsSearch Permission = "movies:persons:search"
 	MoviesPersonsUpdate Permission = "movies:persons:update"
 	MoviesPersonsDelete Permission = "movies:persons:delete"
+
+	ImagesList   Permission = "images:list"
+	ImagesUpload Permission = "images:upload"
+	ImagesView   Permission = "images:view"
 )
 
 var adminPermission = rolePermissionMap{
@@ -51,6 +56,9 @@ var adminPermission = rolePermissionMap{
 	MoviesFormatsCreate:   true,
 	MoviesFormatsDelete:   true,
 	MoviesFormatsUpdate:   true,
+	ImagesUpload:          true,
+	ImagesList:            true,
+	ImagesView:            true,
 }
 
 var regularUserPermission = rolePermissionMap{}

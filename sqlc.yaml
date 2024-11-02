@@ -13,3 +13,4 @@ sql:
         emit_enum_valid_method: true
         emit_params_struct_pointers: true
         emit_interface: true
+    strict_order_by: false

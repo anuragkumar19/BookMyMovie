@@ -1,4 +1,6 @@
 -- +goose Up
+CREATE FUNCTION text_array_to_text (TEXT[]) RETURNS TEXT LANGUAGE SQL IMMUTABLE AS $$SELECT array_to_string($1, ',')$$;
+
 CREATE TABLE
     "movies_persons" (
         "id" BIGSERIAL PRIMARY KEY NOT NULL,
@@ -15,5 +17,16 @@ CREATE TABLE
         "deleted_at" TIMESTAMP WITH TIME ZONE
     );
 
+CREATE INDEX "movies_persons_search_idx" ON "movies_persons" USING GIN (
+    TO_TSVECTOR(
+        'english',
+        "movies_persons"."name" || COALESCE(text_array_to_text ("movies_persons"."nicknames"), '') || COALESCE(text_array_to_text ("movies_persons"."occupations"), '') || "movies_persons"."about"
+    )
+);
+
 -- +goose Down
+DROP INDEX "movies_persons_search_idx";
+
 DROP TABLE "movies_persons";
+
+DROP FUNCTION text_array_to_text;

@@ -12,7 +12,7 @@ import (
 type Storage struct {
 	logger *zerolog.Logger
 	config *Config
-	client *minio.Client
+	*minio.Client
 }
 
 func New(ctx context.Context, config *Config, logger *zerolog.Logger) (Storage, error) {
@@ -47,6 +47,6 @@ func New(ctx context.Context, config *Config, logger *zerolog.Logger) (Storage, 
 	return Storage{
 		config: config,
 		logger: logger,
-		client: client,
+		Client: client,
 	}, nil
 }
