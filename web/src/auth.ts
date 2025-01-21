@@ -1,8 +1,7 @@
 import type { User } from "./services/gen/users/v1/users_pb"
-import { Code, ConnectError } from "@connectrpc/connect"
+import { ConnectError } from "@connectrpc/connect"
 import { computed, ref } from "vue"
 import { AuthService } from "./services/gen/auth/v1/auth_connect"
-import { RefreshAccessTokenRequest } from "./services/gen/auth/v1/auth_pb"
 import { UsersService } from "./services/gen/users/v1/users_connect"
 import { useService } from "./services/use-service"
 
